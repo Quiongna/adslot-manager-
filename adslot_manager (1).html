@@ -1,0 +1,543 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<title>AdSlot Manager — OOH · Lisbon</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,sans-serif;font-size:14px;background:#f4f4f6;color:#111;min-height:100vh}
+input,select,button{font-family:inherit;font-size:13px}
+input[type=number],input[type=text],input[type=date],select{padding:5px 8px;border:1px solid #ddd;border-radius:6px;background:#fff;color:#111;width:100%}
+input[type=number]{width:auto}
+button{padding:6px 14px;border:1px solid #ddd;border-radius:6px;background:#fff;cursor:pointer;color:#111}
+button:hover{background:#f0f0f0}
+.shell{display:flex;border-radius:10px;border:1px solid #e0e0e0;overflow:hidden;min-height:92vh;background:#f4f4f6;margin:16px auto;max-width:1100px}
+.sb{width:188px;background:#fff;border-right:1px solid #e8e8e8;display:flex;flex-direction:column;flex-shrink:0}
+.sbh{padding:14px 14px 12px;border-bottom:1px solid #e8e8e8}
+.sbe{font-size:10px;color:#999;letter-spacing:.06em;margin-bottom:2px}
+.sbt{font-size:15px;font-weight:700}
+.nb{display:flex;align-items:center;gap:8px;padding:9px 14px;background:transparent;border:none;border-left:2px solid transparent;color:#666;font-size:13px;width:100%;text-align:left;cursor:pointer;border-radius:0}
+.nb:hover:not(.on){background:#f5f5f5}.nb.on{color:#111;background:#f0eeff;border-left-color:#6c63d9;font-weight:600}
+.sbdiv{height:1px;background:#eee;margin:5px 12px}
+.mc{flex:1;padding:22px 26px;overflow-y:auto;overflow-x:hidden}
+.pg{display:none}.pg.on{display:block}
+.ptitle{font-size:19px;font-weight:700;margin-bottom:3px}.psub{font-size:12px;color:#666;margin-bottom:14px}
+.card{background:#fff;border-radius:8px;padding:16px;border:1px solid #e8e8e8;margin-bottom:12px}
+.ctitle{font-weight:700;font-size:10px;color:#aaa;margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.sc{background:#f8f8f8;border-radius:7px;padding:11px}.sv{font-size:22px;font-weight:700;margin-bottom:1px}.sl{font-size:11px;color:#888}
+.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.ac{background:#f8f8f8;border-radius:7px;padding:10px;text-align:center;cursor:pointer;border:1px solid #eee}.ac:hover{border-color:#aaa}
+.avt{width:100%;border-collapse:collapse;font-size:12px}
+.avt th,.avt td{border:1px solid #e8e8e8;padding:5px 4px;text-align:center;vertical-align:middle}
+.avt th{background:#f8f8f8;font-weight:600;color:#666;font-size:11px}
+.av-hi{background:#dcfce7;color:#166534}.av-mi{background:#fef9c3;color:#854d0e}
+.av-lo{background:#fee2e2;color:#991b1b}.av-fx{background:#f3f4f6;color:#999}.av-off{background:#f3f4f6;color:#ccc}
+.fg{margin-bottom:11px}.flbl{font-size:11px;color:#666;display:block;margin-bottom:4px;font-weight:600}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.pb{padding:9px 11px;border-radius:7px;border:1.5px solid #e0e0e0;background:#fafafa;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;color:#111;font-family:inherit;width:100%}
+.pb:hover{border-color:#bbb}.pb.sel{border-color:#6c63d9;background:#f0eeff}.pb.offline{opacity:.45;cursor:not-allowed}
+.d8{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+.prog{height:3px;background:#eee;border-radius:2px;margin-bottom:16px}
+.progf{height:100%;background:#6c63d9;border-radius:2px;transition:width .3s}
+.swrp{display:flex;justify-content:space-between;margin-top:13px;padding-top:12px;border-top:1px solid #eee}
+.cr{display:flex;align-items:center;gap:11px;padding:10px 0;border-bottom:1px solid #eee}.cr:last-child{border-bottom:none}
+.badge{font-size:11px;padding:2px 7px;border-radius:99px}
+.b-ok{background:#dcfce7;color:#166534}.b-up{background:#fef9c3;color:#854d0e}.b-end{background:#f3f4f6;color:#888}
+.al{padding:8px 12px;border-radius:7px;font-size:12px;margin-top:7px;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.al-d{background:#fee2e2;color:#991b1b}.al-w{background:#fef9c3;color:#854d0e}.al-s{background:#dcfce7;color:#166534}
+.g4{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:10px}
+.pi{background:#f8f8f8;border-radius:7px;padding:10px 12px}.pil{font-size:10px;color:#888;margin-bottom:2px;font-weight:600;text-transform:uppercase}.piv{font-size:16px;font-weight:700}
+.ebox{background:#f8f8f8;border-radius:7px;padding:12px;margin-top:8px}
+.dr{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px}
+.dbar{flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden}.dfil{height:100%;border-radius:3px}
+.bd-dh{font-size:11px;font-weight:700;color:#888;padding:5px 0;border-bottom:1px solid #eee;margin-bottom:8px;text-transform:uppercase;letter-spacing:.04em}
+.bd-c{background:#fff;border-radius:7px;padding:11px 14px;margin-bottom:6px;border:1px solid #e8e8e8}
+.bd-mt{color:#ccc;font-size:12px;padding:3px 0 9px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:99px;background:#f3f4f6;border:1px solid #e0e0e0;margin:2px 2px 2px 0}
+.leg{font-size:11px;color:#999;margin-bottom:9px;display:flex;gap:11px;align-items:center;flex-wrap:wrap}
+.legd{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:3px;vertical-align:-1px}
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl th{padding:6px 10px;background:#f8f8f8;border:1px solid #e8e8e8;text-align:left;font-weight:600;color:#888;font-size:11px}
+.stbl td{padding:7px 10px;border:1px solid #e8e8e8;vertical-align:middle}
+.dm-opts{display:flex;gap:9px;margin-top:7px}
+.dm-opt{flex:1;padding:10px 12px;border-radius:7px;border:1.5px solid #e0e0e0;cursor:pointer;text-align:left;font-size:12px;background:#fafafa;font-family:inherit;color:#111}
+.dm-opt:hover{background:#f0f0f0}.dm-opt.on{border-color:#6c63d9;background:#f0eeff}
+.dinfo{font-size:11px;color:#555;padding:8px 11px;background:#eef2ff;border-radius:7px;margin-bottom:10px;line-height:1.6;border:1px solid #c7d2fe}
+.savebtn{padding:9px 24px;background:#6c63d9;border:none;border-radius:7px;cursor:pointer;font-size:13px;font-weight:700;color:#fff}
+.savebtn:hover{background:#5a52c5}
+.kbw{margin-bottom:9px}.kbt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;color:#555}
+.kb{height:9px;background:#eee;border-radius:4px;overflow:hidden}.kbf{height:100%;border-radius:4px;transition:width .4s}
+.flt{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap}
+.zbadge{font-size:10px;padding:2px 6px;border-radius:4px;background:#f0eeff;color:#6c63d9;font-weight:700;margin-right:3px}
+.expbtn{padding:7px 14px;background:#fff;border:1px solid #6c63d9;border-radius:7px;cursor:pointer;font-size:12px;font-weight:600;color:#6c63d9}
+.expbtn:hover{background:#f0eeff}
+.atbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:7px;margin-bottom:16px}
+.atbl th{padding:6px 9px;background:#f0eeff;border:1px solid #ddd8ff;text-align:left;font-weight:600;color:#5a52c5;font-size:11px}
+.atbl td{padding:7px 9px;border:1px solid #e8e8e8;vertical-align:middle}
+.atbl tr:nth-child(even) td{background:#fafafa}
+.sec-lbl{font-weight:700;font-size:12px;color:#333;margin-bottom:9px;margin-top:16px;padding-top:13px;border-top:1px solid #eee}
+.alloc-note{font-size:11px;color:#888;padding:5px 9px;background:#f8f8f8;border-radius:5px;margin-bottom:8px;font-style:italic}
+#sync-bar{position:fixed;top:0;left:0;right:0;background:#6c63d9;color:#fff;font-size:12px;font-weight:600;text-align:center;padding:7px;z-index:9999;display:none;letter-spacing:.02em}
+#sync-bar.err{background:#dc2626}
+</style>
+</head>
+<body>
+<div id="sync-bar"></div>
+<div style="padding:0 12px">
+<div class="shell">
+<nav class="sb">
+  <div class="sbh"><div class="sbe">OOH · Lisbon</div><div class="sbt">AdSlot Mgr</div></div>
+  <button class="nb on" data-v="dashboard" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+  <button class="nb" data-v="availability" onclick="nav('availability')"><i class="ti ti-calendar-stats"></i>Availability</button>
+  <button class="nb" data-v="board" onclick="nav('board')"><i class="ti ti-calendar-week"></i>Board</button>
+  <button class="nb" data-v="kpi" onclick="nav('kpi')"><i class="ti ti-chart-bar"></i>KPIs</button>
+  <button class="nb" data-v="campaigns" onclick="nav('campaigns')"><i class="ti ti-list"></i>Campaigns</button>
+  <button class="nb" data-v="new_campaign" onclick="nav('new_campaign')"><i class="ti ti-plus"></i>New campaign</button>
+  <div class="sbdiv"></div>
+  <button class="nb" data-v="mainboard" onclick="nav('mainboard')"><i class="ti ti-settings"></i>Mainboard</button>
+</nav>
+<main class="mc">
+<div id="pg-dashboard" class="pg on">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">Dashboard</div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <label class="flbl" style="margin:0;white-space:nowrap">Viewing date</label>
+      <input type="date" id="dash-date" style="width:148px" onchange="rDash()"/>
+    </div>
+  </div>
+  <div class="psub" id="dd-sub"></div>
+  <div class="sg" id="ds"></div>
+  <div class="card"><div class="ctitle">Area overview</div><div class="ag" id="da"></div></div>
+  <div class="card" id="dr-card" style="display:none"><div class="ctitle">Recent campaigns</div><div id="dr"></div></div>
+</div>
+<div id="pg-availability" class="pg">
+  <div class="ptitle">Availability</div><div class="psub">Slot availability by area, date and time period.</div>
+  <div class="card flt" style="padding:12px 16px">
+    <div class="fg" style="margin:0"><label class="flbl">Area</label><select id="av-a" onchange="rAvail()" style="width:200px"></select></div>
+    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="av-s" onchange="rAvail()" style="width:140px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="av-e" onchange="rAvail()" style="width:140px"/></div>
+  </div>
+  <div class="card" style="overflow-x:auto"><div class="leg" id="av-leg"></div><div id="av-grid"></div></div>
+</div>
+<div id="pg-board" class="pg">
+  <div class="ptitle">Campaign board</div><div class="psub">Active campaigns day by day.</div>
+  <div class="card" style="padding:12px 16px">
+    <div class="flt">
+      <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="bd-s" onchange="rBoard()" style="width:136px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="bd-e" onchange="rBoard()" style="width:136px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">Client</label><select id="bd-cli" onchange="rBoard()" style="width:160px"></select></div>
+      <div class="fg" style="margin:0"><label class="flbl">Area</label><select id="bd-area" onchange="rBoard()" style="width:174px"></select></div>
+    </div>
+  </div>
+  <div id="bd-list"></div>
+</div>
+<div id="pg-kpi" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">KPIs</div>
+    <div class="flt" style="gap:9px">
+      <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="kpi-s" onchange="rKPI()" style="width:140px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="kpi-e" onchange="rKPI()" style="width:140px"/></div>
+    </div>
+  </div>
+  <div class="psub" id="kpi-sub"></div>
+  <div class="sg" id="kpi-cards"></div>
+  <div class="g2">
+    <div class="card"><div class="ctitle">Revenue by area</div><div id="kpi-area"></div></div>
+    <div class="card"><div class="ctitle">Revenue by period</div><div id="kpi-period"></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="ctitle">Campaign pipeline</div><div id="kpi-pipe"></div></div>
+    <div class="card"><div class="ctitle">Utilization today</div><div id="kpi-util"></div></div>
+  </div>
+</div>
+<div id="pg-campaigns" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">Campaigns</div>
+    <div style="display:flex;gap:9px">
+      <button class="expbtn" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
+      <button onclick="nav('new_campaign')" style="background:#6c63d9;color:#fff;border-color:#6c63d9;font-weight:600"><i class="ti ti-plus"></i> New</button>
+    </div>
+  </div>
+  <div class="psub" id="csub"></div>
+  <div class="card" id="clist"></div>
+</div>
+<div id="pg-new_campaign" class="pg">
+  <div class="ptitle">New campaign</div><div class="psub" id="wl">Step 1 of 4</div>
+  <div class="prog"><div class="progf" id="wp" style="width:25%"></div></div>
+  <div class="card">
+    <div id="s1">
+      <div style="font-weight:700;font-size:15px;margin-bottom:13px">Campaign info &amp; areas</div>
+      <div class="fg"><label class="flbl">Campaign name</label><input id="fn" type="text" placeholder="e.g. Summer Launch 2025" style="width:100%"/></div>
+      <div class="fg"><label class="flbl">Client name</label><input id="fc" type="text" placeholder="e.g. Acme Corp" style="width:100%"/></div>
+      <div class="fg" style="margin-bottom:0">
+        <label class="flbl" style="margin-bottom:7px;display:block">Areas — click to select / deselect</label>
+        <div class="g2" id="asel"></div>
+        <div id="asel-note" style="font-size:11px;color:#888;margin-top:8px"></div>
+      </div>
+    </div>
+    <div id="s2" style="display:none">
+      <div style="font-weight:700;font-size:15px;margin-bottom:13px">Dates &amp; time periods</div>
+      <div class="g2" style="margin-bottom:11px">
+        <div class="fg" style="margin:0"><label class="flbl">Start date</label><input id="fs" type="date" oninput="updDur()" style="width:100%"/></div>
+        <div class="fg" style="margin:0"><label class="flbl">End date</label><input id="fe" type="date" oninput="updDur()" style="width:100%"/></div>
+      </div>
+      <div style="font-size:12px;color:#666;margin-bottom:11px" id="fdur"></div>
+      <label class="flbl" style="margin-bottom:7px;display:block">Time periods — click to toggle</label>
+      <div class="g2" id="psel"></div>
+      <div id="psel-note" style="font-size:11px;color:#888;margin-top:8px"></div>
+    </div>
+    <div id="s3" style="display:none">
+      <div style="font-weight:700;font-size:15px;margin-bottom:13px">Budget &amp; slots</div>
+      <div class="fg"><label class="flbl">Total budget (€)</label><input id="fb" type="number" step="0.01" min="0" placeholder="500.00" style="width:100%" oninput="updEst()"/></div>
+      <div class="fg"><label class="flbl">Minimum slots per day <span style="font-weight:400;color:#aaa">(per area)</span></label><input id="fmd" type="number" step="1" min="1" value="10" style="width:100%" oninput="updEst()"/></div>
+      <div class="dinfo" id="distinfo"></div>
+      <div id="estzone" style="display:none">
+        <div class="ebox"><div style="font-weight:700;font-size:12px;margin-bottom:9px">Estimate</div><div class="g4" id="estg"></div></div>
+        <div id="estalerts"></div>
+      </div>
+    </div>
+    <div id="s4" style="display:none">
+      <div style="font-weight:700;font-size:15px;margin-bottom:13px">Review &amp; confirm</div>
+      <div class="g4" id="rg"></div>
+      <div id="ral" style="margin-bottom:4px"></div>
+      <div id="rdist"></div>
+    </div>
+    <div class="swrp"><button id="wb" onclick="wBack()">Cancel</button><button id="wn" onclick="wNext()" style="background:#6c63d9;color:#fff;border-color:#6c63d9;font-weight:600">Next</button></div>
+  </div>
+</div>
+<div id="pg-mainboard" class="pg">
+  <div class="ptitle">Mainboard</div>
+  <div class="psub">Global settings — prices, area zones, screens, reserve and distribution.</div>
+  <div class="card">
+    <div class="ctitle">Base pricing</div>
+    <div class="fg"><label class="flbl">Base price per 10-second slot (euro)</label>
+      <div style="display:flex;align-items:center;gap:11px"><input type="number" id="st-bp" step="0.000001" min="0.000001" style="width:148px"/><span style="font-size:12px;color:#888">x period mult x area mult = slot price</span></div>
+    </div>
+    <label class="flbl">Period multipliers</label>
+    <table class="stbl"><thead><tr><th>Period</th><th>Hours</th><th>Multiplier</th><th>Effective price/slot</th></tr></thead><tbody id="st-pm"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="ctitle">Area zones</div>
+    <div style="font-size:11px;color:#888;margin-bottom:10px">Set screens to 0 to mark an area as offline.</div>
+    <table class="stbl"><thead><tr><th>Zone</th><th>Name</th><th>Screens</th><th>Area mult.</th><th>Eff. base price</th></tr></thead><tbody id="st-areas"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="ctitle">Capacity and distribution</div>
+    <div class="fg"><label class="flbl">Reserve buffer (% of slots kept empty)</label>
+      <div style="display:flex;align-items:center;gap:11px"><input type="number" id="st-res" min="0" max="90" step="1" style="width:84px"/><span style="font-size:12px;color:#888">% reserved - effective capacity: <strong id="st-cap-prev"></strong></span></div>
+    </div>
+    <div class="fg" style="margin-bottom:0"><label class="flbl">Slot distribution mode</label>
+      <div class="dm-opts">
+        <button class="dm-opt" data-dm="weighted"><div style="font-weight:700;margin-bottom:3px">Peak-weighted</div><div style="font-size:11px;color:#666">Slots proportional to period multiplier.</div></button>
+        <button class="dm-opt" data-dm="even"><div style="font-weight:700;margin-bottom:3px">Even spread</div><div style="font-size:11px;color:#666">Equal slots per hour across all periods.</div></button>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
+    <button class="savebtn" onclick="stSave()">Save settings</button>
+    <span id="st-saved" style="font-size:12px;color:#166534;opacity:0;transition:opacity .5s"></span>
+  </div>
+</div>
+</main></div></div>
+
+<script>
+const SUPA_URL='https://satifkbvyebkpvcscbrh.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhdGlma2J2eWVia3B2Y3NjYnJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NTc4OTMsImV4cCI6MjA5NTEzMzg5M30.TgIw-o5-sdP1QOpFJSvRcVOmjc76xKj8blf4rvDBT2A';
+const SH={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
+
+let syncTimer=null;
+function syncBar(msg,err=false,auto=true){
+  const el=document.getElementById('sync-bar');
+  el.textContent=msg;el.className=err?'err':'';el.style.display='block';
+  if(syncTimer)clearTimeout(syncTimer);
+  if(auto&&!err)syncTimer=setTimeout(()=>el.style.display='none',2500);
+}
+async function dbGet(key){
+  try{const r=await fetch(`${SUPA_URL}/rest/v1/adslot_data?key=eq.${key}&select=value`,{headers:SH});const d=await r.json();return d&&d[0]?JSON.parse(d[0].value):null;}catch(e){return null;}
+}
+async function dbSet(key,val){
+  try{const r=await fetch(`${SUPA_URL}/rest/v1/adslot_data`,{method:'POST',headers:SH,body:JSON.stringify({key,value:JSON.stringify(val),updated_at:new Date().toISOString()})});if(!r.ok)throw new Error(r.status);}
+  catch(e){syncBar('Sync error - check connection',true,false);}
+}
+
+const SPH=360;
+const AD=[{id:1,code:'Z01',name:'City Centre / Baixa',defM:1.50},{id:2,code:'Z02',name:'Bairro Alto / Chiado',defM:1.40},{id:3,code:'Z03',name:'Parque Nacoes / Expo',defM:1.35},{id:4,code:'Z04',name:'Avenidas Novas',defM:1.20},{id:5,code:'Z05',name:'Belem / Ajuda',defM:1.15},{id:6,code:'Z06',name:'Alfama / Mouraria',defM:1.10},{id:7,code:'Z07',name:'Amadora / Odivelas',defM:0.90},{id:8,code:'Z08',name:'Sintra / Cascais',defM:0.85}];
+const PD=[{id:'morning',name:'Morning',lbl:'07-10',start:7,end:10,clr:'#BA7517'},{id:'midday',name:'Midday',lbl:'10-12',start:10,end:12,clr:'#1D9E75'},{id:'lunch',name:'Lunch rush',lbl:'12-14',start:12,end:14,clr:'#D85A30'},{id:'afternoon',name:'Afternoon',lbl:'14-18',start:14,end:18,clr:'#378ADD'},{id:'dinner',name:'Dinner peak',lbl:'18-22',start:18,end:22,clr:'#7F77DD'},{id:'latenight',name:'Late night',lbl:'22-02',start:22,end:26,clr:'#888780'}];
+let ST={basePrice:0.00508,reservePct:0,distribution:'weighted',screens:Object.fromEntries(AD.map(a=>[a.id,2])),periodMults:{morning:1.10,midday:1.00,lunch:1.35,afternoon:1.15,dinner:1.50,latenight:0.80},areaMults:Object.fromEntries(AD.map(a=>[a.id,a.defM]))};
+let camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']),selA=new Set([1]),wStep=1,wDist=null;
+
+function gP(){return PD.map(p=>({...p,mult:ST.periodMults[p.id]??1}));}
+function gA(){return AD.map(a=>({...a,screens:ST.screens[a.id]??0,areaMult:ST.areaMults[a.id]??1}));}
+function eCap(sc){return sc===0?0:Math.max(0,Math.floor(sc*SPH*(1-ST.reservePct/100)));}
+function pH(p){const h=[];for(let i=p.start;i<p.end;i++)h.push({hour:i,mult:p.mult});return h;}
+const f2=n=>`E${(+n).toFixed(2)}`,f5=n=>`E${(+n).toFixed(5)}`;
+const pct=n=>`${Math.round(Math.max(0,n)*100)}%`,comma=n=>Math.round(n).toLocaleString();
+function dR(s,e){const d=[],c=new Date(s),f=new Date(e);while(c<=f){d.push(c.toISOString().slice(0,10));c.setDate(c.getDate()+1);}return d;}
+function addD(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function fmtD(d){return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});}
+function fmtDy(d){return new Date(d).toLocaleDateString('en-GB',{weekday:'short'});}
+function tod(){return new Date().toISOString().slice(0,10);}
+function alH(t,msg){const ic={d:'ti-alert-circle',w:'ti-alert-triangle',s:'ti-circle-check'};return`<div class="al al-${t}"><i class="ti ${ic[t]||'ti-info-circle'}" style="font-size:15px;flex-shrink:0"></i><span>${msg}</span></div>`;}
+function campAreas(c){return c.areaIds||[c.areaId].filter(Boolean);}
+
+async function saveC(){syncBar('Saving...',false,false);await dbSet('asl_c4',camps);syncBar('Saved');}
+async function saveST(){await dbSet('asl_st4',ST);}
+async function loadAll(){
+  syncBar('Loading...',false,false);
+  const [s,c]=await Promise.all([dbGet('asl_st4'),dbGet('asl_c4')]);
+  if(s)ST={...ST,...s,screens:{...ST.screens,...(s.screens||{})},periodMults:{...ST.periodMults,...(s.periodMults||{})},areaMults:{...ST.areaMults,...(s.areaMults||{})}};
+  if(c)camps=c;
+  syncBar('Ready');
+}
+
+function bMap(){
+  const m={};
+  function addH(aId,hm,dates){if(!m[aId])m[aId]={};for(const d of dates){for(const[hS,spd]of Object.entries(hm)){const h=+hS,ad=h>=24?addD(d,1):d,ah=h>=24?h-24:h;if(!m[aId][ad])m[aId][ad]={};m[aId][ad][ah]=(m[aId][ad][ah]||0)+spd;}}}
+  for(const c of camps){const dates=dR(c.startDate,c.endDate);if(c.areaData){for(const[s,data]of Object.entries(c.areaData)){if(data.hourMap)addH(+s,data.hourMap,dates);}}else if(c.areaId&&c.hourMap)addH(c.areaId,c.hourMap,dates);}
+  return m;
+}
+function pAv(bm,aId,date,period){
+  const area=gA()[aId-1],hrs=pH(period),cap=eCap(area?.screens??0),total=hrs.length*cap;
+  if(total===0)return{total:0,booked:0,avail:0,pct:0,offline:true};
+  let booked=0;for(const{hour}of hrs){const ad=hour>=24?addD(date,1):date,ah=hour>=24?hour-24:hour;booked+=(bm?.[aId]?.[ad]?.[ah]||0);}
+  return{total,booked,avail:Math.max(0,total-booked),pct:Math.max(0,(total-booked)/total)};
+}
+
+function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm){
+  const sel=gP().filter(p=>pids.includes(p.id)),hrs=sel.flatMap(pH);
+  if(!hrs.length)return{error:'no_periods'};
+  const area=gA()[aId-1],aM=ST.areaMults[aId]??1,cap=eCap(area?.screens??0),dates=dR(s0,e0);
+  if(cap===0)return{error:'no_capacity'};
+  const maxH={};for(const h of hrs){let mn=cap;for(const d of dates){const ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;mn=Math.min(mn,Math.max(0,cap-(bm?.[aId]?.[ad]?.[ah]||0)));}maxH[h.hour]=mn;}
+  const totAv=Object.values(maxH).reduce((a,b)=>a+b,0);if(totAv===0)return{error:'no_capacity'};
+  const B=ST.basePrice,wOf=h=>ST.distribution==='even'?1:h.mult;
+  const sumW=hrs.reduce((s,h)=>s+wOf(h),0),fracs=hrs.map(h=>wOf(h)/sumW);
+  const wCF=hrs.reduce((s,h,i)=>s+fracs[i]*h.mult,0);
+  const uC=B*wCF*aM,unN=Math.round(budget/(nd*uC)),minCost=(minpd||1)*nd*uC;
+  const mxSl=fracs.map((f,i)=>Math.min(Math.round(f*totAv),maxH[hrs[i].hour]));
+  const maxCost=hrs.reduce((s,h,i)=>s+mxSl[i]*B*h.mult*aM,0)*nd;
+  const warns=[];
+  if(budget<minCost)warns.push({t:'d',msg:`Budget/area ${f2(budget)} below minimum. Need ${f2(minCost)}/area.`});
+  if(unN>totAv)warns.push({t:'w',msg:`Budget exceeds capacity. Effective: ${f2(maxCost)}.`});
+  let N=Math.min(Math.max(unN,minpd||1),totAv);
+  let slots=fracs.map((f,i)=>Math.min(Math.round(f*N),maxH[hrs[i].hour]));
+  let diff=N-slots.reduce((a,b)=>a+b,0);
+  const ord=fracs.map((_,i)=>i).sort((a,b)=>fracs[b]-fracs[a]);
+  for(let i=0;diff!==0&&i<hrs.length*6;i++){const ix=ord[i%ord.length],nx=slots[ix]+Math.sign(diff);if(nx>=0&&nx<=maxH[hrs[ix].hour]){slots[ix]=nx;diff-=Math.sign(diff);}}
+  const hm={};hrs.forEach((h,i)=>{hm[h.hour]=(hm[h.hour]||0)+slots[i];});
+  const aN=slots.reduce((a,b)=>a+b,0),cpd=hrs.reduce((s,h,i)=>s+slots[i]*B*h.mult*aM,0);
+  return{slotsPerDay:aN,hourMap:hm,cpd,totalCost:cpd*nd,totAv,maxCost,warns};
+}
+
+function calcCamp(budget,nd,pids,minpd,areaIds,s0,e0,bm){
+  if(!areaIds.length)return{error:'no_areas'};
+  const AREAS=gA(),areaData={},allWarns=[];
+  let pool=budget,open=[...areaIds];
+  for(let iter=0;iter<=areaIds.length;iter++){
+    if(!open.length||pool<0.001)break;
+    const share=pool/open.length,tmp={};
+    for(const aId of open)tmp[aId]=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm);
+    const capped=open.filter(aId=>{const r=tmp[aId];return r.error||(r.totalCost<share*0.99);});
+    if(!capped.length){for(const aId of open){areaData[aId]=tmp[aId];for(const w of(tmp[aId].warns||[]))allWarns.push({t:w.t,msg:`${AREAS.find(a=>a.id===aId)?.code}: ${w.msg}`});}pool=0;open=[];break;}
+    for(const aId of capped){const r=tmp[aId],area=AREAS.find(a=>a.id===aId);if(r.error){allWarns.push({t:'w',msg:`${area?.code}: No capacity.`});areaData[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaData[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}pool-=r.error?0:(r.totalCost||0);}
+    open=open.filter(aId=>!capped.includes(aId));
+  }
+  if(open.length&&pool>0.001){const share=pool/open.length;for(const aId of open){const r=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm),area=AREAS.find(a=>a.id===aId);if(r.error){areaData[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaData[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}}}
+  let totalCost=0,totalSPD=0,totalCpd=0;
+  for(const aId of areaIds){const d=areaData[aId];if(d&&!d.error){totalCost+=d.totalCost;totalSPD+=d.slotsPerDay;totalCpd+=d.cpd;}}
+  const alerts=[...allWarns.filter(w=>w.t==='d')];
+  if(totalCost<budget*0.98&&!alerts.length)alerts.push({t:'w',msg:`${f2(budget-totalCost)} unspendable — all areas at full capacity. Add more areas or extend dates.`});
+  if(!alerts.length)alerts.push({t:'s',msg:`Budget fully allocated — ${comma(totalSPD)} slots/day across ${areaIds.length} area${areaIds.length>1?'s':''} at ${f2(totalCost)} actual cost.`});
+  const redistributed=Object.values(areaData).some(d=>!d.error&&d.totalCost<budget/areaIds.length*0.99);
+  return{areaData,totalCost,totalSlots:totalSPD*nd,slotsPerDay:totalSPD,cpd:totalCpd,alerts,redistributed};
+}
+
+function nav(v){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+v).classList.add('on');
+  const nb=document.querySelector(`[data-v="${v}"]`);if(nb)nb.classList.add('on');
+  ({dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:initWiz,mainboard:initMB})[v]?.();
+}
+
+function rDash(){
+  const inp=document.getElementById('dash-date');if(!inp.value)inp.value=tod();
+  const t=inp.value,AREAS=gA(),PERIODS=gP(),bm=bMap();
+  document.getElementById('dd-sub').textContent=new Date(t).toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const active=camps.filter(c=>c.startDate<=t&&c.endDate>=t).length;
+  let tb=0,tt=0;for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,t,p);tb+=av.booked;tt+=av.total;}
+  document.getElementById('ds').innerHTML=[[camps.length,'Total campaigns'],[active,'Active this day'],[comma(tb),'Slots booked'],[pct(tb/(tt||1)),'Capacity used']].map(([v,l])=>`<div class="sc"><div class="sv">${v}</div><div class="sl">${l}</div></div>`).join('');
+  document.getElementById('da').innerHTML=AREAS.map(area=>{let av=0,tot=0;for(const p of PERIODS){const r=pAv(bm,area.id,t,p);av+=r.avail;tot+=r.total;}const offline=tot===0,pr=offline?0:av/tot,clr=offline?'#ccc':pr>0.6?'#166534':pr>0.3?'#854d0e':'#991b1b';return`<div class="ac" onclick="nav('availability')" title="${area.name}"><div style="font-size:10px;font-weight:700;color:#6c63d9;margin-bottom:1px">${area.code}</div><div style="font-size:10px;color:#aaa;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${area.name.split('/')[0].trim()}</div><div style="font-size:19px;font-weight:700;color:${clr}">${offline?'-':pct(pr)}</div><div style="font-size:10px;color:#aaa">${offline?'Offline':comma(av)+' free'}</div></div>`;}).join('');
+  const rec=[...camps].reverse().slice(0,5);
+  if(rec.length){document.getElementById('dr-card').style.display='';document.getElementById('dr').innerHTML=rec.map(c=>{const st=c.endDate<t?'Ended':c.startDate>t?'Upcoming':'Active',bc=st==='Active'?'b-ok':st==='Upcoming'?'b-up':'b-end';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');return`<div class="cr"><div style="flex:1;min-width:0"><div style="font-weight:600">${c.name} <span class="badge ${bc}">${st}</span></div><div style="font-size:12px;color:#888">${c.client} - ${aZ}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:600">${f2(c.totalCost)}</div><div style="font-size:11px;color:#aaa">${fmtD(c.startDate)}-${fmtD(c.endDate)}</div></div></div>`;}).join('');}
+  else document.getElementById('dr-card').style.display='none';
+}
+
+function rAvailInit(){
+  const sel=document.getElementById('av-a');sel.innerHTML='';
+  gA().forEach(a=>sel.add(new Option(`${a.code} ${a.name} (${a.screens} scr)`,a.id)));
+  if(!document.getElementById('av-s').value){document.getElementById('av-s').value=tod();document.getElementById('av-e').value=addD(tod(),6);}
+  document.getElementById('av-leg').innerHTML='<span>Availability:</span>'+[['> 70%','av-hi'],['30-70%','av-mi'],['< 30%','av-lo'],['Full','av-fx'],['Offline','av-off']].map(([l,c])=>`<span><span class="legd ${c}"></span>${l}</span>`).join('');
+  rAvail();
+}
+function rAvail(){
+  const aId=+document.getElementById('av-a').value,s=document.getElementById('av-s').value,e=document.getElementById('av-e').value;
+  if(!s||!e||e<s)return;
+  const dates=dR(s,e).slice(0,14),bm=bMap(),PERIODS=gP();
+  let h=`<table class="avt"><thead><tr><th style="text-align:left;min-width:116px;padding-left:11px">Period</th>`;
+  for(const d of dates)h+=`<th style="min-width:64px">${fmtD(d)}<br><span style="font-size:10px;font-weight:400">${fmtDy(d)}</span></th>`;
+  h+=`</tr></thead><tbody>`;
+  for(const per of PERIODS){h+=`<tr><td style="padding:8px 11px;background:#f8f8f8;border:1px solid #e8e8e8"><div style="display:flex;align-items:center;gap:8px"><span class="d8" style="background:${per.clr}"></span><div><div style="font-weight:600;font-size:12px">${per.name}</div><div style="font-size:10px;color:#888">${per.lbl}</div></div></div></td>`;for(const d of dates){const av=pAv(bm,aId,d,per);const cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+=`<td class="${cls}"><div style="font-size:12px;font-weight:600">${av.offline?'-':pct(av.pct)}</div><div style="font-size:10px;opacity:.8">${av.offline?'offline':comma(av.avail)+'/'+comma(av.total)}</div></td>`;}h+=`</tr>`;}
+  h+=`</tbody></table>`;document.getElementById('av-grid').innerHTML=h;
+}
+
+function rBoardInit(){
+  if(!document.getElementById('bd-s').value){document.getElementById('bd-s').value=tod();document.getElementById('bd-e').value=addD(tod(),13);}
+  const clients=[...new Set(camps.map(c=>c.client))].sort();
+  const cs=document.getElementById('bd-cli'),pv=cs.value;cs.innerHTML='<option value="">All clients</option>'+clients.map(c=>`<option value="${c}">${c}</option>`).join('');if(pv)cs.value=pv;
+  const as=document.getElementById('bd-area'),pa=as.value;as.innerHTML='<option value="">All areas</option>'+gA().map(a=>`<option value="${a.id}">${a.code} ${a.name}</option>`).join('');if(pa)as.value=pa;
+  rBoard();
+}
+function rBoard(){
+  const s=document.getElementById('bd-s').value,e=document.getElementById('bd-e').value,fCli=document.getElementById('bd-cli').value,fArea=+document.getElementById('bd-area').value;
+  if(!s||!e||e<s)return;
+  const AREAS=gA(),PERIODS=gP();let html='';
+  for(const d of dR(s,e).slice(0,31)){
+    let act=camps.filter(c=>c.startDate<=d&&c.endDate>=d);
+    if(fCli)act=act.filter(c=>c.client===fCli);if(fArea)act=act.filter(c=>campAreas(c).includes(fArea));
+    html+=`<div style="margin-bottom:12px"><div class="bd-dh">${new Date(d).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+    if(!act.length)html+=`<div class="bd-mt">No campaigns${fCli||fArea?' match current filters':''}</div>`;
+    else for(const c of act){const pers=PERIODS.filter(p=>c.periodIds.includes(p.id)),cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span><span style="font-size:11px;color:#666;margin-right:7px">${a?.name||''}</span>`;}).join('');html+=`<div class="bd-c"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><div><span style="font-weight:700">${c.name}</span><span style="color:#888;font-size:12px;margin-left:9px">${c.client}</span></div><span style="font-size:11px;color:#888;flex-shrink:0">${aIds.length} area${aIds.length>1?'s':''}</span></div><div style="margin-bottom:5px;font-size:12px">${aZ}</div><div style="margin-bottom:4px">${pers.map(p=>`<span class="chip"><span class="d8" style="background:${p.clr}"></span>${p.name}</span>`).join('')}</div><div style="font-size:12px;color:#888">${comma(c.slotsPerDay)} slots/day - ${f2(cpd)}/day - ends ${fmtD(c.endDate)}</div></div>`;}
+    html+=`</div>`;
+  }
+  document.getElementById('bd-list').innerHTML=html;
+}
+
+function rKPIInit(){const s=document.getElementById('kpi-s'),e=document.getElementById('kpi-e');if(!s.value){const first=camps.length?camps.reduce((a,b)=>a.startDate<b.startDate?a:b).startDate:addD(tod(),-30);s.value=first;e.value=tod();}rKPI();}
+function rKPI(){
+  const s=document.getElementById('kpi-s').value||addD(tod(),-30),e=document.getElementById('kpi-e').value||tod();
+  const t=tod(),AREAS=gA(),PERIODS=gP(),bm=bMap();
+  document.getElementById('kpi-sub').textContent=`${fmtD(s)} to ${fmtD(e)}`;
+  const inR=camps.filter(c=>c.startDate<=e&&c.endDate>=s);
+  const totalRev=inR.reduce((a,c)=>a+(c.totalCost||0),0),totalSlots=inR.reduce((a,c)=>a+(c.totalSlots||0),0),avgRev=inR.length?totalRev/inR.length:0;
+  document.getElementById('kpi-cards').innerHTML=[[f2(totalRev),'Total revenue'],[inR.length,'Campaigns in range'],[comma(totalSlots),'Slots sold'],[f2(avgRev),'Avg / campaign']].map(([v,l])=>`<div class="sc"><div class="sv">${v}</div><div class="sl">${l}</div></div>`).join('');
+  const revByArea={},revByPer={};
+  for(const c of inR){const aIds=campAreas(c),nd=dR(c.startDate,c.endDate).length;for(const aId of aIds){const aM=ST.areaMults[aId]??1,hm=c.areaData?.[aId]?.hourMap||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+(c.areaData?.[aId]?.totalCost||c.totalCost/aIds.length||0);for(const pid of c.periodIds){const p=PERIODS.find(x=>x.id===pid);if(!p)continue;const sl=pH(p).reduce((a,{hour})=>a+(hm?.[hour]||0),0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;}}}
+  const mxA=Math.max(...Object.values(revByArea),1),mxP=Math.max(...Object.values(revByPer),1);
+  document.getElementById('kpi-area').innerHTML=AREAS.map(a=>{const rv=revByArea[a.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</span><span>${f2(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxA*100).toFixed(1)}%;background:#6c63d9"></div></div></div>`;}).join('');
+  document.getElementById('kpi-period').innerHTML=PERIODS.map(p=>{const rv=revByPer[p.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span class="d8" style="background:${p.clr};margin-right:5px;vertical-align:middle"></span>${p.name}</span><span>${f2(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxP*100).toFixed(1)}%;background:${p.clr}"></div></div></div>`;}).join('');
+  const active=camps.filter(c=>c.startDate<=t&&c.endDate>=t).length,upcoming=camps.filter(c=>c.startDate>t).length,ended=camps.filter(c=>c.endDate<t).length;
+  document.getElementById('kpi-pipe').innerHTML=[['Active','#166534','#dcfce7',active],['Upcoming','#854d0e','#fef9c3',upcoming],['Ended','#888','#f3f4f6',ended]].map(([l,clr,bg,n])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee"><span style="color:${clr};font-weight:600">${l}</span><span style="background:${bg};color:${clr};padding:3px 14px;border-radius:99px;font-weight:700">${n}</span></div>`).join('')+`<div style="margin-top:9px;font-size:11px;color:#aaa">${camps.length} campaigns total</div>`;
+  let tu=0,tt2=0;for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,t,p);tu+=av.booked;tt2+=av.total;}
+  const util=tt2?tu/tt2:0;
+  document.getElementById('kpi-util').innerHTML=`<div style="text-align:center;padding:12px 0"><div style="font-size:40px;font-weight:700;color:${util>0.7?'#991b1b':util>0.3?'#854d0e':'#166534'}">${pct(util)}</div><div style="font-size:12px;color:#888;margin:4px 0">of all slots booked today</div><div style="font-size:11px;color:#aaa">${comma(tu)} booked / ${comma(tt2)} total</div></div><div class="kb" style="margin-top:9px"><div class="kbf" style="width:${(util*100).toFixed(1)}%;background:${util>0.7?'#dc2626':util>0.3?'#d97706':'#16a34a'}"></div></div>`;
+}
+
+function exportCSV(){
+  if(!camps.length){alert('No campaigns to export.');return;}
+  const AREAS=gA(),heads=['ID','Campaign','Client','Areas','Start','End','Days','Periods','Budget','Cost','Slots/day','Total slots'];
+  const rows=camps.map(c=>{const aIds=campAreas(c),aNames=aIds.map(id=>AREAS.find(a=>a.id===id)?.code||'').join(';');const nd=dR(c.startDate,c.endDate).length;return[c.id,`"${c.name}"`,`"${c.client}"`,`"${aNames}"`,c.startDate,c.endDate,nd,`"${c.periodIds.join(';')}"`,c.budget.toFixed(2),c.totalCost.toFixed(4),c.slotsPerDay,c.totalSlots].join(',');});
+  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(','),...rows].join('\n'));
+  const a=document.createElement('a');a.setAttribute('href',uri);a.setAttribute('download',`adslot_${tod()}.csv`);document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+function initWiz(){
+  wStep=1;wDist=null;selP=new Set(['morning','midday','lunch','afternoon','dinner']);selA=new Set([1]);
+  ['fn','fc','fb'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fmd').value='10';document.getElementById('fs').value=tod();document.getElementById('fe').value=addD(tod(),6);
+  document.getElementById('estzone').style.display='none';rAsel();rPsel();updDur();showStep(1);
+}
+function rAsel(){
+  const c=document.getElementById('asel');
+  c.innerHTML=gA().map(a=>{const offline=eCap(a.screens)===0;return`<button type="button" class="pb${selA.has(a.id)?' sel':''}${offline?' offline':''}" data-aid="${a.id}"><span class="zbadge" style="font-size:9px;flex-shrink:0">${a.code}</span><div style="min-width:0"><div style="font-weight:700;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div><div style="font-size:10px;color:#888">${offline?'Offline':a.screens+' scr - '+a.areaMult+'x - '+eCap(a.screens)+' eff/hr'}</div></div></button>`;}).join('');
+  c.querySelectorAll('[data-aid]').forEach(btn=>btn.addEventListener('click',function(){const id=+this.dataset.aid;if(this.classList.contains('offline'))return;if(selA.has(id)){selA.delete(id);this.classList.remove('sel');}else{selA.add(id);this.classList.add('sel');}updAselNote();updEst();}));
+  updAselNote();
+}
+function updAselNote(){document.getElementById('asel-note').textContent=selA.size===0?'Select at least one area.':`${selA.size} area${selA.size>1?'s':''} selected - budget redistributed to maximise spend.`;}
+function rPsel(){
+  const c=document.getElementById('psel');
+  c.innerHTML=gP().map(p=>`<button type="button" class="pb${selP.has(p.id)?' sel':''}" data-pid="${p.id}"><span class="d8" style="background:${p.clr}"></span><div><div style="font-weight:700;font-size:13px">${p.name}</div><div style="font-size:11px;color:#666">${p.lbl} - ${p.mult}x</div></div></button>`).join('');
+  c.querySelectorAll('[data-pid]').forEach(btn=>btn.addEventListener('click',function(){const id=this.dataset.pid;if(selP.has(id)){selP.delete(id);this.classList.remove('sel');}else{selP.add(id);this.classList.add('sel');}document.getElementById('psel-note').textContent=selP.size===0?'Select at least one period.':`${selP.size} period${selP.size>1?'s':''} selected.`;}));
+  document.getElementById('psel-note').textContent=`${selP.size} period${selP.size>1?'s':''} selected.`;
+}
+function updDur(){const s=document.getElementById('fs').value,e=document.getElementById('fe').value;if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('fdur').textContent=`Duration: ${n} day${n!==1?'s':''}`;}}
+function updEst(){
+  const budget=parseFloat(document.getElementById('fb').value),minpd=parseInt(document.getElementById('fmd').value)||1;
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value,zone=document.getElementById('estzone');
+  if(!budget||budget<=0||!s||!e||e<s){zone.style.display='none';return;}
+  const nd=dR(s,e).length;wDist=calcCamp(budget,nd,[...selP],minpd,[...selA],s,e,bMap());zone.style.display='';
+  if(wDist.error){document.getElementById('estg').innerHTML='';document.getElementById('estalerts').innerHTML=alH('d','Select at least one area and one time period.');return;}
+  document.getElementById('estg').innerHTML=[['Areas',selA.size],['Slots/day',comma(wDist.slotsPerDay)],['Cost/day',f2(wDist.cpd)],['Total cost',f2(wDist.totalCost)]].map(([l,v])=>`<div class="pi"><div class="pil">${l}</div><div class="piv">${v}</div></div>`).join('');
+  document.getElementById('estalerts').innerHTML=(wDist.alerts||[]).map(a=>alH(a.t,a.msg)).join('');updAselNote();
+}
+function showStep(n){
+  wStep=n;[1,2,3,4].forEach(i=>document.getElementById('s'+i).style.display=i===n?'':'none');
+  document.getElementById('wl').textContent=`Step ${n} of 4`;document.getElementById('wp').style.width=`${n/4*100}%`;
+  document.getElementById('wb').textContent=n===1?'Cancel':'Back';
+  document.getElementById('wn').textContent=n===4?'Create campaign':'Next';
+  if(n===3){const mode=ST.distribution==='weighted'?'Peak-weighted.':'Even spread.';document.getElementById('distinfo').innerHTML=`Distribution: ${mode} Change in Mainboard.`;}
+}
+function wBack(){if(wStep===1){nav('campaigns');return;}showStep(wStep-1);}
+function wNext(){
+  if(wStep===1){if(!document.getElementById('fn').value.trim()||!document.getElementById('fc').value.trim()){alert('Fill in campaign name and client name.');return;}if(!selA.size){alert('Select at least one area.');return;}showStep(2);}
+  else if(wStep===2){const s=document.getElementById('fs').value,e=document.getElementById('fe').value;if(!s||!e||e<s){alert('Select a valid date range.');return;}if(!selP.size){alert('Select at least one time period.');return;}updDur();showStep(3);}
+  else if(wStep===3){const budget=parseFloat(document.getElementById('fb').value);if(!budget||budget<=0){alert('Enter a valid budget.');return;}const minpd=parseInt(document.getElementById('fmd').value)||1,s=document.getElementById('fs').value,e=document.getElementById('fe').value;wDist=calcCamp(budget,dR(s,e).length,[...selP],minpd,[...selA],s,e,bMap());if(wDist.error){alert('Select at least one area and one time period.');return;}rReview();showStep(4);}
+  else saveCamp();
+}
+function rReview(){
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value,nd=dR(s,e).length;
+  const AREAS=gA(),PERIODS=gP(),budget=parseFloat(document.getElementById('fb').value),aIds=[...selA];
+  document.getElementById('rg').innerHTML=[['Campaign',document.getElementById('fn').value],['Client',document.getElementById('fc').value],['Areas',aIds.length+' area'+(aIds.length>1?'s':'')],['Period',`${fmtD(s)} to ${fmtD(e)} (${nd}d)`],['Budget',f2(budget)],['Actual cost',f2(wDist.totalCost)],['Slots/day',comma(wDist.slotsPerDay)],['Total slots',comma(wDist.totalSlots)]].map(([l,v])=>`<div class="pi"><div class="pil">${l}</div><div class="piv">${v}</div></div>`).join('');
+  document.getElementById('ral').innerHTML=(wDist.alerts||[]).filter(a=>a.t!=='s').map(a=>alH(a.t,a.msg)).join('');
+  let html=`<div class="sec-lbl">Per-area slot allocation</div>`;
+  if(wDist.redistributed)html+=`<div class="alloc-note">Budget redistributed — capacity-limited areas freed their unspent share to areas with more availability.</div>`;
+  html+=`<table class="atbl"><thead><tr><th>Zone</th><th>Name</th><th>Slots/day</th><th>Cost/day</th><th>Total cost</th><th>Allocated</th></tr></thead><tbody>`;
+  for(const aId of aIds){const area=AREAS.find(a=>a.id===aId),data=wDist.areaData?.[aId],hasErr=data?.error;html+=`<tr${hasErr?' style="opacity:.5"':''}><td><span class="zbadge">${area?.code||''}</span></td><td style="font-size:12px">${area?.name||''}</td><td style="text-align:right;font-weight:600">${hasErr?'-':comma(data?.slotsPerDay||0)}</td><td style="text-align:right">${hasErr?'-':f2(data?.cpd||0)}</td><td style="text-align:right;font-weight:600;color:#6c63d9">${hasErr?'-':f2(data?.totalCost||0)}</td><td style="text-align:right;color:#888;font-size:11px">${f2(data?.totalCost||0)}</td></tr>`;}
+  html+=`<tr style="background:#f0eeff;font-weight:700"><td colspan="2">Total</td><td style="text-align:right">${comma(wDist.slotsPerDay)}</td><td style="text-align:right">${f2(wDist.cpd)}</td><td style="text-align:right;color:#6c63d9">${f2(wDist.totalCost)}</td><td style="text-align:right">${f2(budget)}</td></tr></tbody></table>`;
+  const aggHm={};for(const aId of aIds){const data=wDist.areaData?.[aId];if(!data||data.error)continue;for(const[h,spd]of Object.entries(data.hourMap))aggHm[+h]=(aggHm[+h]||0)+spd;}
+  const tcph=aIds.reduce((sum,aId)=>{const area=AREAS.find(a=>a.id===aId);return sum+eCap(area?.screens??0);},0);
+  const selPeriods=PERIODS.filter(p=>selP.has(p.id)),maxSl=Math.max(...selPeriods.map(p=>pH(p).reduce((s,{hour})=>s+(aggHm[hour]||0),0)),1);
+  html+=`<div class="sec-lbl">Budget distribution by time period</div>`;
+  html+=selPeriods.map(p=>{const hrs=pH(p),slots=hrs.reduce((s,{hour})=>s+(aggHm[hour]||0),0),cap=hrs.length*tcph;let cost=0;for(const aId of aIds){const aM=ST.areaMults[aId]??1,data=wDist.areaData?.[aId];if(!data||data.error)continue;const aSlots=hrs.reduce((s,{hour})=>s+(data.hourMap?.[hour]||0),0);cost+=aSlots*ST.basePrice*p.mult*aM*nd;}return`<div class="dr"><span class="d8" style="background:${p.clr}"></span><span style="width:82px;color:#555;font-weight:600">${p.name}</span><div class="dbar"><div class="dfil" style="width:${(slots/maxSl*100).toFixed(1)}%;background:${p.clr}"></div></div><span style="width:96px;text-align:right;color:#888;font-size:11px">${comma(slots)} (${cap>0?(slots/cap*100).toFixed(0):0}% cap)</span><span style="width:66px;text-align:right;color:#6c63d9;font-weight:600;font-size:12px">${f2(cost)}</span></div>`;}).join('');
+  document.getElementById('rdist').innerHTML=html;
+}
+function saveCamp(){
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value,nd=dR(s,e).length;
+  camps.push({id:Date.now().toString(),name:document.getElementById('fn').value.trim(),client:document.getElementById('fc').value.trim(),areaIds:[...selA],startDate:s,endDate:e,periodIds:[...selP],budget:parseFloat(document.getElementById('fb').value),totalCost:wDist.totalCost,slotsPerDay:wDist.slotsPerDay,totalSlots:wDist.totalSlots,cpd:wDist.cpd,areaData:wDist.areaData});
+  saveC();nav('campaigns');
+}
+function rCamps(){
+  const t=tod(),AREAS=gA();
+  document.getElementById('csub').textContent=`${camps.length} campaign${camps.length!==1?'s':''} total`;
+  const el=document.getElementById('clist');
+  if(!camps.length){el.innerHTML=`<div style="text-align:center;padding:44px 20px;color:#bbb"><i class="ti ti-calendar-off" style="font-size:32px;display:block;margin-bottom:12px"></i>No campaigns yet. <button onclick="nav('new_campaign')" style="background:none;border:none;color:#6c63d9;cursor:pointer;font-size:14px;font-weight:700">Create your first one</button></div>`;return;}
+  el.innerHTML=[...camps].reverse().map(c=>{const st=c.endDate<t?'Ended':c.startDate>t?'Upcoming':'Active',bc=st==='Active'?'b-ok':st==='Upcoming'?'b-up':'b-end';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');return`<div class="cr"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${st}</span></div><div style="font-size:12px;color:#888;margin-top:2px">${c.client} - ${aZ}</div></div><div style="text-align:center;min-width:104px;flex-shrink:0"><div style="font-weight:600;font-size:12px">${fmtD(c.startDate)}-${fmtD(c.endDate)}</div><div style="font-size:11px;color:#aaa">${dR(c.startDate,c.endDate).length}d</div></div><div style="text-align:center;min-width:68px;flex-shrink:0"><div style="font-weight:700">${comma(c.totalSlots)}</div><div style="font-size:11px;color:#aaa">slots</div></div><div style="text-align:center;min-width:62px;flex-shrink:0"><div style="font-weight:700">${comma(c.slotsPerDay)}</div><div style="font-size:11px;color:#aaa">per day</div></div><div style="text-align:right;min-width:72px;flex-shrink:0"><div style="font-weight:700;color:#6c63d9">${f2(c.totalCost)}</div><div style="font-size:11px;color:#aaa">total</div></div><button data-del="${c.id}" style="color:#dc2626;background:none;border:none;cursor:pointer;padding:4px 7px;font-size:17px"><i class="ti ti-trash"></i></button></div>`;}).join('');
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){if(!confirm('Delete this campaign?'))return;camps=camps.filter(c=>c.id!==this.dataset.del);saveC();rCamps();}));
+}
+function updCapPrev(){const areas=gA(),caps=[...new Set(areas.map(a=>eCap(a.screens)))].sort((a,b)=>a-b);const el=document.getElementById('st-cap-prev');if(el)el.textContent=`${comma(Math.min(...caps))}-${comma(Math.max(...caps))} slots/hr`;}
+function initMB(){
+  const PERIODS=gP(),AREAS=gA();
+  document.getElementById('st-bp').value=ST.basePrice;document.getElementById('st-res').value=ST.reservePct;
+  const pm=document.getElementById('st-pm');
+  pm.innerHTML=PERIODS.map(p=>`<tr><td><span class="d8" style="background:${p.clr};margin-right:7px;vertical-align:middle"></span>${p.name}</td><td style="color:#888">${p.lbl}</td><td><input type="number" step="0.01" min="0.01" max="20" value="${p.mult}" style="width:74px" data-pm="${p.id}"/> x</td><td style="color:#888;font-size:12px" id="ep-${p.id}">${f5(ST.basePrice*p.mult)}/slot</td></tr>`).join('');
+  pm.querySelectorAll('[data-pm]').forEach(inp=>inp.addEventListener('change',function(){ST.periodMults[this.dataset.pm]=parseFloat(this.value)||1;const el=document.getElementById('ep-'+this.dataset.pm);if(el)el.textContent=f5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
+  document.getElementById('st-bp').addEventListener('input',function(){const bp=parseFloat(this.value)||0.00508;PERIODS.forEach(p=>{const el=document.getElementById('ep-'+p.id);if(el)el.textContent=f5(bp*ST.periodMults[p.id])+'/slot';});updCapPrev();});
+  const sa=document.getElementById('st-areas');
+  sa.innerHTML=AREAS.map(a=>`<tr><td><span class="zbadge">${a.code}</span></td><td style="font-size:12px">${a.name}</td><td><input type="number" min="0" max="500" value="${a.screens}" style="width:68px" data-sc="${a.id}"/></td><td><input type="number" step="0.01" min="0" max="20" value="${a.areaMult}" style="width:68px" data-am="${a.id}"/> x</td><td style="color:#888;font-size:11px" id="ae-${a.id}">${f5(ST.basePrice*a.areaMult)}/slot</td></tr>`).join('');
+  sa.querySelectorAll('[data-sc]').forEach(inp=>inp.addEventListener('change',function(){ST.screens[parseInt(this.dataset.sc)]=Math.max(0,parseInt(this.value)||0);updCapPrev();}));
+  sa.querySelectorAll('[data-am]').forEach(inp=>inp.addEventListener('change',function(){ST.areaMults[parseInt(this.dataset.am)]=parseFloat(this.value)||1;const el=document.getElementById('ae-'+this.dataset.am);if(el)el.textContent=f5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
+  document.getElementById('st-res').addEventListener('input',function(){ST.reservePct=Math.min(90,Math.max(0,parseFloat(this.value)||0));updCapPrev();});
+  document.querySelectorAll('.dm-opt').forEach(b=>{b.classList.toggle('on',b.dataset.dm===ST.distribution);b.addEventListener('click',function(){ST.distribution=this.dataset.dm;document.querySelectorAll('.dm-opt').forEach(x=>x.classList.toggle('on',x.dataset.dm===ST.distribution));});});
+  updCapPrev();
+}
+function stSave(){
+  ST.basePrice=parseFloat(document.getElementById('st-bp').value)||0.00508;
+  ST.reservePct=Math.min(90,Math.max(0,parseFloat(document.getElementById('st-res').value)||0));
+  document.querySelectorAll('[data-pm]').forEach(i=>{ST.periodMults[i.dataset.pm]=parseFloat(i.value)||1;});
+  document.querySelectorAll('[data-sc]').forEach(i=>{ST.screens[parseInt(i.dataset.sc)]=Math.max(0,parseInt(i.value)||0);});
+  document.querySelectorAll('[data-am]').forEach(i=>{ST.areaMults[parseInt(i.dataset.am)]=parseFloat(i.value)||1;});
+  saveST();const el=document.getElementById('st-saved');el.textContent='Saved';el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2500);
+}
+loadAll().then(()=>{document.getElementById('dash-date').value=tod();rDash();});
+</script>
+</body></html>
