@@ -1,1166 +1,433 @@
-<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"/>
-<title>AdSlot Manager — OOH · Lisboa</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>AdSlot Manager</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
 <style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
 :root{
-  --bg:#f0f0f4;--surface:#ffffff;--surface2:#f7f7f9;--border:#e4e4e8;--border2:#d0d0d6;
-  --text:#0f0f12;--text2:#5a5a6e;--text3:#9898aa;
-  --accent:#5b50e8;--accent-light:#eeedfb;--accent-mid:#7b72ee;
-  --green:#16a34a;--green-bg:#dcfce7;--green-text:#14532d;
-  --amber:#d97706;--amber-bg:#fef3c7;--amber-text:#78350f;
-  --red:#dc2626;--red-bg:#fee2e2;--red-text:#7f1d1d;
-  --blue:#2563eb;--blue-bg:#dbeafe;--blue-text:#1e3a8a;
-  --credit:#7c3aed;--credit-bg:#ede9fe;--credit-text:#4c1d95;
-  --r:8px;--r2:12px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --bg:#F2F2F7;--sf:#FFFFFF;--sf2:#F2F2F7;--sf3:#E5E5EA;
+  --bd:rgba(60,60,67,.13);--bd2:rgba(60,60,67,.22);
+  --tx:#000;--tx2:#3C3C43;--tx3:#8E8E93;--tx4:#AEAEB2;
+  --ac:#007AFF;--acl:rgba(0,122,255,.1);--acm:#0A84FF;
+  --gn:#34C759;--gnb:rgba(52,199,89,.12);--gnt:#1A7A32;
+  --am:#FF9500;--amb:rgba(255,149,0,.12);--amt:#7A4800;
+  --rd:#FF3B30;--rdb:rgba(255,59,48,.12);--rdt:#7A1C18;
+  --pu:#AF52DE;--pub:rgba(175,82,222,.12);--put:#5C2B7A;
+  --r:10px;--r2:14px;--sh:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
+  --sh2:0 4px 16px rgba(0,0,0,.08);
+  --fn:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;
+  --fd:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;background:var(--bg);color:var(--text);min-height:100vh}
-input,select,button,textarea{font-family:inherit;font-size:13px}
-input[type=text],input[type=number],input[type=date],select{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);width:100%;transition:border-color .15s}
-input:focus,select:focus{outline:none;border-color:var(--accent)}
-button{padding:7px 16px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);cursor:pointer;color:var(--text);font-weight:500;transition:all .15s}
-button:hover{background:var(--surface2);border-color:var(--border2)}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-.btn-primary:hover{background:var(--accent-mid);border-color:var(--accent-mid)}
-.btn-sm{padding:5px 12px;font-size:12px}
-.btn-ghost{border-color:transparent;background:transparent}
-.btn-ghost:hover{background:var(--surface2);border-color:var(--border)}
-.btn-danger{color:var(--red);border-color:transparent;background:transparent}
-.btn-danger:hover{background:var(--red-bg)}
+*{font-family:var(--fn)}
+body{font-size:14px;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.45}
+input,select,button{font-size:14px}
+input[type=text],input[type=number],input[type=date],select{padding:9px 12px;border:1px solid var(--bd);border-radius:var(--r);background:var(--sf);color:var(--tx);width:100%;transition:all .15s;outline:none;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acl)}
+input[type=number]{width:auto}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--ac);flex-shrink:0;cursor:pointer}
+button{padding:8px 18px;border:none;border-radius:var(--r);cursor:pointer;font-weight:500;transition:all .15s}
+.btn{background:var(--sf3);color:var(--tx);border:1px solid var(--bd)}.btn:hover{background:var(--bd)}
+.btn-p{background:var(--ac);color:#fff}.btn-p:hover{background:var(--acm)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:8px}
+.btn-g{background:transparent;color:var(--ac);border:none}.btn-g:hover{background:var(--acl)}
+.btn-d{background:transparent;color:var(--rd);border:none}.btn-d:hover{background:var(--rdb)}
 
-/* Layout */
 .app{display:flex;min-height:100vh}
-.sb{width:200px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
-.sb-head{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.sb-logo{font-size:16px;font-weight:800;color:var(--accent);letter-spacing:-.02em}
-.sb-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.sb-nav{flex:1;padding:8px 0;overflow-y:auto}
-.nb{display:flex;align-items:center;gap:9px;padding:9px 16px;background:transparent;border:none;border-radius:0;color:var(--text2);font-size:13px;width:100%;text-align:left;cursor:pointer;position:relative;font-weight:500;transition:all .12s}
-.nb:hover{background:var(--surface2);color:var(--text)}
-.nb.on{background:var(--accent-light);color:var(--accent);font-weight:600}
-.nb.on::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
-.nb i{font-size:17px;flex-shrink:0}
-.nb .nb-badge{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:99px;font-weight:700}
-.sbdiv{height:1px;background:var(--border);margin:6px 14px}
-.main{flex:1;padding:28px 32px;overflow-y:auto;max-width:1080px}
+.sb{width:216px;background:var(--sf);border-right:1px solid var(--bd);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sbh{padding:22px 16px 14px}
+.sb-logo{font-family:var(--fd);font-size:18px;font-weight:700;letter-spacing:-.03em}
+.sb-sub{font-size:12px;color:var(--tx3);margin-top:2px}
+.sb-sec{padding:4px 8px;font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.04em;text-transform:uppercase;margin:10px 8px 2px}
+.nb{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);background:transparent;border:none;color:var(--tx2);font-size:14px;width:calc(100% - 16px);margin:1px 8px;text-align:left;cursor:pointer;font-weight:400;transition:all .12s}
+.nb:hover{background:var(--sf2);color:var(--tx)}
+.nb.on{background:var(--acl);color:var(--ac);font-weight:600}
+.nb i{font-size:18px;flex-shrink:0}
+.nbb{margin-left:auto;font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700;background:var(--amb);color:var(--amt)}
+.sbdiv{height:1px;background:var(--bd);margin:8px 16px}
+.mc{flex:1;padding:32px 36px;overflow-y:auto;max-width:1100px}
 .pg{display:none}.pg.on{display:block}
 
-/* Cards & common */
-.card{background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
-.card-title{font-weight:700;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
-.page-title{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
-.page-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px}
-.fg{margin-bottom:12px}
-.flbl{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px}
-.fhint{font-size:11px;color:var(--text3);margin-top:3px}
+.card{background:var(--sf);border-radius:var(--r2);border:1px solid var(--bd);padding:18px;margin-bottom:16px;box-shadow:var(--sh)}
+.ct{font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.ptit{font-family:var(--fd);font-size:24px;font-weight:700;letter-spacing:-.03em;margin-bottom:4px}
+.psub{font-size:14px;color:var(--tx3);margin-bottom:22px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.fg{margin-bottom:14px}
+.flbl{font-size:12px;font-weight:600;color:var(--tx2);display:block;margin-bottom:6px}
+.fhint{font-size:12px;color:var(--tx3);margin-top:4px}
 .row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 
-/* Stat cards */
-.stat{background:var(--surface2);border-radius:var(--r);padding:14px;border:1px solid var(--border)}
-.stat-val{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
-.stat-lbl{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500}
-.stat-credit{background:var(--credit-bg);border-color:#c4b5fd}
-.stat-credit .stat-val{color:var(--credit)}
+.stat{background:var(--sf2);border-radius:var(--r);padding:16px;border:1px solid var(--bd)}
+.sv{font-family:var(--fd);font-size:28px;font-weight:700;letter-spacing:-.03em;line-height:1}
+.sl{font-size:12px;color:var(--tx3);margin-top:5px;font-weight:500}
+.stat-pu .sv{color:var(--pu)}
 
-/* Area mini cards */
-.area-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.area-card{background:var(--surface2);border-radius:var(--r);padding:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
-.area-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.area-code{font-size:10px;font-weight:800;color:var(--accent);margin-bottom:2px}
-.area-name{font-size:11px;color:var(--text2);margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.area-pct{font-size:22px;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
-.mini-bars{display:flex;gap:2px;align-items:flex-end;height:22px}
-.mini-bar{flex:1;border-radius:2px;min-height:3px;transition:height .3s}
+.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ac{background:var(--sf);border-radius:var(--r2);padding:14px;border:1px solid var(--bd);cursor:pointer;transition:all .2s;box-shadow:var(--sh)}
+.ac:hover{transform:translateY(-2px);box-shadow:var(--sh2)}
+.mbars{display:flex;gap:2px;align-items:flex-end;height:22px;margin:6px 0}
+.mbar{flex:1;border-radius:3px;min-height:3px}
 
-/* Toggle buttons (areas & periods) */
-.toggle-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.tgl{padding:10px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;text-align:left;display:flex;align-items:center;gap:9px;color:var(--text);font-family:inherit;width:100%;transition:all .15s}
-.tgl:hover:not(.tgl-off){border-color:var(--border2);background:var(--surface)}
-.tgl.on{border-color:var(--accent);background:var(--accent-light)}
+.tgl{padding:10px 12px;border-radius:var(--r);border:1px solid var(--bd);background:var(--sf);cursor:pointer;text-align:left;display:flex;align-items:center;gap:9px;color:var(--tx);width:100%;transition:all .15s;box-shadow:var(--sh)}
+.tgl:hover:not(.tgl-off){border-color:var(--ac)}
+.tgl.on{border-color:var(--ac);background:var(--acl);color:var(--ac)}
 .tgl.tgl-off{opacity:.4;cursor:not-allowed}
-.tgl-icon{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.tgl-main{font-weight:600;font-size:13px;margin-bottom:1px}
-.tgl-sub{font-size:10px;color:var(--text2)}
-.tgl.on .tgl-sub{color:var(--accent)}
+.tgl-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
-/* Alerts */
-.al{padding:10px 13px;border-radius:var(--r);font-size:12px;margin-top:7px;display:flex;gap:9px;align-items:flex-start;line-height:1.55}
-.al i{font-size:15px;flex-shrink:0;margin-top:1px}
-.al-d{background:var(--red-bg);color:var(--red-text)}
-.al-w{background:var(--amber-bg);color:var(--amber-text)}
-.al-s{background:var(--green-bg);color:var(--green-text)}
-.al-i{background:var(--blue-bg);color:var(--blue-text)}
-.al-c{background:var(--credit-bg);color:var(--credit-text)}
+.al{padding:11px 14px;border-radius:var(--r);font-size:13px;margin-top:8px;display:flex;gap:10px;align-items:flex-start;line-height:1.5}
+.al i{font-size:16px;flex-shrink:0;margin-top:1px}
+.al-d{background:var(--rdb);color:var(--rdt)}
+.al-w{background:var(--amb);color:var(--amt)}
+.al-s{background:var(--gnb);color:var(--gnt)}
+.al-i{background:var(--acl);color:var(--ac)}
 
-/* Progress bar */
-.prog{height:4px;background:var(--border);border-radius:3px;margin-bottom:22px;overflow:hidden}
-.progf{height:100%;background:var(--accent);border-radius:3px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.prog{height:3px;background:var(--sf3);border-radius:99px;margin-bottom:24px;overflow:hidden}
+.progf{height:100%;background:var(--ac);border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.step-h{font-family:var(--fd);font-weight:700;font-size:17px;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.step-n{width:28px;height:28px;border-radius:50%;background:var(--ac);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.swrp{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:16px;border-top:1px solid var(--bd)}
 
-/* Wizard steps */
-.step-head{font-weight:700;font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-.step-num{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.swrp{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.avt{width:100%;border-collapse:collapse;font-size:13px}
+.avt th,.avt td{border:1px solid var(--bd);padding:6px 5px;text-align:center;vertical-align:middle}
+.avt th{background:var(--sf2);font-weight:600;color:var(--tx3);font-size:11px}
+.av-hi{background:rgba(52,199,89,.15);color:#1A7A32}
+.av-mi{background:rgba(255,149,0,.12);color:#7A4800}
+.av-lo{background:rgba(255,59,48,.12);color:#7A1C18}
+.av-fx{background:var(--sf2);color:var(--tx4)}
+.av-off{background:var(--sf2);color:var(--tx4)}
 
-/* Availability table */
-.avt{width:100%;border-collapse:collapse;font-size:12px}
-.avt th,.avt td{border:1px solid var(--border);padding:5px 4px;text-align:center;vertical-align:middle}
-.avt th{background:var(--surface2);font-weight:600;color:var(--text2);font-size:11px}
-.av-hi{background:#dcfce7;color:#14532d}
-.av-mi{background:#fef9c3;color:#713f12}
-.av-lo{background:#fee2e2;color:#7f1d1d}
-.av-fx{background:#f3f4f6;color:#9ca3af}
-.av-off{background:#f3f4f6;color:#d1d5db}
+.dr{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+.dbar{flex:1;height:6px;background:var(--sf3);border-radius:99px;overflow:hidden}
+.dfil{height:100%;border-radius:99px}
 
-/* Period dist bars */
-.distrow{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
-.distbar{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
-.distfil{height:100%;border-radius:4px}
+.cr2{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--bd)}
+.cr2:last-child{border-bottom:none}
+.badge{font-size:11px;padding:3px 9px;border-radius:99px;font-weight:600}
+.b-ok{background:var(--gnb);color:var(--gnt)}.b-up{background:var(--amb);color:var(--amt)}.b-end{background:var(--sf2);color:var(--tx3)}
+.zbadge{font-size:10px;padding:3px 7px;border-radius:6px;background:var(--acl);color:var(--ac);font-weight:700;margin-right:3px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:99px;background:var(--sf2);border:1px solid var(--bd);margin:2px}
 
-/* Campaign list */
-.camp-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
-.camp-row:last-child{border-bottom:none}
-.badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
-.b-ok{background:var(--green-bg);color:var(--green-text)}
-.b-up{background:var(--amber-bg);color:var(--amber-text)}
-.b-end{background:var(--surface2);color:var(--text3)}
-.zbadge{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--accent-light);color:var(--accent);font-weight:700;margin-right:3px}
-.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);margin:2px 2px 2px 0}
+.kbw{margin-bottom:10px}.kbt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--tx2)}
+.kb{height:7px;background:var(--sf3);border-radius:99px;overflow:hidden}
+.kbf{height:100%;border-radius:99px;transition:width .6s}
 
-/* Board */
-.bd-dh{font-size:11px;font-weight:700;color:var(--text3);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-.bd-c{background:var(--surface);border-radius:var(--r);padding:12px 14px;margin-bottom:7px;border:1px solid var(--border)}
-.bd-mt{color:var(--text3);font-size:12px;padding:4px 0 10px;font-style:italic}
-
-/* KPI bars */
-.kbw{margin-bottom:9px}
-.kbt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text2)}
-.kb{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}
-.kbf{height:100%;border-radius:4px;transition:width .5s}
-
-/* Settings table */
 .stbl{width:100%;border-collapse:collapse;font-size:13px}
-.stbl th{padding:7px 11px;background:var(--surface2);border:1px solid var(--border);text-align:left;font-weight:600;color:var(--text2);font-size:11px}
-.stbl td{padding:8px 11px;border:1px solid var(--border);vertical-align:middle}
+.stbl th{padding:9px 12px;background:var(--sf2);border-bottom:1px solid var(--bd);text-align:left;font-weight:600;color:var(--tx3);font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+.stbl td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
+.stbl tr:last-child td{border-bottom:none}
 
-/* Area alloc table */
-.atbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
-.atbl th{padding:7px 10px;background:var(--accent-light);border:1px solid #c7d2fe;text-align:left;font-weight:700;color:var(--accent);font-size:11px}
-.atbl td{padding:8px 10px;border:1px solid var(--border);vertical-align:middle}
-.atbl tr:nth-child(even) td{background:var(--surface2)}
-.sec-lbl{font-weight:700;font-size:12px;color:var(--text);margin-bottom:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px}
+.atbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:16px}
+.atbl th{padding:9px 12px;background:var(--acl);border-bottom:1px solid rgba(0,122,255,.2);text-align:left;font-weight:600;color:var(--ac);font-size:11px;letter-spacing:.03em;text-transform:uppercase}
+.atbl td{padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
+.atbl tr:last-child td{border-bottom:none}
+.atbl tr:nth-child(even) td{background:var(--sf2)}
+.sec-lbl{font-weight:700;font-size:13px;margin-bottom:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--bd);display:flex;align-items:center;gap:7px}
 
-/* Credit box */
-.credit-box{background:var(--credit-bg);border:1.5px solid #c4b5fd;border-radius:var(--r);padding:12px 14px;margin-top:8px}
-.credit-big{font-size:28px;font-weight:800;color:var(--credit);letter-spacing:-.02em}
-.credit-sub{font-size:11px;color:#6d28d9;margin-top:2px}
+.cr-box{background:linear-gradient(135deg,rgba(175,82,222,.12),rgba(0,122,255,.08));border:1px solid rgba(175,82,222,.25);border-radius:var(--r2);padding:16px;margin-top:10px}
+.cr-big{font-family:var(--fd);font-size:32px;font-weight:700;color:var(--pu);letter-spacing:-.04em}
+.bsug{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.bsug-b{padding:7px 13px;border-radius:var(--r);border:1px solid var(--bd);background:var(--sf);cursor:pointer;font-size:12px;font-weight:600;color:var(--tx2);transition:all .15s;box-shadow:var(--sh)}
+.bsug-b:hover{border-color:var(--ac);color:var(--ac);background:var(--acl)}
+.empty-st{text-align:center;padding:60px 24px;color:var(--tx3)}
+.empty-st i{font-size:48px;display:block;margin-bottom:16px;opacity:.25}
+.empty-st h3{font-size:17px;font-weight:600;color:var(--tx2);margin-bottom:8px}
+.empty-st p{font-size:14px;margin-bottom:20px;color:var(--tx3);line-height:1.6}
 
-/* Budget suggest */
-.bsug{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.bsug-btn{padding:6px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:11px;font-weight:600;color:var(--text2);transition:all .15s}
-.bsug-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light)}
+.dm-opts{display:flex;gap:10px;margin-top:8px}
+.dm-opt{flex:1;padding:12px;border-radius:var(--r);border:1px solid var(--bd);cursor:pointer;text-align:left;font-size:13px;background:var(--sf);color:var(--tx);transition:all .15s;box-shadow:var(--sh)}
+.dm-opt:hover{border-color:var(--ac)}
+.dm-opt.on{border-color:var(--ac);background:var(--acl);box-shadow:0 0 0 3px var(--acl)}
 
-/* Empty state */
-.empty{text-align:center;padding:60px 24px;color:var(--text3)}
-.empty i{font-size:44px;display:block;margin-bottom:14px;opacity:.5}
-.empty h3{font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px}
-.empty p{font-size:13px;margin-bottom:20px;line-height:1.5}
+.any-zt{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:10px;box-shadow:var(--sh)}
+.ios-t{position:relative;width:51px;height:31px;flex-shrink:0}
+.ios-t input{opacity:0;width:0;height:0;position:absolute}
+.ios-sl{position:absolute;inset:0;background:var(--sf3);border-radius:99px;transition:.3s;cursor:pointer}
+.ios-sl:before{content:'';position:absolute;width:27px;height:27px;left:2px;bottom:2px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.ios-t input:checked + .ios-sl{background:var(--gn)}
+.ios-t input:checked + .ios-sl:before{transform:translateX(20px)}
 
-/* Sync bar */
-#sync-bar{position:fixed;top:0;left:0;right:0;background:var(--accent);color:#fff;font-size:12px;font-weight:600;text-align:center;padding:8px;z-index:9999;display:none;letter-spacing:.01em}
-#sync-bar.err{background:var(--red)}
-#sync-bar.ok{background:var(--green)}
+.sim-lay{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:start}
+.sim-inp{background:var(--sf);border-radius:var(--r2);border:1px solid var(--bd);overflow:hidden;box-shadow:var(--sh)}
+.sim-sec{padding:16px;border-bottom:1px solid var(--bd)}
+.sim-sec:last-of-type{border-bottom:none}
+.sim-sec-t{font-size:11px;font-weight:600;color:var(--tx3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px}
+.chk-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);border:1px solid var(--bd);background:var(--sf);margin-bottom:6px;cursor:pointer;transition:all .15s;box-shadow:var(--sh)}
+.chk-row.on{border-color:var(--ac);background:var(--acl)}
+.chk-row:hover:not(.on){border-color:var(--bd2)}
 
-/* Dist mode buttons */
-.dm-opts{display:flex;gap:9px;margin-top:7px}
-.dm-opt{flex:1;padding:11px 13px;border-radius:var(--r);border:1.5px solid var(--border);cursor:pointer;text-align:left;font-size:12px;background:var(--surface2);font-family:inherit;color:var(--text);transition:all .15s}
-.dm-opt:hover{background:var(--surface)}
-.dm-opt.on{border-color:var(--accent);background:var(--accent-light)}
-.dm-title{font-weight:700;margin-bottom:3px}
+.dtbl{width:100%;border-collapse:collapse;font-size:13px}
+.dtbl th{padding:9px 12px;background:var(--sf2);border-bottom:1px solid var(--bd);text-align:left;font-weight:600;color:var(--tx3);font-size:11px;position:sticky;top:0;z-index:1;letter-spacing:.03em;text-transform:uppercase}
+.dtbl td{padding:9px 12px;border-bottom:1px solid var(--bd)}
+.dtbl tr:last-child td{border-bottom:none}
+.dtbl tr.warnr td{background:rgba(255,149,0,.06)}
+.dtbl tr.badr td{background:rgba(255,59,48,.06)}
+.mota-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:2px;vertical-align:middle}
 
-/* Mainboard warning badge */
-.warn-badge{background:var(--amber-bg);color:var(--amber-text);font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
+#sync-bar{position:fixed;top:0;left:0;right:0;background:var(--ac);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:9px;z-index:9999;display:none;letter-spacing:.01em}
+#sync-bar.err{background:var(--rd)}#sync-bar.ok{background:var(--gn)}
 
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
-.modal-overlay.open{display:flex}
-.modal{background:var(--surface);border-radius:var(--r2);padding:24px;max-width:820px;width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.modal-title{font-size:17px;font-weight:800}
-
-/* Tabs */
-.tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--surface2);border-radius:var(--r);padding:3px}
-.tab{flex:1;padding:8px;border-radius:6px;border:none;background:transparent;cursor:pointer;font-weight:600;font-size:12px;color:var(--text2);transition:all .15s}
-.tab.on{background:var(--surface);color:var(--accent);box-shadow:var(--shadow)}
-
-/* Responsive */
-@media(max-width:768px){
-  .sb{display:none}.main{padding:16px}
-  .grid4{grid-template-columns:1fr 1fr}.area-grid{grid-template-columns:1fr 1fr}
-  .toggle-grid{grid-template-columns:1fr}
-}
-
-.dinfo{font-size:11px;color:var(--blue-text);padding:9px 12px;background:var(--blue-bg);border-radius:var(--r);margin-bottom:11px;border:1px solid #bfdbfe;line-height:1.6}
-.leg{font-size:11px;color:var(--text3);margin-bottom:9px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.leg{font-size:12px;color:var(--tx3);margin-bottom:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 .legd{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:-1px}
+.dinfo{font-size:12px;color:var(--ac);padding:10px 13px;background:var(--acl);border-radius:var(--r);margin-bottom:12px;line-height:1.6}
+
+@media print{
+  .sb,.sim-inp,#sync-bar,.no-print{display:none!important}
+  .sim-lay{grid-template-columns:1fr!important}
+  body{background:#fff}.mc{padding:0}
+  .dtbl{font-size:11px}
+}
 </style>
 </head>
 <body>
 <div id="sync-bar"></div>
-
 <div class="app">
+
 <nav class="sb">
-  <div class="sb-head">
+  <div class="sbh">
     <div class="sb-logo">AdSlot</div>
-    <div class="sb-sub">OOH · Lisboa</div>
+    <div class="sb-sub">OOH Campaign Manager</div>
   </div>
-  <div class="sb-nav">
+  <div style="flex:1;overflow-y:auto;padding:8px 0">
+    <div class="sb-sec">Overview</div>
     <button class="nb on" data-v="dashboard" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
-    <button class="nb" data-v="availability" onclick="nav('availability')"><i class="ti ti-calendar-stats"></i>Disponibilidade</button>
+    <button class="nb" data-v="availability" onclick="nav('availability')"><i class="ti ti-calendar-stats"></i>Availability</button>
     <button class="nb" data-v="board" onclick="nav('board')"><i class="ti ti-calendar-week"></i>Board</button>
     <button class="nb" data-v="kpi" onclick="nav('kpi')"><i class="ti ti-chart-bar"></i>KPIs</button>
     <div class="sbdiv"></div>
-    <button class="nb" data-v="campaigns" onclick="nav('campaigns')"><i class="ti ti-list"></i>Campanhas</button>
-    <button class="nb" data-v="new_campaign" onclick="nav('new_campaign')"><i class="ti ti-plus"></i>Nova campanha</button>
+    <div class="sb-sec">Campaigns</div>
+    <button class="nb" data-v="campaigns" onclick="nav('campaigns')"><i class="ti ti-list"></i>All Campaigns</button>
+    <button class="nb" data-v="new_campaign" onclick="nav('new_campaign')"><i class="ti ti-plus"></i>New Campaign</button>
+    <button class="nb" data-v="sim" onclick="nav('sim')"><i class="ti ti-rocket"></i>Simulator</button>
     <div class="sbdiv"></div>
-    <button class="nb" data-v="mainboard" onclick="nav('mainboard')"><i class="ti ti-settings"></i>Mainboard <span id="mb-warn" class="nb-badge warn-badge" style="display:none">!</span></button>
+    <div class="sb-sec">Settings</div>
+    <button class="nb" data-v="mainboard" onclick="nav('mainboard')"><i class="ti ti-settings"></i>Mainboard <span id="mb-warn" class="nbb" style="display:none">!</span></button>
   </div>
 </nav>
 
-<main class="main">
+<main class="mc">
 
 <!-- DASHBOARD -->
 <div id="pg-dashboard" class="pg on">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-    <div class="page-title">Dashboard</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ptit">Dashboard</div>
     <input type="date" id="dash-date" style="width:160px" onchange="rDash()"/>
   </div>
-  <div class="page-sub" id="dd-sub"></div>
-  <div class="grid4" id="ds" style="margin-bottom:14px"></div>
-  <div class="card"><div class="card-title">Ocupação por área</div><div class="area-grid" id="da"></div></div>
-  <div class="card" id="dr-card"><div class="card-title">Campanhas recentes</div><div id="dr"></div></div>
+  <div class="psub" id="dd-sub"></div>
+  <div class="g4" id="ds" style="margin-bottom:16px"></div>
+  <div class="card"><div class="ct">Zone Overview</div><div class="ag" id="da"></div></div>
+  <div class="card" id="dr-card"><div class="ct">Recent Campaigns</div><div id="dr"></div></div>
 </div>
 
 <!-- AVAILABILITY -->
 <div id="pg-availability" class="pg">
-  <div class="page-title">Disponibilidade</div>
-  <div class="page-sub">Slots disponíveis por área, data e período horário.</div>
-  <div class="card row" style="padding:14px 16px;gap:12px">
-    <div class="fg" style="margin:0"><label class="flbl">Área</label><select id="av-a" onchange="rAvail()" style="width:200px"></select></div>
-    <div class="fg" style="margin:0"><label class="flbl">De</label><input type="date" id="av-s" onchange="rAvail()" style="width:148px"/></div>
-    <div class="fg" style="margin:0"><label class="flbl">Até</label><input type="date" id="av-e" onchange="rAvail()" style="width:148px"/></div>
+  <div class="ptit">Availability</div>
+  <div class="psub">Slot availability by zone, date and time period.</div>
+  <div class="card row" style="padding:14px 18px;gap:12px">
+    <div class="fg" style="margin:0"><label class="flbl">Zone</label><select id="av-a" onchange="rAvail()" style="width:200px"></select></div>
+    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="av-s" onchange="rAvail()" style="width:150px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="av-e" onchange="rAvail()" style="width:150px"/></div>
   </div>
-  <div class="card" style="overflow-x:auto">
-    <div class="leg" id="av-leg"></div>
-    <div id="av-grid"></div>
-  </div>
+  <div class="card" style="overflow-x:auto"><div class="leg" id="av-leg"></div><div id="av-grid"></div></div>
 </div>
 
 <!-- BOARD -->
 <div id="pg-board" class="pg">
-  <div class="page-title">Board</div>
-  <div class="page-sub">Campanhas activas dia a dia.</div>
-  <div class="card row" style="padding:14px 16px;gap:12px">
-    <div class="fg" style="margin:0"><label class="flbl">De</label><input type="date" id="bd-s" onchange="rBoard()" style="width:148px"/></div>
-    <div class="fg" style="margin:0"><label class="flbl">Até</label><input type="date" id="bd-e" onchange="rBoard()" style="width:148px"/></div>
-    <div class="fg" style="margin:0"><label class="flbl">Cliente</label><select id="bd-cli" onchange="rBoard()" style="width:160px"></select></div>
-    <div class="fg" style="margin:0"><label class="flbl">Área</label><select id="bd-area" onchange="rBoard()" style="width:174px"></select></div>
+  <div class="ptit">Campaign Board</div>
+  <div class="psub">Active campaigns day by day.</div>
+  <div class="card row" style="padding:14px 18px;gap:12px">
+    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="bd-s" onchange="rBoard()" style="width:150px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="bd-e" onchange="rBoard()" style="width:150px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">Client</label><select id="bd-cli" onchange="rBoard()" style="width:160px"></select></div>
+    <div class="fg" style="margin:0"><label class="flbl">Zone</label><select id="bd-area" onchange="rBoard()" style="width:170px"></select></div>
   </div>
   <div id="bd-list"></div>
 </div>
 
 <!-- KPIs -->
 <div id="pg-kpi" class="pg">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-    <div class="page-title">KPIs</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ptit">KPIs</div>
     <div class="row" style="gap:9px">
-      <div class="fg" style="margin:0"><label class="flbl">De</label><input type="date" id="kpi-s" onchange="rKPI()" style="width:148px"/></div>
-      <div class="fg" style="margin:0"><label class="flbl">Até</label><input type="date" id="kpi-e" onchange="rKPI()" style="width:148px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="kpi-s" onchange="rKPI()" style="width:150px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="kpi-e" onchange="rKPI()" style="width:150px"/></div>
     </div>
   </div>
-  <div class="page-sub" id="kpi-sub"></div>
-  <div class="grid4" id="kpi-cards" style="margin-bottom:14px"></div>
-  <div class="grid2">
-    <div class="card"><div class="card-title">Receita por área</div><div id="kpi-area"></div></div>
-    <div class="card"><div class="card-title">Receita por período</div><div id="kpi-period"></div></div>
-  </div>
-  <div class="grid2">
-    <div class="card"><div class="card-title">Pipeline de campanhas</div><div id="kpi-pipe"></div></div>
-    <div class="card"><div class="card-title">Utilização hoje</div><div id="kpi-util"></div></div>
-  </div>
+  <div class="psub" id="kpi-sub"></div>
+  <div class="g4" id="kpi-cards" style="margin-bottom:16px"></div>
+  <div class="g2"><div class="card"><div class="ct">Revenue by Zone</div><div id="kpi-area"></div></div><div class="card"><div class="ct">Revenue by Period</div><div id="kpi-period"></div></div></div>
+  <div class="g2"><div class="card"><div class="ct">Campaign Pipeline</div><div id="kpi-pipe"></div></div><div class="card"><div class="ct">Today's Utilization</div><div id="kpi-util"></div></div></div>
 </div>
 
 <!-- CAMPAIGNS -->
 <div id="pg-campaigns" class="pg">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-    <div class="page-title">Campanhas</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ptit">Campaigns</div>
     <div style="display:flex;gap:8px">
-      <button onclick="exportCSV()" style="font-size:12px"><i class="ti ti-download"></i> CSV</button>
-      <button class="btn-primary" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Nova</button>
+      <button onclick="exportCSV()" class="btn btn-sm no-print"><i class="ti ti-download"></i> Export CSV</button>
+      <button class="btn-p no-print" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> New Campaign</button>
     </div>
   </div>
-  <div class="page-sub" id="csub"></div>
+  <div class="psub" id="csub"></div>
   <div class="card" id="clist"></div>
 </div>
 
 <!-- NEW / EDIT CAMPAIGN -->
 <div id="pg-new_campaign" class="pg">
-  <div class="page-title" id="wiz-title">Nova campanha</div>
-  <div class="page-sub" id="wl">Passo 1 de 2</div>
+  <div class="ptit" id="wiz-title">New Campaign</div>
+  <div class="psub" id="wl">Step 1 of 2</div>
   <div class="prog"><div class="progf" id="wp" style="width:50%"></div></div>
   <div class="card">
-
-    <!-- STEP 1 -->
     <div id="s1">
-      <div class="step-head"><span class="step-num">1</span>Info, áreas e período</div>
-      <div class="grid2" style="margin-bottom:16px">
-        <!-- LEFT -->
+      <div class="step-h"><span class="step-n">1</span>Campaign Info, Zones &amp; Schedule</div>
+      <div class="g2">
         <div>
-          <div class="fg"><label class="flbl">Nome da campanha</label><input id="fn" type="text" placeholder="ex. Verão 2025"/></div>
-          <div class="fg"><label class="flbl">Cliente</label><input id="fc" type="text" placeholder="ex. Marca XYZ"/></div>
+          <div class="fg"><label class="flbl">Campaign Name</label><input id="fn" type="text" placeholder="e.g. Summer Launch 2025" style="width:100%"/></div>
+          <div class="fg"><label class="flbl">Client</label><input id="fc" type="text" placeholder="e.g. Brand XYZ" style="width:100%"/></div>
           <div class="fg" style="margin-bottom:0">
-            <label class="flbl" style="margin-bottom:7px;display:block">Áreas <span style="font-weight:400;color:var(--text3)">(orçamento redistribuído automaticamente)</span></label>
-            <div class="toggle-grid" id="asel"></div>
-            <div id="asel-note" style="font-size:11px;color:var(--text2);margin-top:7px"></div>
+            <label class="flbl" style="margin-bottom:8px;display:block">Zones</label>
+            <div class="any-zt">
+              <div><div style="font-weight:600;font-size:14px">Any available zone</div><div style="font-size:12px;color:var(--tx3)">Ads run across all online zones</div></div>
+              <label class="ios-t"><input type="checkbox" id="any-zone" onchange="rAsel()"/><span class="ios-sl"></span></label>
+            </div>
+            <div id="asel" class="tgl-g"></div>
+            <div id="asel-note" style="font-size:12px;color:var(--tx3);margin-top:8px"></div>
           </div>
         </div>
-        <!-- RIGHT -->
         <div>
-          <div class="grid2" style="margin-bottom:12px">
-            <div class="fg" style="margin:0"><label class="flbl">Data início</label><input id="fs" type="date" oninput="updDur()"/></div>
-            <div class="fg" style="margin:0"><label class="flbl">Data fim</label><input id="fe" type="date" oninput="updDur()"/></div>
+          <div class="g2" style="margin-bottom:12px">
+            <div class="fg" style="margin:0"><label class="flbl">Start Date</label><input id="fs" type="date" oninput="updDur()" style="width:100%"/></div>
+            <div class="fg" style="margin:0"><label class="flbl">End Date</label><input id="fe" type="date" oninput="updDur()" style="width:100%"/></div>
           </div>
-          <div id="fdur" style="font-size:12px;color:var(--text2);margin-bottom:11px"></div>
-          <label class="flbl" style="margin-bottom:7px;display:block">Períodos horários</label>
-          <div class="toggle-grid" id="psel"></div>
-          <div id="psel-note" style="font-size:11px;color:var(--text2);margin-top:7px"></div>
+          <div id="fdur" style="font-size:13px;color:var(--tx3);margin-bottom:12px"></div>
+          <label class="flbl" style="margin-bottom:8px;display:block">Time Periods</label>
+          <div class="tgl-g" id="psel"></div>
+          <div id="psel-note" style="font-size:12px;color:var(--tx3);margin-top:8px"></div>
         </div>
       </div>
     </div>
-
-    <!-- STEP 2 -->
     <div id="s2" style="display:none">
-      <div class="step-head"><span class="step-num">2</span>Orçamento, créditos e revisão</div>
-      <div class="grid2">
-        <!-- LEFT: budget -->
+      <div class="step-h"><span class="step-n">2</span>Budget, Credits &amp; Review</div>
+      <div class="g2">
         <div>
-          <div class="fg">
-            <label class="flbl">Orçamento total (€)</label>
-            <input id="fb" type="number" step="0.01" min="0" placeholder="500.00" oninput="updEst()"/>
-            <div class="fhint">1 crédito = €<span id="cv-hint"></span> · <span id="cr-rate-hint"></span></div>
-          </div>
-          <div class="fg">
-            <label class="flbl">Sugestão de orçamento</label>
-            <div class="bsug" id="bsug"></div>
-          </div>
-          <div class="fg">
-            <label class="flbl">Mínimo de slots/dia <span style="font-weight:400;color:var(--text3)">(por área)</span></label>
-            <input id="fmd" type="number" step="1" min="1" value="10" oninput="updEst()"/>
-          </div>
+          <div class="fg"><label class="flbl">Total Budget (&#8364;)</label><input id="fb" type="number" step="0.01" min="0" placeholder="500.00" style="width:100%" oninput="updEst()"/><div class="fhint" id="cv-hint-wrap">1 credit = <span id="cv-hint"></span> &middot; <span id="cr-rate-hint"></span></div></div>
+          <div class="fg"><label class="flbl">Budget Suggestions</label><div class="bsug" id="bsug"></div></div>
+          <div class="fg"><label class="flbl">Min. slots/day <span style="font-weight:400;color:var(--tx3)">(per zone)</span></label><input id="fmd" type="number" step="1" min="1" value="10" style="width:100%" oninput="updEst()"/></div>
           <div class="dinfo" id="distinfo"></div>
           <div id="estalerts"></div>
         </div>
-        <!-- RIGHT: estimate -->
         <div>
           <div id="estzone" style="display:none">
-            <div style="margin-bottom:12px">
-              <div class="credit-box">
-                <div class="credit-big" id="est-credits">—</div>
-                <div class="credit-sub" id="est-credits-sub">créditos totais</div>
-              </div>
+            <div class="cr-box" style="margin-bottom:14px">
+              <div style="font-size:11px;font-weight:600;color:var(--pu);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px">Total Credits</div>
+              <div class="cr-big" id="est-cr">&#8212;</div>
+              <div style="font-size:12px;color:var(--pu);margin-top:4px" id="est-cr-sub"></div>
             </div>
-            <div class="grid2" id="estg" style="margin-bottom:12px"></div>
-            <div id="est-cpm" style="font-size:12px;color:var(--text2);padding:9px 12px;background:var(--surface2);border-radius:var(--r)"></div>
+            <div class="g2" id="estg" style="margin-bottom:12px"></div>
+            <div id="est-cpm" style="font-size:13px;color:var(--tx2);padding:10px 13px;background:var(--sf2);border-radius:var(--r)"></div>
           </div>
-          <div id="estzone-empty" style="text-align:center;padding:30px 0;color:var(--text3)">
-            <i class="ti ti-calculator" style="font-size:36px;display:block;margin-bottom:8px;opacity:.4"></i>
-            <div style="font-size:12px">Preenche o orçamento para ver a estimativa</div>
+          <div id="estzone-empty" style="text-align:center;padding:32px 0;color:var(--tx3)">
+            <i class="ti ti-calculator" style="font-size:40px;display:block;margin-bottom:10px;opacity:.3"></i>
+            <div style="font-size:13px">Fill in the budget to see the estimate</div>
           </div>
         </div>
       </div>
-      <!-- Review section -->
       <div id="review-zone" style="display:none">
-        <div class="sec-lbl"><i class="ti ti-checklist"></i>Revisão por área</div>
-        <div id="ral" style="margin-bottom:8px"></div>
+        <div class="sec-lbl"><i class="ti ti-checklist"></i>Per-zone allocation</div>
+        <div id="ral" style="margin-bottom:10px"></div>
         <div id="rdist"></div>
       </div>
     </div>
-
     <div class="swrp">
-      <button id="wb" onclick="wBack()">Cancelar</button>
+      <button class="btn" id="wb" onclick="wBack()">Cancel</button>
       <div style="display:flex;gap:8px">
-        <button id="wp-prev" onclick="wPrev()" style="display:none">← Anterior</button>
-        <button id="wn" class="btn-primary" onclick="wNext()">Próximo →</button>
+        <button class="btn" id="wp-prev" onclick="wPrev()" style="display:none">&#8592; Previous</button>
+        <button class="btn-p" id="wn" onclick="wNext()">Next &#8594;</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MAINBOARD -->
-<div id="pg-mainboard" class="pg">
-  <div class="page-title">Mainboard</div>
-  <div class="page-sub">Preços, zonas, ecrãs, reserva e distribuição.</div>
-  <div id="mb-default-warn" class="al al-w" style="margin-bottom:14px;display:none">
-    <i class="ti ti-alert-triangle"></i><span>Ainda estás a usar os valores default. Confirma os preços e número de ecrãs antes de criar campanhas.</span>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Preços e créditos</div>
-    <div class="grid2">
-      <div class="fg">
-        <label class="flbl">Preço base por slot de 10 segundos (€)</label>
-        <div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-bp" step="0.000001" min="0.000001" style="width:150px"/><span style="font-size:12px;color:var(--text2)">× mult. período × mult. área</span></div>
-      </div>
-      <div class="fg">
-        <label class="flbl">Taxa de créditos <span style="font-weight:400">(créditos por euro)</span></label>
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="number" id="st-cr" step="1" min="1" style="width:120px"/>
-          <span style="font-size:12px;color:var(--text2)">créditos/€ → 1 crédito = <span id="cr-val-preview">€0.005</span></span>
-        </div>
-        <div class="fhint">Default: 200 cr/€ (1 crédito ≈ 1 slot base)</div>
-      </div>
-    </div>
-    <label class="flbl">Multiplicadores por período</label>
-    <table class="stbl"><thead><tr><th>Período</th><th>Horas</th><th>Multiplicador</th><th>Preço efetivo/slot</th><th>Créditos/slot</th></tr></thead><tbody id="st-pm"></tbody></table>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Zonas — ecrãs e multiplicadores</div>
-    <div style="font-size:11px;color:var(--text2);margin-bottom:10px">0 ecrãs = zona offline (não aceita reservas).</div>
-    <table class="stbl"><thead><tr><th>Zona</th><th>Nome</th><th>Ecrãs</th><th>Mult. área</th><th>Preço base efetivo</th></tr></thead><tbody id="st-areas"></tbody></table>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Capacidade e distribuição</div>
-    <div class="fg">
-      <label class="flbl">Buffer de reserva — % de slots sempre vazios (não reserváveis)</label>
-      <div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-res" min="0" max="90" step="1" style="width:88px"/><span style="font-size:12px;color:var(--text2)">% reservado → capacidade efetiva: <strong id="st-cap-prev"></strong></span></div>
-    </div>
-    <div class="fg" style="margin-bottom:0">
-      <label class="flbl">Modo de distribuição de slots</label>
-      <div class="dm-opts">
-        <button class="dm-opt" data-dm="weighted"><div class="dm-title">📈 Weighted por pico</div><div style="font-size:11px;color:var(--text2)">Mais slots nos períodos com maior multiplicador.</div></button>
-        <button class="dm-opt" data-dm="even"><div class="dm-title">➡️ Distribuição igual</div><div style="font-size:11px;color:var(--text2)">Mesmo nº de slots por hora em todos os períodos.</div></button>
-      </div>
-    </div>
-  </div>
-
-  <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
-    <button class="btn-primary" onclick="stSave()">Guardar definições</button>
-    <span id="st-saved" style="font-size:12px;color:var(--green);opacity:0;transition:opacity .5s"></span>
-  </div>
-</div>
-
-</main>
-</div>
-
-<!-- EDIT MODAL -->
-<div class="modal-overlay" id="edit-modal">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">Editar campanha</div>
-      <button class="btn-ghost btn-sm" onclick="closeEdit()"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="edit-body"></div>
-  </div>
-</div>
-
-<script>
-// ── Supabase ──────────────────────────────────────────────────────────────
-const SUPA_URL='https://satifkbvyebkpvcscbrh.supabase.co';
-const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhdGlma2J2eWVia3B2Y3NjYnJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NTc4OTMsImV4cCI6MjA5NTEzMzg5M30.TgIw-o5-sdP1QOpFJSvRcVOmjc76xKj8blf4rvDBT2A';
-const SH={'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
-let syncT=null;
-function syncBar(msg,type='',auto=true){
-  const el=document.getElementById('sync-bar');
-  el.textContent=msg;el.className=type;el.style.display='block';
-  if(syncT)clearTimeout(syncT);
-  if(auto)syncT=setTimeout(()=>el.style.display='none',2200);
-}
-async function dbGet(k){try{const r=await fetch(`${SUPA_URL}/rest/v1/adslot_data?key=eq.${k}&select=value`,{headers:SH});const d=await r.json();return d&&d[0]?JSON.parse(d[0].value):null;}catch{return null;}}
-async function dbSet(k,v){try{const r=await fetch(`${SUPA_URL}/rest/v1/adslot_data`,{method:'POST',headers:SH,body:JSON.stringify({key:k,value:JSON.stringify(v),updated_at:new Date().toISOString()})});if(!r.ok)throw new Error(r.status);}catch{syncBar('Erro de ligação — dados não guardados','err',false);}}
-
-// ── Constants ─────────────────────────────────────────────────────────────
-const SPH=360;
-const AD=[
-  {id:1,code:'Z01',name:'City Centre / Baixa',defM:1.50,clr:'#6c63d9'},
-  {id:2,code:'Z02',name:'Bairro Alto / Chiado',defM:1.40,clr:'#7c3aed'},
-  {id:3,code:'Z03',name:'Parque Nações / Expo',defM:1.35,clr:'#2563eb'},
-  {id:4,code:'Z04',name:'Avenidas Novas',defM:1.20,clr:'#0891b2'},
-  {id:5,code:'Z05',name:'Belém / Ajuda',defM:1.15,clr:'#059669'},
-  {id:6,code:'Z06',name:'Alfama / Mouraria',defM:1.10,clr:'#d97706'},
-  {id:7,code:'Z07',name:'Amadora / Odivelas',defM:0.90,clr:'#dc2626'},
-  {id:8,code:'Z08',name:'Sintra / Cascais',defM:0.85,clr:'#be185d'},
-];
-const PD=[
-  {id:'morning',name:'Morning',lbl:'07–10',start:7,end:10,clr:'#BA7517'},
-  {id:'midday',name:'Midday',lbl:'10–12',start:10,end:12,clr:'#1D9E75'},
-  {id:'lunch',name:'Lunch rush',lbl:'12–14',start:12,end:14,clr:'#D85A30'},
-  {id:'afternoon',name:'Afternoon',lbl:'14–18',start:14,end:18,clr:'#378ADD'},
-  {id:'dinner',name:'Dinner peak',lbl:'18–22',start:18,end:22,clr:'#7F77DD'},
-  {id:'latenight',name:'Late night',lbl:'22–02',start:22,end:26,clr:'#888780'},
-];
-
-let ST={
-  basePrice:0.00508,reservePct:0,distribution:'weighted',creditRate:200,
-  screens:Object.fromEntries(AD.map(a=>[a.id,2])),
-  periodMults:{morning:1.10,midday:1.00,lunch:1.35,afternoon:1.15,dinner:1.50,latenight:0.80},
-  areaMults:Object.fromEntries(AD.map(a=>[a.id,a.defM])),
-};
-let _defaultST=JSON.stringify(ST);
-let camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']),selA=new Set([1]),wStep=1,wDist=null,editId=null;
-
-// ── Helpers ───────────────────────────────────────────────────────────────
-function gP(){return PD.map(p=>({...p,mult:ST.periodMults[p.id]??1}));}
-function gA(){return AD.map(a=>({...a,screens:ST.screens[a.id]??0,areaMult:ST.areaMults[a.id]??1,clr:a.clr}));}
-function eCap(sc){return sc===0?0:Math.max(0,Math.floor(sc*SPH*(1-ST.reservePct/100)));}
-function pH(p){const h=[];for(let i=p.start;i<p.end;i++)h.push({hour:i,mult:p.mult});return h;}
-function crOf(euros){return Math.round(euros*ST.creditRate);}
-function euroOf(cr){return cr/ST.creditRate;}
-const eu=n=>`€${(+n).toFixed(2)}`;
-const eu5=n=>`€${(+n).toFixed(5)}`;
-const cr=n=>`${Math.round(n).toLocaleString()} cr`;
-const pct=n=>`${Math.round(Math.max(0,n)*100)}%`;
-const comma=n=>Math.round(n).toLocaleString();
-function dR(s,e){const d=[],c=new Date(s),f=new Date(e);while(c<=f){d.push(c.toISOString().slice(0,10));c.setDate(c.getDate()+1);}return d;}
-function addD(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
-function fmtD(d){return new Date(d).toLocaleDateString('pt-PT',{day:'2-digit',month:'short'});}
-function fmtDy(d){return new Date(d).toLocaleDateString('pt-PT',{weekday:'short'});}
-function tod(){return new Date().toISOString().slice(0,10);}
-function alH(t,msg){const ic={d:'ti-alert-circle',w:'ti-alert-triangle',s:'ti-circle-check',i:'ti-info-circle',c:'ti-coin'};return`<div class="al al-${t}"><i class="ti ${ic[t]||'ti-info-circle'}"></i><span>${msg}</span></div>`;}
-function campAreas(c){return c.areaIds||[c.areaId].filter(Boolean);}
-
-// ── Persist ───────────────────────────────────────────────────────────────
-async function saveC(){syncBar('A guardar…','',false);await dbSet('asl_c5',camps);syncBar('Guardado ✓','ok');}
-async function saveST(){await dbSet('asl_st5',ST);}
-async function loadAll(){
-  syncBar('A carregar…','',false);
-  const [s,c]=await Promise.all([dbGet('asl_st5'),dbGet('asl_c5')]);
-  if(s)ST={...ST,...s,screens:{...ST.screens,...(s.screens||{})},periodMults:{...ST.periodMults,...(s.periodMults||{})},areaMults:{...ST.areaMults,...(s.areaMults||{})}};
-  if(c)camps=c;
-  syncBar('Pronto ✓','ok');
-}
-
-// ── Booking map ───────────────────────────────────────────────────────────
-function bMap(){
-  const m={};
-  function addH(aId,hm,dates){if(!m[aId])m[aId]={};for(const d of dates){for(const[hS,spd]of Object.entries(hm)){const h=+hS,ad=h>=24?addD(d,1):d,ah=h>=24?h-24:h;if(!m[aId][ad])m[aId][ad]={};m[aId][ad][ah]=(m[aId][ad][ah]||0)+spd;}}}
-  for(const c of camps){if(c.id===editId)continue;const dates=dR(c.startDate,c.endDate);if(c.areaData){for(const[s,data]of Object.entries(c.areaData)){if(data.hourMap)addH(+s,data.hourMap,dates);}}else if(c.areaId&&c.hourMap)addH(c.areaId,c.hourMap,dates);}
-  return m;
-}
-function pAv(bm,aId,date,period){
-  const area=gA()[aId-1],hrs=pH(period),cap=eCap(area?.screens??0),total=hrs.length*cap;
-  if(total===0)return{total:0,booked:0,avail:0,pct:0,offline:true};
-  let booked=0;for(const{hour}of hrs){const ad=hour>=24?addD(date,1):date,ah=hour>=24?hour-24:hour;booked+=(bm?.[aId]?.[ad]?.[ah]||0);}
-  return{total,booked,avail:Math.max(0,total-booked),pct:Math.max(0,(total-booked)/total)};
-}
-
-// ── Calc engine ───────────────────────────────────────────────────────────
-function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm){
-  const sel=gP().filter(p=>pids.includes(p.id)),hrs=sel.flatMap(pH);
-  if(!hrs.length)return{error:'no_periods'};
-  const area=gA()[aId-1],aM=ST.areaMults[aId]??1,cap=eCap(area?.screens??0),dates=dR(s0,e0);
-  if(cap===0)return{error:'no_capacity'};
-  const maxH={};for(const h of hrs){let mn=cap;for(const d of dates){const ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;mn=Math.min(mn,Math.max(0,cap-(bm?.[aId]?.[ad]?.[ah]||0)));}maxH[h.hour]=mn;}
-  const totAv=Object.values(maxH).reduce((a,b)=>a+b,0);if(totAv===0)return{error:'no_capacity'};
-  const B=ST.basePrice,wOf=h=>ST.distribution==='even'?1:h.mult;
-  const sumW=hrs.reduce((s,h)=>s+wOf(h),0),fracs=hrs.map(h=>wOf(h)/sumW);
-  const wCF=hrs.reduce((s,h,i)=>s+fracs[i]*h.mult,0);
-  const uC=B*wCF*aM,unN=Math.round(budget/(nd*uC)),minCost=(minpd||1)*nd*uC;
-  const mxSl=fracs.map((f,i)=>Math.min(Math.round(f*totAv),maxH[hrs[i].hour]));
-  const maxCost=hrs.reduce((s,h,i)=>s+mxSl[i]*B*h.mult*aM,0)*nd;
-  const warns=[];
-  if(budget<minCost)warns.push({t:'d',msg:`Budget/área ${eu(budget)} cobre ~${comma(Math.max(0,unN))} slots/dia — abaixo do mínimo de ${comma(minpd)}. Precisas de pelo menos ${eu(minCost)}/área.`});
-  if(unN>totAv)warns.push({t:'w',msg:`Budget excede capacidade (máx ${comma(totAv)} slots/dia). Spend efectivo: ${eu(maxCost)}.`});
-  let N=Math.min(Math.max(unN,minpd||1),totAv);
-  let slots=fracs.map((f,i)=>Math.min(Math.round(f*N),maxH[hrs[i].hour]));
-  let diff=N-slots.reduce((a,b)=>a+b,0);
-  const ord=fracs.map((_,i)=>i).sort((a,b)=>fracs[b]-fracs[a]);
-  for(let i=0;diff!==0&&i<hrs.length*6;i++){const ix=ord[i%ord.length],nx=slots[ix]+Math.sign(diff);if(nx>=0&&nx<=maxH[hrs[ix].hour]){slots[ix]=nx;diff-=Math.sign(diff);}}
-  const hm={};hrs.forEach((h,i)=>{hm[h.hour]=(hm[h.hour]||0)+slots[i];});
-  const aN=slots.reduce((a,b)=>a+b,0),cpd=hrs.reduce((s,h,i)=>s+slots[i]*B*h.mult*aM,0);
-  return{slotsPerDay:aN,hourMap:hm,cpd,totalCost:cpd*nd,totAv,maxCost,warns};
-}
-
-function calcCamp(budget,nd,pids,minpd,areaIds,s0,e0,bm){
-  if(!areaIds.length)return{error:'no_areas'};
-  const AREAS=gA(),areaData={},allWarns=[];let pool=budget,open=[...areaIds];
-  for(let iter=0;iter<=areaIds.length;iter++){
-    if(!open.length||pool<0.001)break;
-    const share=pool/open.length,tmp={};for(const aId of open)tmp[aId]=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm);
-    const capped=open.filter(aId=>{const r=tmp[aId];return r.error||(r.totalCost<share*0.99);});
-    if(!capped.length){for(const aId of open){areaData[aId]=tmp[aId];for(const w of(tmp[aId].warns||[]))allWarns.push({t:w.t,msg:`${AREAS.find(a=>a.id===aId)?.code}: ${w.msg}`});}pool=0;open=[];break;}
-    for(const aId of capped){const r=tmp[aId],area=AREAS.find(a=>a.id===aId);if(r.error){allWarns.push({t:'w',msg:`${area?.code} ${area?.name}: ${r.error==='no_capacity'?'Sem capacidade':'Sem períodos'}.`});areaData[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaData[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}pool-=r.error?0:(r.totalCost||0);}
-    open=open.filter(aId=>!capped.includes(aId));
-  }
-  if(open.length&&pool>0.001){const share=pool/open.length;for(const aId of open){const r=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm),area=AREAS.find(a=>a.id===aId);if(r.error){areaData[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaData[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}}}
-  let totalCost=0,totalSPD=0,totalCpd=0;
-  for(const aId of areaIds){const d=areaData[aId];if(d&&!d.error){totalCost+=d.totalCost;totalSPD+=d.slotsPerDay;totalCpd+=d.cpd;}}
-  const alerts=[...allWarns.filter(w=>w.t==='d')];
-  if(totalCost<budget*0.98&&!alerts.length)alerts.push({t:'w',msg:`${eu(budget-totalCost)} não utilizáveis — todas as áreas selecionadas estão no limite de capacidade.`});
-  if(!alerts.length)alerts.push({t:'s',msg:`Orçamento totalmente alocado — ${comma(totalSPD)} slots/dia em ${areaIds.length} área${areaIds.length>1?'s':''} por ${eu(totalCost)} total.`});
-  const redistributed=Object.values(areaData).some(d=>!d.error&&d.totalCost<budget/areaIds.length*0.99);
-  // CPM = cost per 1000 impressions
-  const totalSlots=totalSPD*nd;
-  const cpm=totalSlots>0?(totalCost/totalSlots)*1000:0;
-  return{areaData,totalCost,totalSlots,slotsPerDay:totalSPD,cpd:totalCpd,alerts,redistributed,cpm};
-}
-
-// Budget suggestions for selected areas/periods/dates
-function budgetSuggestions(pids,areaIds,s0,e0,bm){
-  const nd=dR(s0,e0).length,AREAS=gA();
-  const targets=[0.25,0.5,1.0];
-  return targets.map(fill=>{
-    let totalMax=0;
-    for(const aId of areaIds){
-      const r=calcSingle(999999,nd,pids,1,aId,s0,e0,bm);
-      if(!r.error)totalMax+=r.maxCost||r.totalCost;
-    }
-    return{label:`${fill*100}% cap.`,budget:Math.round(totalMax*fill*100)/100};
-  });
-}
-
-// ── Navigation ────────────────────────────────────────────────────────────
-function nav(v){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.getElementById('pg-'+v).classList.add('on');
-  const nb=document.querySelector(`[data-v="${v}"]`);if(nb)nb.classList.add('on');
-  checkMBWarn();
-  ({dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:initWiz,mainboard:initMB})[v]?.();
-}
-
-function checkMBWarn(){
-  const isDefault=JSON.stringify({basePrice:ST.basePrice,screens:ST.screens,creditRate:ST.creditRate})===
-    JSON.stringify({basePrice:0.00508,screens:Object.fromEntries(AD.map(a=>[a.id,2])),creditRate:200});
-  document.getElementById('mb-warn').style.display=isDefault?'':'none';
-  document.getElementById('mb-default-warn').style.display=isDefault?'flex':'none';
-}
-
-// ── Dashboard ─────────────────────────────────────────────────────────────
-function rDash(){
-  const inp=document.getElementById('dash-date');if(!inp.value)inp.value=tod();
-  const t=inp.value,AREAS=gA(),PERIODS=gP(),bm=bMap();
-  document.getElementById('dd-sub').textContent=new Date(t).toLocaleDateString('pt-PT',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-  const active=camps.filter(c=>c.startDate<=t&&c.endDate>=t).length;
-  let tb=0,tt=0;for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,t,p);tb+=av.booked;tt+=av.total;}
-  const totalCredits=camps.filter(c=>c.startDate<=t&&c.endDate>=t).reduce((s,c)=>s+crOf(c.totalCost),0);
-  document.getElementById('ds').innerHTML=[
-    ['<i class="ti ti-list" style="font-size:18px;opacity:.5"></i>',camps.length,'Campanhas totais',''],
-    ['<i class="ti ti-player-play" style="font-size:18px;opacity:.5"></i>',active,'Activas hoje',''],
-    ['<i class="ti ti-hash" style="font-size:18px;opacity:.5"></i>',comma(tb),'Slots reservados',''],
-    ['<i class="ti ti-coin" style="font-size:18px;opacity:.5"></i>',comma(totalCredits),'Créditos activos','stat-credit'],
-  ].map(([ic,v,l,cls])=>`<div class="stat ${cls}"><div style="margin-bottom:6px;opacity:.6">${ic}</div><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
-  // Area mini cards with period bars
-  document.getElementById('da').innerHTML=AREAS.map(area=>{
-    let av=0,tot=0;for(const p of PERIODS){const r=pAv(bm,area.id,t,p);av+=r.avail;tot+=r.total;}
-    const offline=tot===0,pr=offline?0:av/tot;
-    const clr=offline?'#d1d5db':pr>0.6?'#16a34a':pr>0.3?'#d97706':'#dc2626';
-    const bars=PERIODS.map(p=>{const av2=pAv(bm,area.id,t,p);const h=av2.offline?3:Math.max(3,Math.round((1-av2.pct)*22));return`<div class="mini-bar" style="background:${p.clr};height:${h}px;opacity:${av2.offline?.3:.85}" title="${p.name}: ${av2.offline?'offline':pct(av2.pct)+' ocupado'}"></div>`;}).join('');
-    return`<div class="area-card" onclick="nav('availability')">
-      <div class="area-code">${area.code}</div>
-      <div class="area-name">${area.name}</div>
-      <div class="area-pct" style="color:${clr}">${offline?'—':pct(pr)}</div>
-      <div class="mini-bars">${bars}</div>
-      <div style="font-size:10px;color:var(--text3);margin-top:6px">${offline?'Offline':comma(av)+' livres'}</div>
-    </div>`;
-  }).join('');
-  // Recent campaigns
-  const rec=[...camps].sort((a,b)=>b.startDate.localeCompare(a.startDate)).slice(0,6);
-  const drCard=document.getElementById('dr-card');
-  if(!rec.length){
-    drCard.innerHTML=`<div class="card-title">Campanhas recentes</div><div class="empty"><i class="ti ti-calendar-off"></i><h3>Ainda sem campanhas</h3><p>Cria a primeira campanha para começar a ocupar os slots disponíveis.</p><button class="btn-primary" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Criar campanha</button></div>`;
-  }else{
-    drCard.innerHTML=`<div class="card-title">Campanhas recentes</div>`+rec.map(c=>{
-      const st=c.endDate<t?'Ended':c.startDate>t?'Upcoming':'Active',bc=st==='Active'?'b-ok':st==='Upcoming'?'b-up':'b-end';
-      const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');
-      return`<div class="camp-row"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${st==='Active'?'Activa':st==='Upcoming'?'Em breve':'Terminada'}</span></div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;color:var(--accent)">${eu(c.totalCost)}</div><div style="font-size:11px;color:var(--text3)">${comma(crOf(c.totalCost))} cr · ${fmtD(c.startDate)}–${fmtD(c.endDate)}</div></div></div>`;
-    }).join('');
-  }
-}
-
-// ── Availability ──────────────────────────────────────────────────────────
-function rAvailInit(){
-  const sel=document.getElementById('av-a');sel.innerHTML='';
-  gA().forEach(a=>sel.add(new Option(`${a.code} ${a.name} (${a.screens} ecrãs)`,a.id)));
-  if(!document.getElementById('av-s').value){document.getElementById('av-s').value=tod();document.getElementById('av-e').value=addD(tod(),6);}
-  document.getElementById('av-leg').innerHTML='<span>Disponibilidade:</span>'+[['> 70%','av-hi'],['30–70%','av-mi'],['< 30%','av-lo'],['Cheio','av-fx'],['Offline','av-off']].map(([l,c])=>`<span><span class="legd ${c}"></span>${l}</span>`).join('');
-  rAvail();
-}
-function rAvail(){
-  const aId=+document.getElementById('av-a').value,s=document.getElementById('av-s').value,e=document.getElementById('av-e').value;
-  if(!s||!e||e<s)return;
-  const dates=dR(s,e).slice(0,14),bm=bMap(),PERIODS=gP();
-  let h=`<table class="avt"><thead><tr><th style="text-align:left;min-width:116px;padding-left:11px">Período</th>`;
-  for(const d of dates)h+=`<th style="min-width:64px">${fmtD(d)}<br><span style="font-size:10px;font-weight:400">${fmtDy(d)}</span></th>`;
-  h+=`</tr></thead><tbody>`;
-  for(const per of PERIODS){
-    h+=`<tr><td style="padding:8px 11px;background:var(--surface2);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:${per.clr};flex-shrink:0;display:inline-block"></span><div><div style="font-weight:600;font-size:12px">${per.name}</div><div style="font-size:10px;color:var(--text3)">${per.lbl} · ${per.mult}×</div></div></div></td>`;
-    for(const d of dates){const av=pAv(bm,aId,d,per);const cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+=`<td class="${cls}"><div style="font-size:12px;font-weight:700">${av.offline?'—':pct(av.pct)}</div><div style="font-size:10px;opacity:.75">${av.offline?'offline':comma(av.avail)+'/'+comma(av.total)}</div></td>`;}
-    h+=`</tr>`;
-  }
-  h+=`</tbody></table>`;document.getElementById('av-grid').innerHTML=h;
-}
-
-// ── Board ─────────────────────────────────────────────────────────────────
-function rBoardInit(){
-  if(!document.getElementById('bd-s').value){document.getElementById('bd-s').value=tod();document.getElementById('bd-e').value=addD(tod(),13);}
-  const clients=[...new Set(camps.map(c=>c.client))].sort();
-  const cs=document.getElementById('bd-cli'),pv=cs.value;cs.innerHTML='<option value="">Todos os clientes</option>'+clients.map(c=>`<option value="${c}">${c}</option>`).join('');if(pv)cs.value=pv;
-  const as=document.getElementById('bd-area'),pa=as.value;as.innerHTML='<option value="">Todas as áreas</option>'+gA().map(a=>`<option value="${a.id}">${a.code} ${a.name}</option>`).join('');if(pa)as.value=pa;
-  rBoard();
-}
-function rBoard(){
-  const s=document.getElementById('bd-s').value,e=document.getElementById('bd-e').value,fCli=document.getElementById('bd-cli').value,fArea=+document.getElementById('bd-area').value;
-  if(!s||!e||e<s)return;
-  const AREAS=gA(),PERIODS=gP();let html='';
-  for(const d of dR(s,e).slice(0,31)){
-    let act=camps.filter(c=>c.startDate<=d&&c.endDate>=d);
-    if(fCli)act=act.filter(c=>c.client===fCli);if(fArea)act=act.filter(c=>campAreas(c).includes(fArea));
-    html+=`<div style="margin-bottom:14px"><div class="bd-dh">${new Date(d).toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'})}</div>`;
-    if(!act.length)html+=`<div class="bd-mt">Sem campanhas${fCli||fArea?' para este filtro':''}</div>`;
-    else for(const c of act){
-      const pers=PERIODS.filter(p=>c.periodIds.includes(p.id)),cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));
-      const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span><span style="font-size:11px;color:var(--text2);margin-right:7px">${a?.name||''}</span>`;}).join('');
-      html+=`<div class="bd-c"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><div><span style="font-weight:700">${c.name}</span><span style="color:var(--text2);font-size:12px;margin-left:9px">${c.client}</span></div><div style="text-align:right;font-size:11px;color:var(--text3)">${eu(cpd)}/dia · ${comma(crOf(cpd))} cr/dia</div></div><div style="margin-bottom:5px;font-size:12px">${aZ}</div><div style="margin-bottom:4px">${pers.map(p=>`<span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:3px"></span>${p.name}</span>`).join('')}</div><div style="font-size:12px;color:var(--text2)">${comma(c.slotsPerDay)} slots/dia · termina ${fmtD(c.endDate)}</div></div>`;
-    }
-    html+=`</div>`;
-  }
-  document.getElementById('bd-list').innerHTML=html;
-}
-
-// ── KPIs ──────────────────────────────────────────────────────────────────
-function rKPIInit(){const s=document.getElementById('kpi-s'),e=document.getElementById('kpi-e');if(!s.value){const first=camps.length?camps.reduce((a,b)=>a.startDate<b.startDate?a:b).startDate:addD(tod(),-30);s.value=first;e.value=tod();}rKPI();}
-function rKPI(){
-  const s=document.getElementById('kpi-s').value||addD(tod(),-30),e=document.getElementById('kpi-e').value||tod();
-  const t=tod(),AREAS=gA(),PERIODS=gP(),bm=bMap();
-  document.getElementById('kpi-sub').textContent=`${fmtD(s)} – ${fmtD(e)}`;
-  const inR=camps.filter(c=>c.startDate<=e&&c.endDate>=s);
-  const totalRev=inR.reduce((a,c)=>a+(c.totalCost||0),0),totalSlots=inR.reduce((a,c)=>a+(c.totalSlots||0),0),avgRev=inR.length?totalRev/inR.length:0;
-  const totalCr=crOf(totalRev);
-  document.getElementById('kpi-cards').innerHTML=[
-    [eu(totalRev),'Receita total',''],
-    [comma(totalCr)+' cr','Créditos vendidos','stat-credit'],
-    [comma(totalSlots),'Slots vendidos',''],
-    [eu(avgRev),'Média/campanha',''],
-  ].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-val">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
-  const revByArea={},revByPer={};
-  for(const c of inR){const aIds=campAreas(c),nd=dR(c.startDate,c.endDate).length;for(const aId of aIds){const aM=ST.areaMults[aId]??1,hm=c.areaData?.[aId]?.hourMap||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+(c.areaData?.[aId]?.totalCost||c.totalCost/aIds.length||0);for(const pid of c.periodIds){const p=PERIODS.find(x=>x.id===pid);if(!p)continue;const sl=pH(p).reduce((a,{hour})=>a+(hm?.[hour]||0),0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;}}}
-  const mxA=Math.max(...Object.values(revByArea),1),mxP=Math.max(...Object.values(revByPer),1);
-  document.getElementById('kpi-area').innerHTML=AREAS.map(a=>{const rv=revByArea[a.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxA*100).toFixed(1)}%;background:${a.clr}"></div></div></div>`;}).join('');
-  document.getElementById('kpi-period').innerHTML=PERIODS.map(p=>{const rv=revByPer[p.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span style="width:8px;height:8px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:5px;vertical-align:middle"></span>${p.name}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxP*100).toFixed(1)}%;background:${p.clr}"></div></div></div>`;}).join('');
-  const active=camps.filter(c=>c.startDate<=t&&c.endDate>=t).length,upcoming=camps.filter(c=>c.startDate>t).length,ended=camps.filter(c=>c.endDate<t).length;
-  document.getElementById('kpi-pipe').innerHTML=[['Activas','var(--green)','var(--green-bg)',active],['Em breve','var(--amber)','var(--amber-bg)',upcoming],['Terminadas','var(--text3)','var(--surface2)',ended]].map(([l,clr,bg,n])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span style="color:${clr};font-weight:700">${l}</span><span style="background:${bg};color:${clr};padding:3px 14px;border-radius:99px;font-weight:800">${n}</span></div>`).join('')+`<div style="margin-top:9px;font-size:11px;color:var(--text3)">${camps.length} campanhas no total</div>`;
-  let tu=0,tt2=0;for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,t,p);tu+=av.booked;tt2+=av.total;}
-  const util=tt2?tu/tt2:0;
-  document.getElementById('kpi-util').innerHTML=`<div style="text-align:center;padding:14px 0"><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;color:${util>0.7?'var(--red)':util>0.3?'var(--amber)':'var(--green)'}">${pct(util)}</div><div style="font-size:12px;color:var(--text2);margin:5px 0">dos slots reservados hoje</div><div style="font-size:11px;color:var(--text3)">${comma(tu)} reservados / ${comma(tt2)} total</div></div><div class="kb" style="margin-top:10px"><div class="kbf" style="width:${(util*100).toFixed(1)}%;background:${util>0.7?'var(--red)':util>0.3?'var(--amber)':'var(--green)'}"></div></div>`;
-}
-
-// ── Export CSV ────────────────────────────────────────────────────────────
-function exportCSV(){
-  if(!camps.length){alert('Sem campanhas para exportar.');return;}
-  const AREAS=gA(),heads=['ID','Campanha','Cliente','Áreas','Início','Fim','Dias','Períodos','Orçamento(€)','Custo(€)','Créditos','CPM(€)','Slots/dia','Total slots'];
-  const rows=camps.map(c=>{const aIds=campAreas(c),aNames=aIds.map(id=>AREAS.find(a=>a.id===id)?.code||'').join(';');const nd=dR(c.startDate,c.endDate).length;const cpm=c.cpm||(c.totalSlots>0?(c.totalCost/c.totalSlots)*1000:0);return[c.id,`"${c.name}"`,`"${c.client}"`,`"${aNames}"`,c.startDate,c.endDate,nd,`"${c.periodIds.join(';')}"`,c.budget.toFixed(2),c.totalCost.toFixed(4),crOf(c.totalCost),cpm.toFixed(4),c.slotsPerDay,c.totalSlots].join(',');});
-  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(','),...rows].join('\n'));
-  const a=document.createElement('a');a.setAttribute('href',uri);a.setAttribute('download',`adslot_${tod()}.csv`);document.body.appendChild(a);a.click();document.body.removeChild(a);
-}
-
-// ── Wizard ────────────────────────────────────────────────────────────────
-function initWiz(cToEdit=null){
-  editId=cToEdit?cToEdit.id:null;
-  wStep=1;wDist=null;
-  if(cToEdit){
-    document.getElementById('wiz-title').textContent='Editar campanha';
-    selP=new Set(cToEdit.periodIds);
-    selA=new Set(campAreas(cToEdit));
-    document.getElementById('fn').value=cToEdit.name;
-    document.getElementById('fc').value=cToEdit.client;
-    document.getElementById('fs').value=cToEdit.startDate;
-    document.getElementById('fe').value=cToEdit.endDate;
-    document.getElementById('fb').value=cToEdit.budget;
-    document.getElementById('fmd').value=10;
-  }else{
-    document.getElementById('wiz-title').textContent='Nova campanha';
-    selP=new Set(['morning','midday','lunch','afternoon','dinner']);
-    selA=new Set([1]);
-    ['fn','fc','fb'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('fmd').value='10';
-    document.getElementById('fs').value=tod();
-    document.getElementById('fe').value=addD(tod(),6);
-  }
-  document.getElementById('estzone').style.display='none';
-  document.getElementById('estzone-empty').style.display='block';
-  document.getElementById('review-zone').style.display='none';
-  document.getElementById('cv-hint').textContent=(1/ST.creditRate).toFixed(5);
-  document.getElementById('cr-rate-hint').textContent=`${ST.creditRate} créditos/€`;
-  rAsel();rPsel();updDur();showStep(1);
-}
-
-function rAsel(){
-  const c=document.getElementById('asel');
-  c.innerHTML=gA().map(a=>{const offline=eCap(a.screens)===0;return`<button type="button" class="tgl${selA.has(a.id)?' on':''}${offline?' tgl-off':''}" data-aid="${a.id}"><div><div class="tgl-main">${a.code} · ${a.name.split('/')[0].trim()}</div><div class="tgl-sub">${offline?'Offline':a.screens+' ecrãs · '+a.areaMult+'× · '+eCap(a.screens)+' ef/hr'}</div></div></button>`;}).join('');
-  c.querySelectorAll('[data-aid]').forEach(btn=>btn.addEventListener('click',function(){const id=+this.dataset.aid;if(this.classList.contains('tgl-off'))return;if(selA.has(id)){selA.delete(id);this.classList.remove('on');}else{selA.add(id);this.classList.add('on');}updAselNote();updEst();}));
-  updAselNote();
-}
-function updAselNote(){const n=selA.size;document.getElementById('asel-note').textContent=n===0?'⚠️ Seleciona pelo menos uma área.':n===1?'1 área selecionada.':` ${n} áreas selecionadas — orçamento redistribuído automaticamente.`;}
-function rPsel(){
-  const c=document.getElementById('psel');
-  c.innerHTML=gP().map(p=>`<button type="button" class="tgl${selP.has(p.id)?' on':''}" data-pid="${p.id}"><span class="tgl-icon" style="background:${p.clr}"></span><div><div class="tgl-main">${p.name}</div><div class="tgl-sub">${p.lbl} · ${p.mult}× · ${eu5(ST.basePrice*p.mult)}/slot</div></div></button>`).join('');
-  c.querySelectorAll('[data-pid]').forEach(btn=>btn.addEventListener('click',function(){const id=this.dataset.pid;if(selP.has(id)){selP.delete(id);this.classList.remove('on');}else{selP.add(id);this.classList.add('on');}document.getElementById('psel-note').textContent=selP.size===0?'⚠️ Seleciona pelo menos um período.':selP.size+' período'+(selP.size>1?'s':'')+' selecionado'+(selP.size>1?'s':'')+'.';}));
-  document.getElementById('psel-note').textContent=selP.size+' período'+(selP.size>1?'s':'')+' selecionado'+(selP.size>1?'s':'.')+'.';
-}
-function updDur(){
-  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-  if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('fdur').textContent=`Duração: ${n} dia${n!==1?'s':''}`;}
-  updBsug();
-}
-function updBsug(){
-  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-  if(!s||!e||e<s||!selA.size||!selP.size){document.getElementById('bsug').innerHTML='';return;}
-  const bm=bMap(),sugs=budgetSuggestions([...selP],[...selA],s,e,bm);
-  document.getElementById('bsug').innerHTML=sugs.map(sg=>`<button class="bsug-btn" onclick="document.getElementById('fb').value='${sg.budget.toFixed(2)}';updEst()">${sg.label}<br><strong>${eu(sg.budget)}</strong></button>`).join('');
-}
-function updEst(){
-  const budget=parseFloat(document.getElementById('fb').value),minpd=parseInt(document.getElementById('fmd').value)||1;
-  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-  if(!budget||budget<=0||!s||!e||e<s){
-    document.getElementById('estzone').style.display='none';
-    document.getElementById('estzone-empty').style.display='block';
-    document.getElementById('review-zone').style.display='none';
-    return;
-  }
-  const nd=dR(s,e).length;
-  wDist=calcCamp(budget,nd,[...selP],minpd,[...selA],s,e,bMap());
-  document.getElementById('estzone').style.display='';
-  document.getElementById('estzone-empty').style.display='none';
-  if(wDist.error){
-    document.getElementById('est-credits').textContent='—';
-    document.getElementById('estg').innerHTML='';
-    document.getElementById('estalerts').innerHTML=alH('d','Seleciona pelo menos uma área e um período.');
-    document.getElementById('review-zone').style.display='none';
-    return;
-  }
-  const totalCr=crOf(wDist.totalCost);
-  document.getElementById('est-credits').textContent=comma(totalCr);
-  document.getElementById('est-credits-sub').textContent=`créditos · ${eu(wDist.totalCost)} (orçamento: ${eu(budget)})`;
-  document.getElementById('estg').innerHTML=[
-    ['Áreas',selA.size],['Slots/dia (total)',comma(wDist.slotsPerDay)],
-    ['Custo/dia',eu(wDist.cpd)],['CPM',eu(wDist.cpm)],
-  ].map(([l,v])=>`<div class="stat"><div class="stat-val" style="font-size:18px">${v}</div><div class="stat-lbl">${l}</div></div>`).join('');
-  document.getElementById('est-cpm').innerHTML=`<strong>CPM ${eu(wDist.cpm)}</strong> — custo por mil impressões · <strong>${comma(crOf(wDist.cpd))} cr/dia</strong>`;
-  document.getElementById('estalerts').innerHTML=(wDist.alerts||[]).map(a=>alH(a.t,a.msg)).join('');
-  // Review
-  document.getElementById('review-zone').style.display='';
-  rReview(budget,nd);
-}
-
-function showStep(n){
-  wStep=n;
-  [1,2].forEach(i=>document.getElementById('s'+i).style.display=i===n?'':'none');
-  document.getElementById('wl').textContent=`Passo ${n} de 2`;
-  document.getElementById('wp').style.width=`${n/2*100}%`;
-  document.getElementById('wb').textContent=n===1?'Cancelar':'← Anterior';
-  document.getElementById('wn').textContent=n===2?(editId?'✓ Actualizar campanha':'✓ Criar campanha'):'Próximo →';
-  document.getElementById('wp-prev').style.display=n===2?'':'none';
-  if(n===2){updBsug();updEst();}
-}
-function wBack(){
-  if(wStep===1){editId=null;nav('campaigns');return;}
-  showStep(1);
-}
-function wPrev(){showStep(1);}
-function wNext(){
-  if(wStep===1){
-    if(!document.getElementById('fn').value.trim()||!document.getElementById('fc').value.trim()){alert('Preenche o nome da campanha e do cliente.');return;}
-    if(!selA.size){alert('Seleciona pelo menos uma área.');return;}
-    const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-    if(!s||!e||e<s){alert('Seleciona um intervalo de datas válido.');return;}
-    if(!selP.size){alert('Seleciona pelo menos um período horário.');return;}
-    showStep(2);
-  }else{
-    const budget=parseFloat(document.getElementById('fb').value);
-    if(!budget||budget<=0){alert('Insere um orçamento válido.');return;}
-    const minpd=parseInt(document.getElementById('fmd').value)||1,s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-    wDist=calcCamp(budget,dR(s,e).length,[...selP],minpd,[...selA],s,e,bMap());
-    if(wDist.error){alert('Seleciona pelo menos uma área e um período.');return;}
-    saveCamp();
-  }
-}
-
-function rReview(budget,nd){
-  const AREAS=gA(),PERIODS=gP(),aIds=[...selA],s=document.getElementById('fs').value,e=document.getElementById('fe').value;
-  document.getElementById('ral').innerHTML=(wDist.alerts||[]).filter(a=>a.t!=='s').map(a=>alH(a.t,a.msg)).join('');
-  let html=`<table class="atbl"><thead><tr><th>Zona</th><th>Nome</th><th>Slots/dia</th><th>Custo/dia</th><th>Créditos/dia</th><th>Custo total</th></tr></thead><tbody>`;
-  for(const aId of aIds){const area=AREAS.find(a=>a.id===aId),data=wDist.areaData?.[aId],hasErr=data?.error;html+=`<tr${hasErr?' style="opacity:.4"':''}><td><span class="zbadge">${area?.code||''}</span></td><td style="font-size:12px">${area?.name||''}</td><td style="text-align:right;font-weight:700">${hasErr?'—':comma(data?.slotsPerDay||0)}</td><td style="text-align:right">${hasErr?'—':eu(data?.cpd||0)}</td><td style="text-align:right;color:var(--credit);font-weight:600">${hasErr?'—':comma(crOf(data?.cpd||0))}</td><td style="text-align:right;font-weight:700;color:var(--accent)">${hasErr?'—':eu(data?.totalCost||0)}</td></tr>`;}
-  html+=`<tr style="background:var(--accent-light);font-weight:800"><td colspan="2">Total</td><td style="text-align:right">${comma(wDist.slotsPerDay)}</td><td style="text-align:right">${eu(wDist.cpd)}</td><td style="text-align:right;color:var(--credit)">${comma(crOf(wDist.cpd))}</td><td style="text-align:right;color:var(--accent)">${eu(wDist.totalCost)}</td></tr>`;
-  html+=`</tbody></table>`;
-  // Period distribution bars
-  const aggHm={};for(const aId of aIds){const data=wDist.areaData?.[aId];if(!data||data.error)continue;for(const[h,spd]of Object.entries(data.hourMap))aggHm[+h]=(aggHm[+h]||0)+spd;}
-  const tcph=aIds.reduce((sum,aId)=>{const area=AREAS.find(a=>a.id===aId);return sum+eCap(area?.screens??0);},0);
-  const selPeriods=PERIODS.filter(p=>selP.has(p.id)),maxSl=Math.max(...selPeriods.map(p=>pH(p).reduce((s,{hour})=>s+(aggHm[hour]||0),0)),1);
-  html+=`<div class="sec-lbl"><i class="ti ti-clock"></i>Distribuição por período</div>`;
-  html+=selPeriods.map(p=>{
-    const hrs=pH(p),slots=hrs.reduce((s,{hour})=>s+(aggHm[hour]||0),0),cap=hrs.length*tcph;
-    let cost=0;for(const aId of aIds){const aM=ST.areaMults[aId]??1,data=wDist.areaData?.[aId];if(!data||data.error)continue;const aSlots=hrs.reduce((s,{hour})=>s+(data.hourMap?.[hour]||0),0);cost+=aSlots*ST.basePrice*p.mult*aM*nd;}
-    return`<div class="distrow">
-      <span style="width:9px;height:9px;border-radius:50%;background:${p.clr};flex-shrink:0;display:inline-block"></span>
-      <span style="width:84px;color:var(--text2);font-weight:600">${p.name}</span>
-      <div class="distbar"><div class="distfil" style="width:${(slots/maxSl*100).toFixed(1)}%;background:${p.clr}"></div></div>
-      <span style="width:96px;text-align:right;color:var(--text2)">${comma(slots)} (${cap>0?(slots/cap*100).toFixed(0):0}% cap)</span>
-      <span style="width:66px;text-align:right;font-weight:700;color:var(--accent)">${eu(cost)}</span>
-      <span style="width:70px;text-align:right;color:var(--credit);font-size:11px">${comma(crOf(cost))} cr</span>
-    </div>`;
-  }).join('');
-  document.getElementById('rdist').innerHTML=html;
-}
-
-function saveCamp(){
-  const s=document.getElementById('fs').value,e=document.getElementById('fe').value,nd=dR(s,e).length;
-  const newCamp={id:editId||Date.now().toString(),name:document.getElementById('fn').value.trim(),client:document.getElementById('fc').value.trim(),areaIds:[...selA],startDate:s,endDate:e,periodIds:[...selP],budget:parseFloat(document.getElementById('fb').value),totalCost:wDist.totalCost,slotsPerDay:wDist.slotsPerDay,totalSlots:wDist.totalSlots,cpd:wDist.cpd,cpm:wDist.cpm,areaData:wDist.areaData};
-  if(editId){const idx=camps.findIndex(c=>c.id===editId);if(idx>=0)camps[idx]=newCamp;else camps.push(newCamp);}
-  else camps.push(newCamp);
-  editId=null;saveC();nav('campaigns');
-}
-
-// ── Campaigns list ────────────────────────────────────────────────────────
-function rCamps(){
-  const t=tod(),AREAS=gA();
-  document.getElementById('csub').textContent=`${camps.length} campanha${camps.length!==1?'s':''} no total`;
-  const el=document.getElementById('clist');
-  if(!camps.length){el.innerHTML=`<div class="empty"><i class="ti ti-calendar-off"></i><h3>Ainda sem campanhas</h3><p>Cria a primeira campanha para começar.</p><button class="btn-primary" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Nova campanha</button></div>`;return;}
-  el.innerHTML=[...camps].reverse().map(c=>{
-    const st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Activa':st==='up'?'Em breve':'Terminada';
-    const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');
-    const cpmStr=c.cpm?eu(c.cpm):'—';
-    return`<div class="camp-row">
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700">${c.name} <span class="badge ${bc}">${sl}</span></div>
-        <div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div>
-      </div>
-      <div style="text-align:center;min-width:108px;flex-shrink:0">
-        <div style="font-weight:600;font-size:12px">${fmtD(c.startDate)}–${fmtD(c.endDate)}</div>
-        <div style="font-size:11px;color:var(--text3)">${dR(c.startDate,c.endDate).length} dias</div>
-      </div>
-      <div style="text-align:center;min-width:80px;flex-shrink:0">
-        <div style="font-weight:700;color:var(--credit)">${comma(crOf(c.totalCost))}</div>
-        <div style="font-size:11px;color:var(--text3)">créditos</div>
-      </div>
-      <div style="text-align:center;min-width:68px;flex-shrink:0">
-        <div style="font-weight:700;font-size:12px">CPM ${cpmStr}</div>
-        <div style="font-size:11px;color:var(--text3)">${comma(c.slotsPerDay)} sl/dia</div>
-      </div>
-      <div style="text-align:right;min-width:72px;flex-shrink:0">
-        <div style="font-weight:800;color:var(--accent)">${eu(c.totalCost)}</div>
-        <div style="font-size:11px;color:var(--text3)">total</div>
-      </div>
-      <div style="display:flex;gap:4px;flex-shrink:0">
-        <button class="btn-ghost btn-sm" data-edit="${c.id}" title="Editar"><i class="ti ti-pencil"></i></button>
-        <button class="btn-danger btn-sm" data-del="${c.id}" title="Apagar"><i class="ti ti-trash"></i></button>
-      </div>
-    </div>`;
-  }).join('');
-  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){if(!confirm('Apagar esta campanha?'))return;camps=camps.filter(c=>c.id!==this.dataset.del);saveC();rCamps();}));
-  el.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click',function(){const c=camps.find(x=>x.id===this.dataset.edit);if(c){initWiz(c);nav('new_campaign');};}));
-}
-
-// ── Mainboard ─────────────────────────────────────────────────────────────
-function updCapPrev(){const areas=gA(),caps=[...new Set(areas.map(a=>eCap(a.screens)))].sort((a,b)=>a-b);const el=document.getElementById('st-cap-prev');if(el)el.textContent=`${comma(Math.min(...caps))}–${comma(Math.max(...caps))} slots/hr`;}
-function updCrPreview(){
-  const cr2=parseFloat(document.getElementById('st-cr').value)||200;
-  const el=document.getElementById('cr-val-preview');if(el)el.textContent=`€${(1/cr2).toFixed(5)}`;
-}
-function initMB(){
-  const PERIODS=gP(),AREAS=gA();
-  document.getElementById('st-bp').value=ST.basePrice;
-  document.getElementById('st-res').value=ST.reservePct;
-  document.getElementById('st-cr').value=ST.creditRate;
-  updCrPreview();
-  document.getElementById('st-cr').addEventListener('input',updCrPreview);
-  const pm=document.getElementById('st-pm');
-  pm.innerHTML=PERIODS.map(p=>{
-    const crPerSlot=(ST.basePrice*p.mult/ST.creditRate*1000).toFixed(1);
-    return`<tr><td><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:7px;vertical-align:middle"></span>${p.name}</td><td style="color:var(--text2)">${p.lbl}</td><td><input type="number" step="0.01" min="0.01" max="20" value="${p.mult}" style="width:76px" data-pm="${p.id}"/> ×</td><td style="color:var(--text2);font-size:12px" id="ep-${p.id}">${eu5(ST.basePrice*p.mult)}/slot</td><td style="color:var(--credit);font-size:12px" id="cp-${p.id}">${crPerSlot} cr/slot (×1000)</td></tr>`;
-  }).join('');
-  pm.querySelectorAll('[data-pm]').forEach(inp=>inp.addEventListener('change',function(){ST.periodMults[this.dataset.pm]=parseFloat(this.value)||1;const el2=document.getElementById('ep-'+this.dataset.pm);if(el2)el2.textContent=eu5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
-  document.getElementById('st-bp').addEventListener('input',function(){const bp=parseFloat(this.value)||0.00508;PERIODS.forEach(p=>{const el2=document.getElementById('ep-'+p.id);if(el2)el2.textContent=eu5(bp*ST.periodMults[p.id])+'/slot';});updCapPrev();});
-  const sa=document.getElementById('st-areas');
-  sa.innerHTML=AREAS.map(a=>`<tr><td><span class="zbadge">${a.code}</span></td><td style="font-size:12px">${a.name}</td><td><input type="number" min="0" max="500" value="${a.screens}" style="width:70px" data-sc="${a.id}"/></td><td><input type="number" step="0.01" min="0" max="20" value="${a.areaMult}" style="width:70px" data-am="${a.id}"/> ×</td><td style="color:var(--text2);font-size:11px" id="ae-${a.id}">${eu5(ST.basePrice*a.areaMult)}/slot</td></tr>`).join('');
-  sa.querySelectorAll('[data-sc]').forEach(inp=>inp.addEventListener('change',function(){ST.screens[parseInt(this.dataset.sc)]=Math.max(0,parseInt(this.value)||0);updCapPrev();}));
-  sa.querySelectorAll('[data-am]').forEach(inp=>inp.addEventListener('change',function(){ST.areaMults[parseInt(this.dataset.am)]=parseFloat(this.value)||1;const el2=document.getElementById('ae-'+this.dataset.am);if(el2)el2.textContent=eu5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
-  document.getElementById('st-res').addEventListener('input',function(){ST.reservePct=Math.min(90,Math.max(0,parseFloat(this.value)||0));updCapPrev();});
-  document.querySelectorAll('.dm-opt').forEach(b=>{b.classList.toggle('on',b.dataset.dm===ST.distribution);b.addEventListener('click',function(){ST.distribution=this.dataset.dm;document.querySelectorAll('.dm-opt').forEach(x=>x.classList.toggle('on',x.dataset.dm===ST.distribution));});});
-  updCapPrev();checkMBWarn();
-}
-function stSave(){
-  ST.basePrice=parseFloat(document.getElementById('st-bp').value)||0.00508;
-  ST.reservePct=Math.min(90,Math.max(0,parseFloat(document.getElementById('st-res').value)||0));
-  ST.creditRate=Math.max(1,parseInt(document.getElementById('st-cr').value)||200);
-  document.querySelectorAll('[data-pm]').forEach(i=>{ST.periodMults[i.dataset.pm]=parseFloat(i.value)||1;});
-  document.querySelectorAll('[data-sc]').forEach(i=>{ST.screens[parseInt(i.dataset.sc)]=Math.max(0,parseInt(i.value)||0);});
-  document.querySelectorAll('[data-am]').forEach(i=>{ST.areaMults[parseInt(i.dataset.am)]=parseFloat(i.value)||1;});
-  saveST();checkMBWarn();
-  const el=document.getElementById('st-saved');el.textContent='✓ Guardado';el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2500);
-}
-
-function closeEdit(){document.getElementById('edit-modal').classList.remove('open');}
-
-// ── Boot ──────────────────────────────────────────────────────────────────
-loadAll().then(()=>{
-  document.getElementById('dash-date').value=tod();
-  rDash();
-  checkMBWarn();
-});
-</script>
-</body></html>
-<!-- PATCH: inject simulator nav + page + logic -->
-<script>
-// ── inject nav item ───────────────────────────────────────────────────────
-(function(){
-  const div=document.querySelector('.sbdiv:last-of-type');
-  if(!div)return;
-  const btn=document.createElement('button');
-  btn.className='nb';btn.dataset.v='sim';btn.onclick=()=>nav('sim');
-  btn.innerHTML='<i class="ti ti-rocket"></i>Simulador';
-  div.parentNode.insertBefore(btn,div);
-})();
-</script>
-
-<style>
-#pg-sim{display:none}
-#pg-sim.on{display:block}
-.sim-layout{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start}
-.sim-card{background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);padding:16px;box-shadow:var(--shadow)}
-.sim-section{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
-.sim-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.sim-stat{background:var(--surface2);border-radius:var(--r);padding:12px;border:1px solid var(--border)}
-.sim-stat-v{font-size:22px;font-weight:800;letter-spacing:-.02em}
-.sim-stat-l{font-size:11px;color:var(--text2);margin-top:3px;font-weight:500}
-.sim-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-.day-ok{color:var(--green)}
-.day-warn{color:var(--amber)}
-.day-bad{color:var(--red)}
-.dtbl{width:100%;border-collapse:collapse;font-size:12px}
-.dtbl th{padding:7px 10px;background:var(--surface2);border:1px solid var(--border);text-align:left;font-weight:700;color:var(--text2);font-size:11px;position:sticky;top:0;z-index:1}
-.dtbl td{padding:7px 10px;border:1px solid var(--border);vertical-align:middle}
-.dtbl tr:nth-child(even) td{background:var(--surface2)}
-.dtbl tr.day-warn-row td{background:#fffbeb}
-.dtbl tr.day-bad-row td{background:#fef2f2}
-.burn-svg{width:100%;overflow:hidden;border-radius:var(--r);border:1px solid var(--border)}
-.mota-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:3px;vertical-align:middle}
-
-@media print{
-  .sb,.sim-inputs-col,#sync-bar,button:not(.no-hide){display:none!important}
-  .sim-layout{grid-template-columns:1fr!important}
-  body{background:#fff}
-  .main{padding:0}
-  .burn-svg{page-break-inside:avoid}
-  .dtbl{font-size:10px}
-  #pg-sim{display:block!important}
-  .pg:not(#pg-sim){display:none!important}
-}
-</style>
-
-<!-- SIMULATOR PAGE -->
-<div id="pg-sim" class="pg" style="display:none">
+<!-- SIMULATOR -->
+<div id="pg-sim" class="pg">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-    <div class="page-title">🚀 Simulador de campanha</div>
-    <div style="display:flex;gap:8px" id="sim-export-btns" style="display:none">
-      <button onclick="simExportCSV()" style="font-size:12px"><i class="ti ti-download"></i> CSV</button>
-      <button onclick="window.print()" style="font-size:12px"><i class="ti ti-printer"></i> PDF / Imprimir</button>
+    <div class="ptit">Simulator</div>
+    <div id="sim-xbtns" style="display:none;gap:8px" class="no-print">
+      <button onclick="simExportCSV()" class="btn btn-sm"><i class="ti ti-download"></i> CSV</button>
+      <button onclick="window.print()" class="btn btn-sm"><i class="ti ti-printer"></i> PDF</button>
     </div>
   </div>
-  <div class="page-sub">Simula o consumo real de créditos dia a dia, tendo em conta motas disponíveis, campanhas activas e critérios do cliente.</div>
-
-  <div class="sim-layout">
-    <!-- INPUTS -->
-    <div class="sim-inputs-col">
-      <div class="sim-card">
-
-        <div class="sim-section">
-          <div class="card-title">Contrato do cliente</div>
-          <div class="fg"><label class="flbl">Créditos contratados</label><input type="number" id="sim-cr" step="1" min="1" placeholder="ex. 50000" oninput="simLive()"/><div class="fhint" id="sim-cr-eur"></div></div>
-          <div class="grid2">
-            <div class="fg" style="margin:0"><label class="flbl">Início</label><input type="date" id="sim-s" oninput="simLive()"/></div>
-            <div class="fg" style="margin:0"><label class="flbl">Fim</label><input type="date" id="sim-e" oninput="simLive()"/></div>
-          </div>
-          <div id="sim-dur" style="font-size:12px;color:var(--text2);margin-top:8px"></div>
+  <div class="psub">Day-by-day credit burn based on real moto availability, active campaigns and client criteria.</div>
+  <div class="sim-lay">
+    <div class="sim-inp">
+      <div class="sim-sec">
+        <div class="sim-sec-t">Contract</div>
+        <div class="fg"><label class="flbl">Total Credits</label><input type="number" id="sim-cr" step="1" min="1" placeholder="e.g. 50000" oninput="simLive()" style="width:100%"/><div class="fhint" id="sim-cr-eur"></div></div>
+        <div class="g2">
+          <div class="fg" style="margin:0"><label class="flbl">Start</label><input type="date" id="sim-s" oninput="simLive()" style="width:100%"/></div>
+          <div class="fg" style="margin:0"><label class="flbl">End</label><input type="date" id="sim-e" oninput="simLive()" style="width:100%"/></div>
         </div>
-
-        <div class="sim-section">
-          <div class="card-title">Áreas / Motas</div>
-          <div id="sim-asel" style="display:flex;flex-direction:column;gap:6px"></div>
-        </div>
-
-        <div class="sim-section">
-          <div class="card-title">Períodos horários</div>
-          <div id="sim-psel" style="display:flex;flex-direction:column;gap:5px"></div>
-        </div>
-
-        <div class="sim-section">
-          <div class="card-title">Critérios</div>
-          <div class="fg"><label class="flbl">Mínimo de slots/dia <span style="color:var(--text3);font-weight:400">(por área)</span></label><input type="number" id="sim-min" step="1" min="1" value="10" oninput="simLive()"/></div>
-          <div class="fg" style="margin-bottom:0">
-            <label class="flbl">Modo de distribuição</label>
-            <div style="display:flex;gap:6px;margin-top:4px">
-              <button class="sim-dm on" data-dm="even" onclick="simDM(this)" style="flex:1;padding:6px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--accent);background:var(--accent-light);font-weight:600">Igual/dia</button>
-              <button class="sim-dm" data-dm="weighted" onclick="simDM(this)" style="flex:1;padding:6px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);font-weight:500">Por pico</button>
-            </div>
+        <div id="sim-dur" style="font-size:12px;color:var(--tx3);margin-top:8px"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="sim-sec-t">Zones / Motos</div>
+        <div id="sim-asel"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="sim-sec-t">Time Periods</div>
+        <div id="sim-psel"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="sim-sec-t">Criteria</div>
+        <div class="fg"><label class="flbl">Min slots/day <span style="font-weight:400;color:var(--tx3)">(per zone)</span></label><input type="number" id="sim-min" step="1" min="1" value="10" style="width:100%"/></div>
+        <div class="fg" style="margin-bottom:16px">
+          <label class="flbl">Distribution</label>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <button class="sim-dm" data-dm="even" onclick="simPickDM(this)" style="flex:1;padding:8px;font-size:12px;border-radius:var(--r);border:1.5px solid var(--ac);background:var(--acl);font-weight:700;cursor:pointer;color:var(--ac)">Even / day</button>
+            <button class="sim-dm" data-dm="weighted" onclick="simPickDM(this)" style="flex:1;padding:8px;font-size:12px;border-radius:var(--r);border:1px solid var(--bd);background:var(--sf);font-weight:500;cursor:pointer;color:var(--tx2)">Peak-weighted</button>
           </div>
         </div>
-
-        <button class="btn-primary" style="width:100%;padding:10px" onclick="runSimulation()"><i class="ti ti-play"></i> Simular</button>
+        <button class="btn-p" style="width:100%;padding:12px;font-size:14px;border-radius:var(--r2)" onclick="runSim()"><i class="ti ti-play"></i>&nbsp; Run Simulation</button>
       </div>
     </div>
-
-    <!-- RESULTS -->
-    <div id="sim-results">
-      <div id="sim-empty" class="sim-card" style="text-align:center;padding:60px 24px;color:var(--text3)">
-        <i class="ti ti-rocket" style="font-size:48px;display:block;margin-bottom:14px;opacity:.3"></i>
-        <div style="font-weight:700;font-size:16px;color:var(--text2);margin-bottom:6px">Configura e simula</div>
-        <div style="font-size:13px;line-height:1.6">Preenche os parâmetros do cliente à esquerda e carrega em <strong>Simular</strong> para ver o consumo real dia a dia.</div>
+    <div>
+      <div id="sim-empty" class="card" style="text-align:center;padding:70px 24px">
+        <i class="ti ti-rocket" style="font-size:52px;display:block;margin-bottom:16px;opacity:.2;color:var(--ac)"></i>
+        <div style="font-family:var(--fd);font-weight:700;font-size:18px;color:var(--tx2);margin-bottom:8px">Configure and Simulate</div>
+        <div style="font-size:14px;color:var(--tx3);line-height:1.7">Fill in the contract parameters on the left<br>and press <strong>Run Simulation</strong>.</div>
       </div>
-      <div id="sim-output" style="display:none">
-        <!-- Summary -->
-        <div class="sim-grid4" id="sim-summary"></div>
-        <!-- Alerts -->
-        <div id="sim-alerts" style="margin-bottom:14px"></div>
-        <!-- Burndown chart -->
-        <div class="sim-card" style="margin-bottom:14px">
-          <div class="card-title" style="margin-bottom:12px">Burndown de créditos — dia a dia</div>
-          <svg id="sim-chart" class="burn-svg" height="180" viewBox="0 0 800 180" preserveAspectRatio="none"></svg>
-          <div id="sim-chart-leg" style="display:flex;gap:16px;margin-top:8px;font-size:11px;color:var(--text2)"></div>
+      <div id="sim-out" style="display:none">
+        <div id="sim-summary" class="g4" style="margin-bottom:16px"></div>
+        <div id="sim-alerts" style="margin-bottom:16px"></div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="ct">Credit Burndown &mdash; Day by Day</div>
+          <div style="overflow-x:auto"><svg id="sim-svg" height="190" style="width:100%;min-width:400px;border-radius:var(--r);border:1px solid var(--bd)"></svg></div>
+          <div id="sim-leg" style="display:flex;gap:16px;margin-top:10px;font-size:12px;color:var(--tx2);flex-wrap:wrap"></div>
         </div>
-        <!-- Area motas summary -->
-        <div class="sim-card" style="margin-bottom:14px" id="sim-motas-card">
-          <div class="card-title">Motas por área</div>
-          <div id="sim-motas"></div>
+        <div class="card" style="margin-bottom:16px">
+          <div class="ct">Motos by Zone</div>
+          <div id="sim-motas" style="display:flex;flex-wrap:wrap;gap:10px"></div>
         </div>
-        <!-- Day table -->
-        <div class="sim-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div class="card-title" style="margin:0">Calendário dia a dia</div>
-            <div style="display:flex;gap:6px">
-              <button class="btn-sm" onclick="simToggleAll()"><i class="ti ti-eye"></i> <span id="sim-toggle-lbl">Ver todos</span></button>
-              <button class="btn-sm" onclick="simExportCSV()"><i class="ti ti-download"></i> CSV</button>
-              <button class="btn-sm" onclick="window.print()"><i class="ti ti-printer"></i> PDF</button>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div class="ct" style="margin:0">Daily Calendar</div>
+            <div style="display:flex;gap:7px" class="no-print">
+              <button class="btn btn-sm" onclick="simToggle()"><i class="ti ti-eye"></i> <span id="sim-tgl-lbl">Show all</span></button>
+              <button class="btn btn-sm" onclick="simExportCSV()"><i class="ti ti-download"></i> CSV</button>
+              <button class="btn btn-sm" onclick="window.print()"><i class="ti ti-printer"></i> PDF</button>
             </div>
           </div>
-          <div style="overflow-x:auto;max-height:420px;overflow-y:auto">
-            <table class="dtbl" id="sim-table">
-              <thead>
-                <tr>
-                  <th>Data</th><th>Dia</th>
-                  <th>Motas activas</th>
-                  <th>Slots/dia</th>
-                  <th>Cap. usada</th>
-                  <th>Créditos</th>
-                  <th>Cr. restantes</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
+          <div style="overflow-x:auto;max-height:460px;overflow-y:auto">
+            <table class="dtbl">
+              <thead><tr>
+                <th>Date</th><th>Day</th><th>Motos</th>
+                <th style="text-align:right">Slots</th><th style="text-align:right">Cap. used</th>
+                <th style="text-align:right">Credits</th><th style="text-align:right">Remaining</th>
+                <th style="text-align:center">Status</th>
+              </tr></thead>
               <tbody id="sim-tbody"></tbody>
             </table>
           </div>
@@ -1170,285 +437,270 @@ loadAll().then(()=>{
   </div>
 </div>
 
-<script>
-// ── Simulator state ───────────────────────────────────────────────────────
-let simData=[], simAreas=new Set([1,2]), simPeriods=new Set(['morning','midday','lunch','afternoon','dinner']), simDist='even', simShowAll=false;
-
-function initSim(){
-  // Areas
-  const ac=document.getElementById('sim-asel');
-  ac.innerHTML=gA().map(a=>{
-    const offline=eCap(a.screens)===0;
-    const on=simAreas.has(a.id);
-    return`<label style="display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r);border:1.5px solid ${on&&!offline?'var(--accent)':'var(--border)'};background:${on&&!offline?'var(--accent-light)':'var(--surface2)'};cursor:${offline?'not-allowed':'pointer'};opacity:${offline?.4:1}">
-      <input type="checkbox" data-aid="${a.id}" ${on&&!offline?'checked':''} ${offline?'disabled':''} onchange="simToggleA(${a.id},this.checked)" style="width:auto;accent-color:var(--accent)"/>
-      <div style="flex:1;min-width:0">
-        <div style="font-weight:700;font-size:12px"><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</div>
-        <div style="font-size:10px;color:var(--text2)">${offline?'Offline':a.screens+' mota'+(a.screens!==1?'s':'')}</div>
+<!-- MAINBOARD -->
+<div id="pg-mainboard" class="pg">
+  <div class="ptit">Mainboard</div>
+  <div class="psub">Pricing, zones, screens, reserve buffer and distribution mode.</div>
+  <div id="mb-default-warn" class="al al-w" style="margin-bottom:16px;display:none"><i class="ti ti-alert-triangle"></i><span>You are using default values. Please confirm prices and screen counts before creating campaigns.</span></div>
+  <div class="card">
+    <div class="ct">Pricing &amp; Credits</div>
+    <div class="g2">
+      <div class="fg"><label class="flbl">Base price per 10-second slot (&#8364;)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-bp" step="0.000001" min="0.000001" style="width:150px"/><span style="font-size:13px;color:var(--tx3)">&#215; period mult &#215; zone mult</span></div></div>
+      <div class="fg"><label class="flbl">Credit rate (credits per &#8364;)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-cr" step="1" min="1" style="width:120px"/><span style="font-size:13px;color:var(--tx3)">1 cr = <span id="cr-prev"></span></span></div><div class="fhint">Default: 200 credits/&#8364;</div></div>
+    </div>
+    <label class="flbl">Period Multipliers</label>
+    <table class="stbl"><thead><tr><th>Period</th><th>Hours</th><th>Multiplier</th><th>Price/slot</th><th>Credits/slot</th></tr></thead><tbody id="st-pm"></tbody></table>
+  </div>
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div class="ct" style="margin:0">Zones &mdash; Screens &amp; Multipliers</div>
+      <button class="btn-p btn-sm" onclick="addZone()"><i class="ti ti-plus"></i> Add Zone</button>
+    </div>
+    <div style="font-size:12px;color:var(--tx3);margin-bottom:12px">Set screens to 0 to mark a zone as offline. Edit names, codes and multipliers inline.</div>
+    <div id="zone-rows"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Capacity &amp; Distribution</div>
+    <div class="fg"><label class="flbl">Reserve buffer &mdash; % of slots kept empty (non-bookable)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-res" min="0" max="90" step="1" style="width:90px"/><span style="font-size:13px;color:var(--tx3)">% reserved &#8594; effective capacity: <strong id="st-cap-prev"></strong></span></div></div>
+    <div class="fg" style="margin-bottom:0"><label class="flbl">Slot Distribution Mode</label>
+      <div class="dm-opts">
+        <button class="dm-opt" data-dm="weighted"><div style="font-weight:700;margin-bottom:4px">&#128200; Peak-weighted</div><div style="font-size:12px;color:var(--tx3)">More slots in higher-multiplier periods.</div></button>
+        <button class="dm-opt" data-dm="even"><div style="font-weight:700;margin-bottom:4px">&#8594; Even spread</div><div style="font-size:12px;color:var(--tx3)">Equal slots per hour across all periods.</div></button>
       </div>
-    </label>`;
-  }).join('');
-  // Periods
-  const pc=document.getElementById('sim-psel');
-  pc.innerHTML=gP().map(p=>{
-    const on=simPeriods.has(p.id);
-    return`<label style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:var(--r);border:1.5px solid ${on?'var(--accent)':'var(--border)'};background:${on?'var(--accent-light)':'var(--surface2)'};cursor:pointer">
-      <input type="checkbox" data-pid="${p.id}" ${on?'checked':''} onchange="simToggleP('${p.id}',this.checked)" style="width:auto;accent-color:var(--accent)"/>
-      <span style="width:8px;height:8px;border-radius:50%;background:${p.clr};display:inline-block;flex-shrink:0"></span>
-      <div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name}</div><div style="font-size:10px;color:var(--text2)">${p.lbl} · ${p.mult}×</div></div>
-    </label>`;
-  }).join('');
-  // Defaults
-  if(!document.getElementById('sim-s').value){
-    document.getElementById('sim-s').value=tod();
-    document.getElementById('sim-e').value=addD(tod(),29);
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
+    <button class="btn-p" onclick="stSave()" style="padding:10px 24px">Save Settings</button>
+    <span id="st-saved" style="font-size:13px;color:var(--gn);opacity:0;transition:opacity .5s;font-weight:600"></span>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+var SU='https://satifkbvyebkpvcscbrh.supabase.co';
+var SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhdGlma2J2eWVia3B2Y3NjYnJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NTc4OTMsImV4cCI6MjA5NTEzMzg5M30.TgIw-o5-sdP1QOpFJSvRcVOmjc76xKj8blf4rvDBT2A';
+var SHH={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
+var sTimer=null;
+function syncBar(m,t,a){var el=document.getElementById('sync-bar');el.textContent=m;el.className=t||'';el.style.display='block';if(sTimer)clearTimeout(sTimer);if(a!==false)sTimer=setTimeout(function(){el.style.display='none';},2200);}
+async function dbGet(k){try{var r=await fetch(SU+'/rest/v1/adslot_data?key=eq.'+k+'&select=value',{headers:SHH});var d=await r.json();return(d&&d[0])?JSON.parse(d[0].value):null;}catch(e){return null;}}
+async function dbSet(k,v){try{await fetch(SU+'/rest/v1/adslot_data',{method:'POST',headers:SHH,body:JSON.stringify({key:k,value:JSON.stringify(v),updated_at:new Date().toISOString()})});}catch(e){syncBar('Connection error','err',false);}}
+
+var SPH=360;
+var DZ=[
+  {id:1,code:'Z01',name:'City Centre / Baixa',screens:2,areaMult:1.50,clr:'#5856D6'},
+  {id:2,code:'Z02',name:'Bairro Alto / Chiado',screens:2,areaMult:1.40,clr:'#007AFF'},
+  {id:3,code:'Z03',name:'Parque Nações / Expo',screens:2,areaMult:1.35,clr:'#34C759'},
+  {id:4,code:'Z04',name:'Avenidas Novas',screens:2,areaMult:1.20,clr:'#FF9500'},
+  {id:5,code:'Z05',name:'Belém / Ajuda',screens:2,areaMult:1.15,clr:'#00C7BE'},
+  {id:6,code:'Z06',name:'Alfama / Mouraria',screens:2,areaMult:1.10,clr:'#FF6B35'},
+  {id:7,code:'Z07',name:'Amadora / Odivelas',screens:2,areaMult:0.90,clr:'#FF2D55'},
+  {id:8,code:'Z08',name:'Sintra / Cascais',screens:2,areaMult:0.85,clr:'#AF52DE'},
+];
+var DP=[
+  {id:'morning',name:'Morning',lbl:'07-10',start:7,end:10,clr:'#FF9500'},
+  {id:'midday',name:'Midday',lbl:'10-12',start:10,end:12,clr:'#34C759'},
+  {id:'lunch',name:'Lunch rush',lbl:'12-14',start:12,end:14,clr:'#FF6B35'},
+  {id:'afternoon',name:'Afternoon',lbl:'14-18',start:14,end:18,clr:'#007AFF'},
+  {id:'dinner',name:'Dinner peak',lbl:'18-22',start:18,end:22,clr:'#5856D6'},
+  {id:'latenight',name:'Late night',lbl:'22-02',start:22,end:26,clr:'#8E8E93'},
+];
+var ST={basePrice:0.00508,reservePct:0,distribution:'weighted',creditRate:200,zones:DZ.map(function(z){return Object.assign({},z);}),periodMults:{morning:1.10,midday:1.00,lunch:1.35,afternoon:1.15,dinner:1.50,latenight:0.80}};
+var camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']);
+var selA=new Set([1]),anyZone=false,wStep=1,wDist=null,editId=null;
+var simData=[],simAreas=new Set([1,2]),simPers=new Set(['morning','midday','lunch','afternoon','dinner']);
+var simDist='even',simAll=false,nextZId=100;
+var EU='\u20AC';
+function gP(){return DP.map(function(p){return Object.assign({},p,{mult:ST.periodMults[p.id]||1});});}
+function gA(){return ST.zones||DZ.map(function(z){return Object.assign({},z);});}
+function gAOn(){return gA().filter(function(a){return eCap(a.screens)>0;});}
+function eCap(sc){return sc===0?0:Math.max(0,Math.floor(sc*SPH*(1-ST.reservePct/100)));}
+function pH(p){var h=[];for(var i=p.start;i<p.end;i++)h.push({hour:i,mult:p.mult});return h;}
+function crOf(e2){return Math.round(e2*ST.creditRate);}
+function euroOf(c){return c/ST.creditRate;}
+function eu(n){return EU+(+n).toFixed(2);}
+function eu5(n){return EU+(+n).toFixed(5);}
+function pct(n){return Math.round(Math.max(0,n)*100)+'%';}
+function comma(n){return Math.round(n).toLocaleString();}
+function dR(s,e){var d=[],c=new Date(s),f=new Date(e);while(c<=f){d.push(c.toISOString().slice(0,10));c.setDate(c.getDate()+1);}return d;}
+function addD(d,n){var dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function fmtD(d){return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short'});}
+function fmtDy(d){return new Date(d).toLocaleDateString('en-GB',{weekday:'short'});}
+function tod(){return new Date().toISOString().slice(0,10);}
+function alH(t,msg){var ic={d:'ti-alert-circle',w:'ti-alert-triangle',s:'ti-circle-check',i:'ti-info-circle'};return'<div class="al al-'+t+'"><i class="ti '+(ic[t]||'ti-info-circle')+'"></i><span>'+msg+'</span></div>';}
+function campAreas(c){return c.anyZone?gAOn().map(function(a){return a.id;}):(c.areaIds||[c.areaId].filter(Boolean));}
+
+async function saveC(){syncBar('Saving\u2026','',false);await dbSet('asl_c6',camps);syncBar('Saved \u2713','ok');}
+async function saveST(){await dbSet('asl_st6',ST);}
+async function loadAll(){
+  syncBar('Loading\u2026','',false);
+  var rs=await Promise.all([dbGet('asl_st6'),dbGet('asl_c6')]);
+  var s=rs[0],c=rs[1];
+  if(s){ST.basePrice=s.basePrice||ST.basePrice;ST.reservePct=s.reservePct||0;ST.distribution=s.distribution||'weighted';ST.creditRate=s.creditRate||200;ST.periodMults=Object.assign({},ST.periodMults,s.periodMults||{});if(s.zones&&s.zones.length)ST.zones=s.zones;}
+  if(c)camps=c;
+  var mx=0;gA().forEach(function(z){if(z.id>mx)mx=z.id;});nextZId=mx+1;
+  syncBar('Ready \u2713','ok');
+}
+function bMap(skipId){
+  var m={};
+  function addH(aId,hm,dates){if(!m[aId])m[aId]={};for(var i=0;i<dates.length;i++){var d=dates[i];for(var hS in hm){var spd=hm[hS],h=+hS,ad=h>=24?addD(d,1):d,ah=h>=24?h-24:h;if(!m[aId][ad])m[aId][ad]={};m[aId][ad][ah]=(m[aId][ad][ah]||0)+spd;}}}
+  for(var ci=0;ci<camps.length;ci++){var c=camps[ci];if(c.id===skipId)continue;var dates=dR(c.startDate,c.endDate),aIds=campAreas(c);if(c.areaData){for(var k in c.areaData){if(c.areaData[k].hourMap)addH(+k,c.areaData[k].hourMap,dates);}}else if(c.areaId&&c.hourMap)addH(c.areaId,c.hourMap,dates);}
+  return m;
+}
+function pAv(bm,aId,date,period){
+  var zone=gA().find(function(a){return a.id===aId;}),hrs=pH(period),cap=eCap(zone?zone.screens:0),total=hrs.length*cap;
+  if(total===0)return{total:0,booked:0,avail:0,pct:0,offline:true};
+  var booked=0;for(var i=0;i<hrs.length;i++){var h=hrs[i],ad=h.hour>=24?addD(date,1):date,ah=h.hour>=24?h.hour-24:h.hour;booked+=bm&&bm[aId]&&bm[aId][ad]?bm[aId][ad][ah]||0:0;}
+  return{total:total,booked:booked,avail:Math.max(0,total-booked),pct:Math.max(0,(total-booked)/total)};
+}
+function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm){
+  var sel=gP().filter(function(p){return pids.includes(p.id);}),hrs=[];sel.forEach(function(p){hrs=hrs.concat(pH(p));});
+  if(!hrs.length)return{error:'no_periods'};
+  var zone=gA().find(function(a){return a.id===aId;}),aM=(zone?zone.areaMult:1)||1,cap=eCap(zone?zone.screens:0),dates=dR(s0,e0);
+  if(cap===0)return{error:'no_capacity'};
+  var maxH={};
+  for(var hi=0;hi<hrs.length;hi++){var h=hrs[hi],mn=cap;for(var di=0;di<dates.length;di++){var d=dates[di],ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;var bk=bm&&bm[aId]&&bm[aId][ad]?bm[aId][ad][ah]||0:0;mn=Math.min(mn,Math.max(0,cap-bk));}maxH[h.hour]=mn;}
+  var totAv=Object.values(maxH).reduce(function(a,b){return a+b;},0);if(!totAv)return{error:'no_capacity'};
+  var B=ST.basePrice,wOf=function(h2){return ST.distribution==='even'?1:h2.mult;};
+  var sumW=hrs.reduce(function(s,h2){return s+wOf(h2);},0),fracs=hrs.map(function(h2){return wOf(h2)/sumW;});
+  var wCF=hrs.reduce(function(s,h2,i){return s+fracs[i]*h2.mult;},0);
+  var uC=B*wCF*aM,unN=Math.round(budget/(nd*uC)),minCost=(minpd||1)*nd*uC;
+  var mxSl=fracs.map(function(f,i){return Math.min(Math.round(f*totAv),maxH[hrs[i].hour]);});
+  var maxCost=hrs.reduce(function(s,h2,i){return s+mxSl[i]*B*h2.mult*aM;},0)*nd;
+  var warns=[];
+  if(budget<minCost)warns.push({t:'d',msg:'Budget/zone '+eu(budget)+' is below minimum. Need at least '+eu(minCost)+'/zone.'});
+  if(unN>totAv)warns.push({t:'w',msg:'Budget exceeds capacity (max '+comma(totAv)+' slots/day). Effective: '+eu(maxCost)+'.'});
+  var N=Math.min(Math.max(unN,minpd||1),totAv);
+  var slots=fracs.map(function(f,i){return Math.min(Math.round(f*N),maxH[hrs[i].hour]);});
+  var diff=N-slots.reduce(function(a,b){return a+b;},0);
+  var ord=fracs.map(function(_,i){return i;}).sort(function(a,b){return fracs[b]-fracs[a];});
+  for(var ii=0;diff!==0&&ii<hrs.length*6;ii++){var ix=ord[ii%ord.length],nx=slots[ix]+Math.sign(diff);if(nx>=0&&nx<=maxH[hrs[ix].hour]){slots[ix]=nx;diff-=Math.sign(diff);}}
+  var hm={};for(var si=0;si<hrs.length;si++)hm[hrs[si].hour]=(hm[hrs[si].hour]||0)+slots[si];
+  var aN=slots.reduce(function(a,b){return a+b;},0),cpd=hrs.reduce(function(s,h2,i){return s+slots[i]*B*h2.mult*aM;},0);
+  return{slotsPerDay:aN,hourMap:hm,cpd:cpd,totalCost:cpd*nd,totAv:totAv,maxCost:maxCost,warns:warns};
+}
+function calcCamp(budget,nd,pids,minpd,areaIds,s0,e0,bm){
+  if(!areaIds.length)return{error:'no_areas'};
+  var areaData={},allWarns=[],pool=budget,open=areaIds.slice();
+  for(var iter=0;iter<=areaIds.length;iter++){
+    if(!open.length||pool<0.001)break;
+    var share=pool/open.length,tmp={};for(var i=0;i<open.length;i++)tmp[open[i]]=calcSingle(share,nd,pids,minpd,open[i],s0,e0,bm);
+    var capped=open.filter(function(aId){var r=tmp[aId];return r.error||(r.totalCost<share*0.99);});
+    if(!capped.length){for(var j=0;j<open.length;j++){areaData[open[j]]=tmp[open[j]];(tmp[open[j]].warns||[]).forEach(function(w){allWarns.push({t:w.t,msg:(gA().find(function(a){return a.id===open[j];})||{}).code+': '+w.msg});});}pool=0;open=[];break;}
+    for(var k=0;k<capped.length;k++){var aId=capped[k],r=tmp[aId],zone=gA().find(function(a){return a.id===aId;});if(r.error){allWarns.push({t:'w',msg:(zone||{}).code+': '+(r.error==='no_capacity'?'No capacity.':'No periods.')});areaData[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaData[aId]=r;(r.warns||[]).forEach(function(w){allWarns.push({t:w.t,msg:(zone||{}).code+': '+w.msg});});}pool-=r.error?0:(r.totalCost||0);}
+    open=open.filter(function(aId){return!capped.includes(aId);});
   }
-  simLive();
+  if(open.length&&pool>0.001){var sh2=pool/open.length;for(var m=0;m<open.length;m++){var r2=calcSingle(sh2,nd,pids,minpd,open[m],s0,e0,bm);areaData[open[m]]=r2.error?{slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r2.error}:r2;}}
+  var totalCost=0,totalSPD=0,totalCpd=0;
+  for(var aId2 in areaData){var d2=areaData[aId2];if(d2&&!d2.error){totalCost+=d2.totalCost;totalSPD+=d2.slotsPerDay;totalCpd+=d2.cpd;}}
+  var alerts=allWarns.filter(function(w){return w.t==='d';});
+  if(totalCost<budget*0.98&&!alerts.length)alerts.push({t:'w',msg:eu(budget-totalCost)+' unspendable \u2014 all selected zones are at full capacity.'});
+  if(!alerts.length)alerts.push({t:'s',msg:'Budget fully allocated \u2014 '+comma(totalSPD)+' slots/day across '+areaIds.length+' zone'+(areaIds.length>1?'s':'')+' for '+eu(totalCost)+'.'});
+  var cpm=totalSPD*nd>0?(totalCost/(totalSPD*nd))*1000:0;
+  return{areaData:areaData,totalCost:totalCost,totalSlots:totalSPD*nd,slotsPerDay:totalSPD,cpd:totalCpd,alerts:alerts,cpm:cpm};
 }
-
-function simToggleA(id,checked){simAreas[checked?'add':'delete'](id);updateSimCheckStyle('aid',id,checked);simLive();}
-function simToggleP(id,checked){simPeriods[checked?'add':'delete'](id);updateSimCheckStyle('pid',id,checked);simLive();}
-function updateSimCheckStyle(attr,id,on){
-  const lbl=document.querySelector(`[data-${attr}="${id}"]`)?.closest('label');
-  if(!lbl)return;
-  lbl.style.borderColor=on?'var(--accent)':'var(--border)';
-  lbl.style.background=on?'var(--accent-light)':'var(--surface2)';
+function nav(v){
+  document.querySelectorAll('.pg').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('pg-'+v).classList.add('on');
+  var nb=document.querySelector('[data-v="'+v+'"]');if(nb)nb.classList.add('on');
+  checkMBWarn();
+  var fns={dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:function(){initWiz(null);},sim:initSim,mainboard:initMB};
+  if(fns[v])fns[v]();
 }
-function simDM(btn){
-  simDist=btn.dataset.dm;
-  document.querySelectorAll('.sim-dm').forEach(b=>{b.style.borderColor=b===btn?'var(--accent)':'var(--border)';b.style.background=b===btn?'var(--accent-light)':'var(--surface2)';b.style.fontWeight=b===btn?'600':'500';b.classList.toggle('on',b===btn);});
-  simLive();
-}
-
-function simLive(){
-  const s=document.getElementById('sim-s').value,e=document.getElementById('sim-e').value;
-  if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('sim-dur').textContent=`${n} dia${n!==1?'s':''} de campanha`;}
-  const cr2=parseFloat(document.getElementById('sim-cr').value)||0;
-  if(cr2>0)document.getElementById('sim-cr-eur').textContent=`= ${eu(euroOf(cr2))} · ${eu(euroOf(cr2/Math.max(1,dR(s||tod(),e||tod()).length))}/dia ideal`;
-  else document.getElementById('sim-cr-eur').textContent='';
-}
-
-// ── Core simulation ───────────────────────────────────────────────────────
-function runSimulation(){
-  const totalCr=parseFloat(document.getElementById('sim-cr').value)||0;
-  const s=document.getElementById('sim-s').value,e=document.getElementById('sim-e').value;
-  const minSPD=parseInt(document.getElementById('sim-min').value)||1;
-  if(!totalCr||totalCr<=0){alert('Insere o total de créditos contratados.');return;}
-  if(!s||!e||e<s){alert('Seleciona um período válido.');return;}
-  if(!simAreas.size){alert('Seleciona pelo menos uma área.');return;}
-  if(!simPeriods.size){alert('Seleciona pelo menos um período.');return;}
-
-  const bm=bMap(), AREAS=gA(), PERIODS=gP();
-  const days=dR(s,e), totalDays=days.length;
-  const sel=PERIODS.filter(p=>simPeriods.has(p.id));
-  const hrs=sel.flatMap(pH);
-  const aIds=[...simAreas];
-
-  // Pre-compute cost-per-slot per area (weighted by period and distribution)
-  const wOf=h=>simDist==='even'?1:h.mult;
-  const sumW=hrs.reduce((ss,h)=>ss+wOf(h),0);
-  const fracs=hrs.map(h=>wOf(h)/sumW);
-  const wCF=hrs.reduce((ss,h,i)=>ss+fracs[i]*h.mult,0);
-  const cpsOf=aId=>ST.basePrice*wCF*(ST.areaMults[aId]??1); // cost per slot for area
-
-  let remainCr=totalCr;
-  simData=[];
-
-  for(let i=0;i<days.length;i++){
-    const d=days[i];
-    const daysLeft=totalDays-i;
-    const idealCrPerDay=remainCr/daysLeft;
-
-    const areaData={};
-    let totalAvail=0,totalSlots=0,totalCost=0;
-
-    for(const aId of aIds){
-      const area=AREAS[aId-1];
-      const cap=eCap(area.screens);
-      // Available slots this day for this area (accounting for other campaigns)
-      let avail=0;
-      for(const h of hrs){
-        const ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;
-        avail+=Math.max(0,cap-(bm?.[aId]?.[ad]?.[ah]||0));
-      }
-      const cps=cpsOf(aId);
-      // Ideal slots for this area: budget split equally across areas
-      const idealSlotsArea=cps>0?Math.round(euroOf(idealCrPerDay)/(cps*aIds.length)):0;
-      // Actual slots: respect min, cap at avail
-      const actualSlots=Math.min(avail,Math.max(minSPD,idealSlotsArea));
-      const areaCost=actualSlots*cps;
-      totalAvail+=avail;totalSlots+=actualSlots;totalCost+=areaCost;
-      areaData[aId]={slots:actualSlots,avail,cost:areaCost,screens:area.screens,cap,code:area.code,name:area.name,minMet:actualSlots>=minSPD};
-    }
-
-    const dayCr=crOf(totalCost);
-    const actualCr=Math.min(remainCr,dayCr);
-    const scale=dayCr>0?actualCr/dayCr:0;
-    remainCr=Math.max(0,remainCr-actualCr);
-
-    const minGlobal=minSPD*aIds.length;
-    const status=totalSlots>=minGlobal?'ok':totalSlots>0?'warn':'bad';
-
-    simData.push({date:d,idx:i,slots:Math.round(totalSlots*scale),avail:totalAvail,credits:actualCr,cost:totalCost*scale,remaining:remainCr,pctUsed:totalAvail>0?totalSlots/totalAvail:0,status,areaData,idealCrPerDay,daysLeft});
-  }
-
-  renderSim(totalCr,totalDays,minSPD);
-}
-
-function renderSim(totalCr,totalDays,minSPD){
-  document.getElementById('sim-empty').style.display='none';
-  document.getElementById('sim-output').style.display='';
-  document.getElementById('sim-export-btns').style.display='flex';
-
-  const avgCr=totalCr/totalDays;
-  const totalSlots=simData.reduce((s,d)=>s+d.slots,0);
-  const avgSlots=totalSlots/totalDays;
-  const daysBelow=simData.filter(d=>d.status!=='ok').length;
-  const lastDay=simData[simData.length-1];
-  const leftover=lastDay?lastDay.remaining:0;
-  const totalSpent=totalCr-leftover;
-
-  // Summary cards
-  document.getElementById('sim-summary').innerHTML=[
-    [totalDays+' dias','Duração contratada',''],
-    [comma(Math.round(avgCr))+' cr','Ideal/dia',''],
-    [comma(Math.round(avgSlots)),'Slots médios/dia',''],
-    [daysBelow===0?'✓ Todos cumprem':daysBelow+' dias','Dias abaixo do mínimo',daysBelow===0?'':'sim-stat-warn'],
-  ].map(([v,l,cls])=>`<div class="sim-stat ${cls||''}"><div class="sim-stat-v" style="${cls==='sim-stat-warn'?'color:var(--amber)':''}">${v}</div><div class="sim-stat-l">${l}</div></div>`).join('');
-
-  // Alerts
-  const als=[];
-  if(daysBelow>0)als.push(alH('w',`${daysBelow} dia${daysBelow>1?'s':''} com slots abaixo do mínimo de ${minSPD*[...simAreas].length} — outras campanhas estão a bloquear capacidade.`));
-  if(leftover>totalCr*0.05)als.push(alH('i',`${comma(Math.round(leftover))} créditos por gastar no fim da campanha (${eu(euroOf(leftover))}). Considera aumentar o mínimo de slots/dia.`));
-  if(leftover===0&&totalSpent<totalCr*0.99)als.push(alH('d',`Os créditos acabam antes do fim da campanha! Faltam ${comma(Math.round(totalCr-totalSpent))} créditos.`));
-  if(!als.length)als.push(alH('s',`Simulação equilibrada — os créditos distribuem-se uniformemente ao longo dos ${totalDays} dias.`));
-  document.getElementById('sim-alerts').innerHTML=als.join('');
-
-  // Burndown SVG chart
-  renderBurnSVG(totalCr);
-
-  // Motas card
-  const AREAS=gA();
-  document.getElementById('sim-motas').innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:10px">`+[...simAreas].map(aId=>{
-    const area=AREAS[aId-1];
-    const avgSl=simData.reduce((s,d)=>s+(d.areaData[aId]?.slots||0),0)/totalDays;
-    const avgAv=simData.reduce((s,d)=>s+(d.areaData[aId]?.avail||0),0)/totalDays;
-    return`<div style="background:var(--surface2);border-radius:var(--r);padding:10px 14px;border:1px solid var(--border);min-width:160px">
-      <div style="font-weight:800;font-size:13px"><span class="zbadge">${area.code}</span>${area.name.split('/')[0].trim()}</div>
-      <div style="margin-top:6px;display:flex;gap:6px;align-items:center">${Array.from({length:area.screens},(_,i)=>`<span class="mota-dot" style="background:${i<Math.round(avgSl/Math.max(1,area.screens))?area.clr:'#ddd'}"></span>`).join('')}</div>
-      <div style="font-size:11px;color:var(--text2);margin-top:4px">${area.screens} mota${area.screens!==1?'s':''} · <strong>${comma(Math.round(avgSl))}</strong> slots/dia média</div>
-      <div style="font-size:10px;color:var(--text3)">${avgAv>0?(avgSl/avgAv*100).toFixed(0):0}% capacidade usada</div>
-    </div>`;
-  }).join('')+`</div>`;
-
-  // Day table
-  renderSimTable(false);
-}
-
-function renderBurnSVG(totalCr){
-  const W=800,H=180,PL=40,PR=10,PT=16,PB=28;
-  const cw=W-PL-PR,ch=H-PT-PB;
-  const n=simData.length;
-  const step=Math.max(1,Math.floor(n/120)); // sample for performance
-  const pts=simData.filter((_,i)=>i%step===0||i===n-1);
-  const maxCr=totalCr;
-  const toX=i=>(PL+i/Math.max(1,pts.length-1)*cw).toFixed(1);
-  const toY=v=>(PT+ch-(v/maxCr)*ch).toFixed(1);
-
-  // Area fill
-  const area=pts.map((d,i)=>`${toX(i)},${toY(d.remaining)}`).join(' ');
-  const fillPath=`${PL},${PT+ch} `+pts.map((d,i)=>`${toX(i)},${toY(d.remaining)}`).join(' ')+` ${toX(pts.length-1)},${PT+ch}`;
-
-  // Credit ideal line
-  const idealPts=pts.map((d,i)=>`${toX(i)},${toY(Math.max(0,totalCr-totalCr*(d.idx/simData.length)))}`).join(' ');
-
-  // Colored bars
-  const barW=Math.max(1,(cw/n)-0.5);
-  const bars=simData.map((d,i)=>{
-    const x=PL+i/n*cw,h2=Math.max(1,(d.credits/totalCr)*ch);
-    const clr=d.status==='ok'?'#16a34a':d.status==='warn'?'#d97706':'#dc2626';
-    return`<rect x="${x.toFixed(1)}" y="${(PT+ch-h2).toFixed(1)}" width="${barW.toFixed(1)}" height="${h2.toFixed(1)}" fill="${clr}" opacity="0.6"/>`;
+function checkMBWarn(){var isD=(ST.basePrice===0.00508&&ST.creditRate===200);document.getElementById('mb-warn').style.display=isD?'':'none';document.getElementById('mb-default-warn').style.display=isD?'flex':'none';}
+function rDash(){
+  var inp=document.getElementById('dash-date');if(!inp.value)inp.value=tod();
+  var t=inp.value,AREAS=gA(),PERIODS=gP(),bm=bMap();
+  document.getElementById('dd-sub').textContent=new Date(t).toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  var active=camps.filter(function(c){return c.startDate<=t&&c.endDate>=t;}).length,tb=0,tt=0;
+  for(var i=0;i<AREAS.length;i++)for(var j=0;j<PERIODS.length;j++){var av=pAv(bm,AREAS[i].id,t,PERIODS[j]);tb+=av.booked;tt+=av.total;}
+  var totalCr=camps.filter(function(c){return c.startDate<=t&&c.endDate>=t;}).reduce(function(s,c){return s+crOf(c.totalCost);},0);
+  document.getElementById('ds').innerHTML=[[camps.length,'Total Campaigns',''],[active,'Active Today',''],[comma(tb),'Slots Booked',''],[comma(totalCr)+' cr','Active Credits','stat-pu']].map(function(x){return'<div class="stat '+x[2]+'"><div class="sv">'+x[0]+'</div><div class="sl">'+x[1]+'</div></div>';}).join('');
+  document.getElementById('da').innerHTML=AREAS.map(function(zone){
+    var av=0,tot=0;for(var pi=0;pi<PERIODS.length;pi++){var r=pAv(bm,zone.id,t,PERIODS[pi]);av+=r.avail;tot+=r.total;}
+    var offline=tot===0,pr=offline?0:av/tot,clr=offline?'#C7C7CC':pr>0.6?'#34C759':pr>0.3?'#FF9500':'#FF3B30';
+    var bars=PERIODS.map(function(p){var av2=pAv(bm,zone.id,t,p);var h2=av2.offline?3:Math.max(3,Math.round((1-av2.pct)*22));return'<div class="mbar" style="background:'+p.clr+';height:'+h2+'px;opacity:'+(av2.offline?.25:.8)+'"></div>';}).join('');
+    return'<div class="ac" onclick="nav(\'availability\')"><div style="font-size:10px;font-weight:700;color:var(--ac);margin-bottom:2px">'+zone.code+'</div><div style="font-size:11px;color:var(--tx3);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+zone.name.split('/')[0].trim()+'</div><div style="font-family:var(--fd);font-size:22px;font-weight:700;color:'+clr+'">'+( offline?'&mdash;':pct(pr))+'</div><div class="mbars">'+bars+'</div><div style="font-size:11px;color:var(--tx3)">'+( offline?'Offline':comma(av)+' free')+'</div></div>';
   }).join('');
-
-  // Y axis labels
-  const yLabels=[0,0.25,0.5,0.75,1].map(f=>{
-    const y=PT+ch-f*ch;
-    return`<text x="${PL-5}" y="${(y+4).toFixed(0)}" text-anchor="end" font-size="9" fill="#9898aa">${comma(Math.round(totalCr*f))}</text><line x1="${PL}" y1="${y.toFixed(0)}" x2="${(PL+cw).toFixed(0)}" y2="${y.toFixed(0)}" stroke="#e4e4e8" stroke-width="0.5"/>`;
-  }).join('');
-
-  // X axis labels (sample dates)
-  const xLabels=pts.filter((_,i)=>i%(Math.ceil(pts.length/6))===0).map((d,i,arr)=>{
-    const xi=pts.indexOf(d);
-    const x=PL+xi/Math.max(1,pts.length-1)*cw;
-    return`<text x="${x.toFixed(0)}" y="${(H-8).toFixed(0)}" text-anchor="middle" font-size="9" fill="#9898aa">${fmtD(d.date)}</text>`;
-  }).join('');
-
-  document.getElementById('sim-chart').innerHTML=`
-    <defs><linearGradient id="burnGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5b50e8" stop-opacity="0.2"/><stop offset="100%" stop-color="#5b50e8" stop-opacity="0.02"/></linearGradient></defs>
-    <rect x="0" y="0" width="${W}" height="${H}" fill="#fafafa" rx="8"/>
-    ${yLabels}${bars}
-    <polygon points="${fillPath}" fill="url(#burnGrad)"/>
-    <polyline points="${area}" fill="none" stroke="#5b50e8" stroke-width="2" stroke-linejoin="round"/>
-    <polyline points="${idealPts}" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
-    ${xLabels}
-    <text x="${PL}" y="${PT-4}" font-size="9" fill="#9898aa">Créditos restantes</text>
-  `;
-  document.getElementById('sim-chart-leg').innerHTML=`
-    <span><svg width="20" height="10"><rect x="0" y="2" width="16" height="6" fill="#16a34a" rx="2" opacity=".7"/></svg> Dia normal</span>
-    <span><svg width="20" height="10"><rect x="0" y="2" width="16" height="6" fill="#d97706" rx="2" opacity=".7"/></svg> Abaixo do mínimo</span>
-    <span><svg width="20" height="10"><rect x="0" y="2" width="16" height="6" fill="#dc2626" rx="2" opacity=".7"/></svg> Sem capacidade</span>
-    <span><svg width="24" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#5b50e8" stroke-width="2"/></svg> Créditos reais</span>
-    <span><svg width="24" height="10"><line x1="0" y1="5" x2="20" y2="5" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4,3" opacity=".6"/></svg> Ritmo ideal</span>
-  `;
+  var rec=camps.slice().sort(function(a,b){return b.startDate.localeCompare(a.startDate);}).slice(0,6);
+  var drCard=document.getElementById('dr-card');
+  if(!rec.length){drCard.innerHTML='<div class="ct">Recent Campaigns</div><div class="empty-st"><i class="ti ti-calendar-off"></i><h3>No campaigns yet</h3><p>Create your first campaign to start booking slots.</p><button class="btn-p" onclick="nav(\'new_campaign\')"><i class="ti ti-plus"></i> Create Campaign</button></div>';}
+  else{drCard.innerHTML='<div class="ct">Recent Campaigns</div>'+rec.map(function(c){var st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Active':st==='up'?'Upcoming':'Ended';var aIds=campAreas(c),aZ=aIds.slice(0,4).map(function(id){var a=AREAS.find(function(x){return x.id===id;});return'<span class="zbadge">'+(a?a.code:'?')+'</span>';}).join('');return'<div class="cr2"><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:15px">'+c.name+' <span class="badge '+bc+'">'+sl+'</span></div><div style="font-size:13px;color:var(--tx3);margin-top:2px">'+c.client+' &middot; '+aZ+(c.anyZone?'<span style="font-size:11px;color:var(--ac);margin-left:4px">Any zone</span>':'')+'</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;font-size:16px;color:var(--ac)">'+eu(c.totalCost)+'</div><div style="font-size:12px;color:var(--tx3)">'+comma(crOf(c.totalCost))+' cr</div></div></div>';}).join('');}
 }
-
-function renderSimTable(showAll){
-  const rows=showAll?simData:simData.slice(0,60);
-  document.getElementById('sim-tbody').innerHTML=rows.map(d=>{
-    const icon=d.status==='ok'?'<span style="color:var(--green)">✓</span>':d.status==='warn'?'<span style="color:var(--amber)">⚠</span>':'<span style="color:var(--red)">✗</span>';
-    const rowCls=d.status==='warn'?'day-warn-row':d.status==='bad'?'day-bad-row':'';
-    const weekday=new Date(d.date).toLocaleDateString('pt-PT',{weekday:'short'});
-    const totalMotas=[...simAreas].reduce((s,aId)=>s+(simData[0]?.areaData[aId]?.screens||0),0);
-    const pct2=(d.avail>0?(d.slots/d.avail*100):0).toFixed(0);
-    return`<tr class="${rowCls}">
-      <td style="font-weight:600;white-space:nowrap">${fmtD(d.date)}</td>
-      <td style="color:var(--text3)">${weekday}</td>
-      <td style="text-align:center">${totalMotas} <span style="font-size:10px;color:var(--text3)">motas</span></td>
-      <td style="text-align:right;font-weight:700">${comma(d.slots)}</td>
-      <td style="text-align:right"><span style="color:${+pct2>70?'var(--green)':+pct2>30?'var(--amber)':'var(--red)'}">${pct2}%</span></td>
-      <td style="text-align:right;font-weight:700;color:var(--credit)">${comma(Math.round(d.credits))}</td>
-      <td style="text-align:right">${comma(Math.round(d.remaining))}</td>
-      <td style="text-align:center">${icon}</td>
-    </tr>`;
-  }).join('');
-  if(!showAll&&simData.length>60){
-    document.getElementById('sim-tbody').innerHTML+=`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:12px;font-style:italic">Mostrando 60 de ${simData.length} dias. Clica em "Ver todos" para expandir.</td></tr>`;
-  }
+function rAvailInit(){
+  var sel=document.getElementById('av-a');sel.innerHTML='';
+  gA().forEach(function(a){sel.add(new Option(a.code+' '+a.name+' ('+a.screens+' screens)',a.id));});
+  if(!document.getElementById('av-s').value){document.getElementById('av-s').value=tod();document.getElementById('av-e').value=addD(tod(),6);}
+  document.getElementById('av-leg').innerHTML='<span>Availability:</span>'+[['> 70%','av-hi'],['30-70%','av-mi'],['< 30%','av-lo'],['Full','av-fx'],['Offline','av-off']].map(function(x){return'<span><span class="legd '+x[1]+'"></span>'+x[0]+'</span>';}).join('');
+  rAvail();
 }
-
-function simToggleAll(){
-  simShowAll=!simShowAll;
-  document.getElementById('sim-toggle-lbl').textContent=simShowAll?'Colapsar':'Ver todos';
-  renderSimTable(simShowAll);
-}
-
-function simExportCSV(){
-  if(!simData.length){alert('Corre primeiro a simulação.');return;}
-  const heads=['Data','Dia semana','Slots','Capacidade disponível','% usada','Créditos consumidos','Créditos restantes','Estado'];
-  const rows=simData.map(d=>{
-    const wd=new Date(d.date).toLocaleDateString('pt-PT',{weekday:'long'});
-    const pct2=d.avail>0?(d.slots/d.avail*100).toFixed(1):0;
-    const st=d.status==='ok'?'Normal':d.status==='warn'?'Abaixo do mínimo':'Sem capacidade';
-    return[d.date,wd,d.slots,d.avail,pct2,Math.round(d.credits),Math.round(d.remaining),st].join(',');
+function rAvail(){
+  var aId=+document.getElementById('av-a').value,s=document.getElementById('av-s').value,e=document.getElementById('av-e').value;
+  if(!s||!e||e<s)return;
+  var dates=dR(s,e).slice(0,14),bm=bMap(),PERIODS=gP();
+  var h='<table class="avt"><thead><tr><th style="text-align:left;min-width:120px;padding-left:12px">Period</th>';
+  dates.forEach(function(d){h+='<th style="min-width:66px">'+fmtD(d)+'<br><span style="font-size:10px;font-weight:400">'+fmtDy(d)+'</span></th>';});
+  h+='</tr></thead><tbody>';
+  PERIODS.forEach(function(per){
+    h+='<tr><td style="padding:9px 12px;background:var(--sf2)"><div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:'+per.clr+';flex-shrink:0;display:inline-block"></span><div><div style="font-weight:600;font-size:13px">'+per.name+'</div><div style="font-size:11px;color:var(--tx3)">'+per.lbl+' &middot; '+per.mult+'&times;</div></div></div></td>';
+    dates.forEach(function(d){var av=pAv(bm,aId,d,per),cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+='<td class="'+cls+'"><div style="font-size:13px;font-weight:700">'+(av.offline?'&mdash;':pct(av.pct))+'</div><div style="font-size:11px;opacity:.75">'+(av.offline?'offline':comma(av.avail)+'/'+comma(av.total))+'</div></td>';});
+    h+='</tr>';
   });
-  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(','),...rows].join('\n'));
-  const a=document.createElement('a');a.href=uri;a.download=`simulacao_${document.getElementById('sim-s').value}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+  h+='</tbody></table>';document.getElementById('av-grid').innerHTML=h;
 }
-
-// ── Patch nav function to init simulator ─────────────────────────────────
-const _origNav=nav;
-nav=function(v){
-  _origNav(v);
-  if(v==='sim')initSim();
-};
-</script>
+function rBoardInit(){
+  if(!document.getElementById('bd-s').value){document.getElementById('bd-s').value=tod();document.getElementById('bd-e').value=addD(tod(),13);}
+  var clients=[].concat([...new Set(camps.map(function(c){return c.client;}))]).sort();
+  var cs=document.getElementById('bd-cli'),pv=cs.value;cs.innerHTML='<option value="">All clients</option>'+clients.map(function(c){return'<option value="'+c+'">'+c+'</option>';}).join('');if(pv)cs.value=pv;
+  var as=document.getElementById('bd-area'),pa=as.value;as.innerHTML='<option value="">All zones</option>'+gA().map(function(a){return'<option value="'+a.id+'">'+a.code+' '+a.name+'</option>';}).join('');if(pa)as.value=pa;
+  rBoard();
+}
+function rBoard(){
+  var s=document.getElementById('bd-s').value,e=document.getElementById('bd-e').value,fCli=document.getElementById('bd-cli').value,fArea=+document.getElementById('bd-area').value;
+  if(!s||!e||e<s)return;
+  var AREAS=gA(),PERIODS=gP(),html='';
+  dR(s,e).slice(0,31).forEach(function(d){
+    var act=camps.filter(function(c){return c.startDate<=d&&c.endDate>=d;});
+    if(fCli)act=act.filter(function(c){return c.client===fCli;});
+    if(fArea)act=act.filter(function(c){return campAreas(c).includes(fArea);});
+    html+='<div style="margin-bottom:16px"><div class="bd-dh">'+new Date(d).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+'</div>';
+    if(!act.length)html+='<div style="color:var(--tx3);font-size:13px;padding:4px 0 10px;font-style:italic">No campaigns'+(fCli||fArea?' matching filters':'')+'</div>';
+    else act.forEach(function(c){var pers=PERIODS.filter(function(p){return c.periodIds.includes(p.id);}),cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));var aIds=campAreas(c),aZ=aIds.slice(0,5).map(function(id){var a=AREAS.find(function(x){return x.id===id;});return a?'<span class="zbadge">'+a.code+'</span><span style="font-size:12px;color:var(--tx3);margin-right:8px">'+a.name.split('/')[0].trim()+'</span>':'';}).join('');html+='<div style="background:var(--sf);border-radius:var(--r2);padding:14px 16px;margin-bottom:8px;border:1px solid var(--bd);box-shadow:var(--sh)"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><span style="font-weight:700;font-size:15px">'+c.name+'</span><span style="color:var(--tx3);font-size:13px;margin-left:10px">'+c.client+'</span></div><div style="font-size:12px;color:var(--tx3)">'+eu(cpd)+'/day &middot; '+comma(crOf(cpd))+' cr/day</div></div><div style="margin-bottom:6px;font-size:13px">'+aZ+(c.anyZone?'<span style="font-size:11px;color:var(--ac);margin-left:4px">Any zone</span>':'')+'</div><div style="margin-bottom:5px">'+pers.map(function(p){return'<span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:'+p.clr+';display:inline-block;margin-right:3px"></span>'+p.name+'</span>';}).join('')+'</div><div style="font-size:13px;color:var(--tx3)">'+comma(c.slotsPerDay)+' slots/day &middot; ends '+fmtD(c.endDate)+'</div></div>';});
+    html+='</div>';
+  });
+  document.getElementById('bd-list').innerHTML=html;
+}
+function rKPIInit(){var s=document.getElementById('kpi-s'),e=document.getElementById('kpi-e');if(!s.value){var first=camps.length?camps.reduce(function(a,b){return a.startDate<b.startDate?a:b;}).startDate:addD(tod(),-30);s.value=first;e.value=tod();}rKPI();}
+function rKPI(){
+  var s=document.getElementById('kpi-s').value||addD(tod(),-30),e=document.getElementById('kpi-e').value||tod();
+  var t=tod(),AREAS=gA(),PERIODS=gP(),bm=bMap();
+  document.getElementById('kpi-sub').textContent=fmtD(s)+' \u2013 '+fmtD(e);
+  var inR=camps.filter(function(c){return c.startDate<=e&&c.endDate>=s;});
+  var totalRev=inR.reduce(function(a,c){return a+(c.totalCost||0);},0),totalSlots=inR.reduce(function(a,c){return a+(c.totalSlots||0);},0),avgRev=inR.length?totalRev/inR.length:0;
+  document.getElementById('kpi-cards').innerHTML=[[eu(totalRev),'Total Revenue',''],[comma(crOf(totalRev))+' cr','Credits Sold','stat-pu'],[comma(totalSlots),'Slots Sold',''],[eu(avgRev),'Avg / Campaign','']].map(function(x){return'<div class="stat '+x[2]+'"><div class="sv">'+x[0]+'</div><div class="sl">'+x[1]+'</div></div>';}).join('');
+  var revByArea={},revByPer={};
+  inR.forEach(function(c){var aIds=campAreas(c),nd=dR(c.startDate,c.endDate).length;aIds.forEach(function(aId){var aM=(gA().find(function(a){return a.id===aId;})||{areaMult:1}).areaMult,hm=(c.areaData&&c.areaData[aId]?c.areaData[aId].hourMap:null)||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+((c.areaData&&c.areaData[aId]?c.areaData[aId].totalCost:0)||c.totalCost/aIds.length||0);c.periodIds.forEach(function(pid){var p=PERIODS.find(function(x){return x.id===pid;});if(!p)return;var sl=pH(p).reduce(function(a,h){return a+(hm[h.hour]||0);},0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;});});});
+  var mxA=Math.max.apply(null,Object.values(revByArea).concat([1])),mxP=Math.max.apply(null,Object.values(revByPer).concat([1]));
+  document.getElementById('kpi-area').innerHTML=AREAS.map(function(a){var rv=revByArea[a.id]||0,p2=totalRev?rv/totalRev*100:0;return'<div class="kbw"><div class="kbt"><span><span class="zbadge">'+a.code+'</span>'+a.name.split('/')[0].trim()+'</span><span>'+eu(rv)+' ('+p2.toFixed(0)+'%)</span></div><div class="kb"><div class="kbf" style="width:'+(rv/mxA*100).toFixed(1)+'%;background:'+a.clr+'"></div></div></div>';}).join('');
+  document.getElementById('kpi-period').innerHTML=PERIODS.map(function(p){var rv=revByPer[p.id]||0,p2=totalRev?rv/totalRev*100:0;return'<div class="kbw"><div class="kbt"><span><span style="width:8px;height:8px;border-radius:50%;background:'+p.clr+';display:inline-block;margin-right:5px;vertical-align:middle"></span>'+p.name+'</span><span>'+eu(rv)+' ('+p2.toFixed(0)+'%)</span></div><div class="kb"><div class="kbf" style="width:'+(rv/mxP*100).toFixed(1)+'%;background:'+p.clr+'"></div></div></div>';}).join('');
+  var active=camps.filter(function(c){return c.startDate<=t&&c.endDate>=t;}).length,upcoming=camps.filter(function(c){return c.startDate>t;}).length,ended=camps.filter(function(c){return c.endDate<t;}).length;
+  document.getElementById('kpi-pipe').innerHTML=[['Active','var(--gn)','var(--gnb)',active],['Upcoming','var(--am)','var(--amb)',upcoming],['Ended','var(--tx3)','var(--sf2)',ended]].map(function(x){return'<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd)"><span style="color:'+x[0]+';font-weight:700;font-size:15px">'+x[2]+'</span><span style="background:'+x[1]+';color:'+x[0]+';padding:4px 16px;border-radius:99px;font-weight:800">'+x[3]+'</span></div>';}).join('')+'<div style="margin-top:10px;font-size:12px;color:var(--tx3)">'+camps.length+' campaigns total</div>';
+  var tu=0,tt2=0;AREAS.forEach(function(a){PERIODS.forEach(function(p){var av=pAv(bm,a.id,t,p);tu+=av.booked;tt2+=av.total;});});
+  var util=tt2?tu/tt2:0;
+  document.getElementById('kpi-util').innerHTML='<div style="text-align:center;padding:16px 0"><div style="font-family:var(--fd);font-size:48px;font-weight:700;letter-spacing:-.04em;color:'+(util>0.7?'var(--rd)':util>0.3?'var(--am)':'var(--gn)')+'">'+pct(util)+'</div><div style="font-size:13px;color:var(--tx3);margin:6px 0">slots booked today</div><div style="font-size:12px;color:var(--tx4)">'+comma(tu)+' / '+comma(tt2)+'</div></div><div class="kb" style="margin-top:12px"><div class="kbf" style="width:'+(util*100).toFixed(1)+'%;background:'+(util>0.7?'var(--rd)':util>0.3?'var(--am)':'var(--gn)')+'"></div></div>';
+}
+function exportCSV(){
+  if(!camps.length){alert('No campaigns to export.');return;}
+  var AREAS=gA(),heads=['ID','Campaign','Client','Zones','Any Zone','Start','End','Days','Periods','Budget','Cost','Credits','CPM','Slots/day','Total slots'];
+  var rows=camps.map(function(c){var aIds=campAreas(c),aN=aIds.map(function(id){var a=AREAS.find(function(a2){return a2.id===id;});return a?a.code:'?';}).join(';');var nd=dR(c.startDate,c.endDate).length,cpm=c.cpm||(c.totalSlots>0?(c.totalCost/c.totalSlots)*1000:0);return[c.id,'"'+c.name+'"','"'+c.client+'"','"'+aN+'"',c.anyZone?'Yes':'No',c.startDate,c.endDate,nd,'"'+c.periodIds.join(';')+'"',(c.budget||0).toFixed(2),c.totalCost.toFixed(4),crOf(c.totalCost),cpm.toFixed(4),c.slotsPerDay,c.totalSlots].join(',');});
+  var uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(',')].concat(rows).join('\n'));
+  var a=document.createElement('a');a.href=uri;a.download='adslot_'+tod()+'.csv';document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+function initWiz(cToEdit){
+  editId=cToEdit?cToEdit.id:null;wStep=1;wDist=null;
+  if(cToEdit){document.getElementById('wiz-title').textContent='Edit Campaign';selP=new Set(cToEdit.periodIds);selA=new Set(campAreas(cToEdit));anyZone=!!cToEdit.anyZone;document.getElementById('fn').value=cToEdit.name;document.getElementById('fc').value=cToEdit.client;document.getElementById('fs').value=cToEdit.startDate;document.getElementById('fe').value=cToEdit.endDate;document.getElementById('fb').value=cToEdit.budget||0;document.getElementById('fmd').value=10;}
+  else{document.getElementById('wiz-title').textContent='New Campaign';selP=new Set(['morning','midday','lunch','afternoon','dinner']);selA=new Set([1]);anyZone=false;['fn','fc','fb'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('fmd').value='10';document.getElementById('fs').value=tod();document.getElementById('fe').value=addD(tod(),6);}
+  document.getElementById('any-zone').checked=anyZone;
+  document.getElementById('estzone').style.display='none';document.getElementById('estzone-empty').style.display='
