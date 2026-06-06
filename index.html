@@ -48,19 +48,19 @@ button:hover{background:var(--surface2)}
 .ptitle{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
 .psub{font-size:13px;color:var(--text2);margin-bottom:20px}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:stretch}
 .fg{margin-bottom:12px}
 .flbl{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px}
 .fhint{font-size:11px;color:var(--text3);margin-top:3px}
 .row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
 
-.stat{background:var(--surface2);border-radius:var(--r);padding:14px;border:1px solid var(--border)}
-.stat-v{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
-.stat-l{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500}
+.stat{background:var(--surface2);border-radius:var(--r);padding:14px 16px;border:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end}
+.stat-v{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.stat-l{font-size:11px;color:var(--text2);margin-top:5px;font-weight:500}
 .stat-cr{background:var(--cred-bg);border-color:#c4b5fd}.stat-cr .stat-v{color:var(--cred)}
 
-.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.ac{background:var(--surface2);border-radius:var(--r);padding:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch}
+.ac{background:var(--surface2);border-radius:var(--r);padding:14px;border:1px solid var(--border);cursor:pointer;transition:all .15s;display:flex;flex-direction:column}
 .ac:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .mini-bars{display:flex;gap:2px;align-items:flex-end;height:22px;margin:5px 0}
 .mini-bar{flex:1;border-radius:2px;min-height:3px}
@@ -94,7 +94,7 @@ button:hover{background:var(--surface2)}
 .dbar{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
 .dfil{height:100%;border-radius:4px}
 
-.cr2{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cr2{display:flex;align-items:center;gap:10px;padding:14px 0;border-bottom:1px solid var(--border)}
 .cr2:last-child{border-bottom:none}
 .camp-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px;margin-bottom:12px;box-shadow:var(--sh);transition:box-shadow .15s}
 .camp-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
@@ -110,8 +110,8 @@ button:hover{background:var(--surface2)}
 .zbadge{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--accent-l);color:var(--accent);font-weight:700;margin-right:3px}
 .chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);margin:2px 2px 2px 0}
 
-.bd-dh{font-size:11px;font-weight:700;color:var(--text3);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-.bd-c{background:var(--surface);border-radius:var(--r);padding:12px 14px;margin-bottom:7px;border:1px solid var(--border)}
+.bd-dh{font-size:11px;font-weight:800;color:var(--text3);padding:8px 0 6px;border-bottom:2px solid var(--border);margin-bottom:10px;text-transform:uppercase;letter-spacing:.07em}
+.bd-c{background:var(--surface);border-radius:var(--r2);padding:16px 18px;margin-bottom:10px;border:1px solid var(--border);box-shadow:var(--sh)}
 
 .kbw{margin-bottom:9px}.kbt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text2)}
 .kb{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}.kbf{height:100%;border-radius:4px;transition:width .5s}
@@ -806,7 +806,28 @@ function rBoard(){
     if(fCli)act=act.filter(c=>c.client===fCli);if(fArea)act=act.filter(c=>campAreas(c).includes(fArea));
     html+=`<div style="margin-bottom:14px"><div class="bd-dh">${new Date(d).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})}</div>`;
     if(!act.length)html+=`<div style="color:var(--text3);font-size:12px;padding:4px 0 10px;font-style:italic">No campaigns${fCli||fArea?' for this filter':''}</div>`;
-    else for(const c of act){const pers=PERIODS.filter(p=>c.periodIds.includes(p.id)),cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span><span style="font-size:11px;color:var(--text2);margin-right:6px">${a?.name||''}</span>`;}).join('');html+=`<div class="bd-c"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><div><span style="font-weight:700">${c.name}</span><span style="color:var(--text2);font-size:12px;margin-left:9px">${c.client}</span></div><div style="text-align:right;font-size:11px;color:var(--text3)">${eu(cpd)}/day</div></div><div style="margin-bottom:5px;font-size:12px">${aZ}</div><div style="margin-bottom:4px">${pers.map(p=>`<span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:3px"></span>${p.name}</span>`).join('')}</div><div style="font-size:12px;color:var(--text2)">${comma(c.slotsPerDay)} slots/day · ends ${fmtD(c.endDate)}</div></div>`;}
+    else for(const c of act){
+      const pers=PERIODS.filter(p=>c.periodIds.includes(p.id));
+      const cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));
+      const aIds=campAreas(c);
+      const aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join(' ');
+      const perChips=pers.map(p=>`<span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:${p.clr};display:inline-block;flex-shrink:0"></span>${p.name}</span>`).join('');
+      html+=`<div class="bd-c">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-weight:800;font-size:15px">${c.name}</span>
+            <span style="font-size:12px;color:var(--text2)">${c.client}</span>
+          </div>
+          <span style="font-size:12px;font-weight:700;color:var(--accent);white-space:nowrap;padding-left:12px">${eu(cpd)}/day</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px">${aZ}</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">${perChips}</div>
+        <div style="font-size:11px;color:var(--text3);display:flex;gap:14px">
+          <span><strong style="color:var(--text2)">${comma(c.slotsPerDay)}</strong> slots/day</span>
+          <span>ends <strong style="color:var(--text2)">${fmtD(c.endDate)}</strong></span>
+        </div>
+      </div>`;
+    }
     html+=`</div>`;
   }
   document.getElementById('bd-list').innerHTML=html;
