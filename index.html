@@ -1,0 +1,1226 @@
+<!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"/>
+<title>AdSlot Manager — OOH · Lisbon</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
+<style>
+:root{
+  --bg:#f0f0f4;--surface:#fff;--surface2:#f7f7f9;--border:#e4e4e8;--border2:#d0d0d6;
+  --text:#0f0f12;--text2:#5a5a6e;--text3:#9898aa;
+  --accent:#5b50e8;--accent-l:#eeedfb;--accent-m:#7b72ee;
+  --green:#16a34a;--green-bg:#dcfce7;--green-t:#14532d;
+  --amber:#d97706;--amber-bg:#fef3c7;--amber-t:#78350f;
+  --red:#dc2626;--red-bg:#fee2e2;--red-t:#7f1d1d;
+  --blue:#2563eb;--blue-bg:#dbeafe;--blue-t:#1e3a8a;
+  --cred:#7c3aed;--cred-bg:#ede9fe;--cred-t:#4c1d95;
+  --r:8px;--r2:12px;--sh:0 1px 3px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;background:var(--bg);color:var(--text);min-height:100vh}
+input,select,button,textarea{font-family:inherit;font-size:13px}
+input[type=text],input[type=number],input[type=date],select{padding:7px 10px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);color:var(--text);width:100%;transition:border-color .15s}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+input[type=number]{width:auto}
+button{padding:7px 16px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--surface);cursor:pointer;color:var(--text);font-weight:500;transition:all .15s}
+button:hover{background:var(--surface2)}
+.btn-p{background:var(--accent);color:#fff;border-color:var(--accent)}.btn-p:hover{background:var(--accent-m);border-color:var(--accent-m)}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-g{border-color:transparent;background:transparent}.btn-g:hover{background:var(--surface2);border-color:var(--border)}
+.btn-d{color:var(--red);border-color:transparent;background:transparent}.btn-d:hover{background:var(--red-bg)}
+
+.app{display:flex;min-height:100vh}
+.sb{width:196px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sbh{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
+.sb-logo{font-size:16px;font-weight:800;color:var(--accent);letter-spacing:-.02em}
+.sb-sub{font-size:11px;color:var(--text3);margin-top:1px}
+.sb-nav{flex:1;padding:8px 0;overflow-y:auto}
+.nb{display:flex;align-items:center;gap:9px;padding:9px 16px;background:transparent;border:none;border-radius:0;color:var(--text2);font-size:13px;width:100%;text-align:left;cursor:pointer;position:relative;font-weight:500;transition:all .12s}
+.nb:hover{background:var(--surface2);color:var(--text)}
+.nb.on{background:var(--accent-l);color:var(--accent);font-weight:600}
+.nb.on::before{content:'';position:absolute;left:0;top:4px;bottom:4px;width:3px;background:var(--accent);border-radius:0 3px 3px 0}
+.nb i{font-size:17px;flex-shrink:0}
+.nb .nbb{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:99px;font-weight:700}
+.sbdiv{height:1px;background:var(--border);margin:6px 14px}
+.mc{flex:1;padding:28px 32px;overflow-y:auto;max-width:1080px}
+.pg{display:none}.pg.on{display:block}
+
+.card{background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
+.ctitle{font-weight:700;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.ptitle{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:3px}
+.psub{font-size:13px;color:var(--text2);margin-bottom:20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.fg{margin-bottom:12px}
+.flbl{font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:5px}
+.fhint{font-size:11px;color:var(--text3);margin-top:3px}
+.row{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+
+.stat{background:var(--surface2);border-radius:var(--r);padding:14px;border:1px solid var(--border)}
+.stat-v{font-size:26px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.stat-l{font-size:11px;color:var(--text2);margin-top:4px;font-weight:500}
+.stat-cr{background:var(--cred-bg);border-color:#c4b5fd}.stat-cr .stat-v{color:var(--cred)}
+
+.ag{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ac{background:var(--surface2);border-radius:var(--r);padding:12px;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.ac:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.mini-bars{display:flex;gap:2px;align-items:flex-end;height:22px;margin:5px 0}
+.mini-bar{flex:1;border-radius:2px;min-height:3px}
+
+.tgl{padding:9px 11px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;color:var(--text);font-family:inherit;width:100%;transition:all .15s}
+.tgl:hover:not(.tgl-off){border-color:var(--border2)}
+.tgl.on{border-color:var(--accent);background:var(--accent-l)}
+.tgl.tgl-off{opacity:.4;cursor:not-allowed}
+.tgl-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+.al{padding:10px 13px;border-radius:var(--r);font-size:12px;margin-top:7px;display:flex;gap:9px;align-items:flex-start;line-height:1.55}
+.al i{font-size:15px;flex-shrink:0;margin-top:1px}
+.al-d{background:var(--red-bg);color:var(--red-t)}
+.al-w{background:var(--amber-bg);color:var(--amber-t)}
+.al-s{background:var(--green-bg);color:var(--green-t)}
+.al-i{background:var(--blue-bg);color:var(--blue-t)}
+
+.prog{height:4px;background:var(--border);border-radius:3px;margin-bottom:22px;overflow:hidden}
+.progf{height:100%;background:var(--accent);border-radius:3px;transition:width .35s}
+.step-h{font-weight:700;font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.step-n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.swrp{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+
+.avt{width:100%;border-collapse:collapse;font-size:12px}
+.avt th,.avt td{border:1px solid var(--border);padding:5px 4px;text-align:center;vertical-align:middle}
+.avt th{background:var(--surface2);font-weight:600;color:var(--text2);font-size:11px}
+.av-hi{background:#dcfce7;color:#14532d}.av-mi{background:#fef9c3;color:#713f12}
+.av-lo{background:#fee2e2;color:#7f1d1d}.av-fx{background:#f3f4f6;color:#9ca3af}.av-off{background:#f3f4f6;color:#d1d5db}
+
+.dr{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px}
+.dbar{flex:1;height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.dfil{height:100%;border-radius:4px}
+
+.cr2{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.cr2:last-child{border-bottom:none}
+.badge{font-size:10px;padding:2px 8px;border-radius:99px;font-weight:700}
+.b-ok{background:var(--green-bg);color:var(--green-t)}.b-up{background:var(--amber-bg);color:var(--amber-t)}.b-end{background:var(--surface2);color:var(--text3)}
+.zbadge{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--accent-l);color:var(--accent);font-weight:700;margin-right:3px}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 8px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);margin:2px 2px 2px 0}
+
+.bd-dh{font-size:11px;font-weight:700;color:var(--text3);padding:5px 0;border-bottom:1px solid var(--border);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
+.bd-c{background:var(--surface);border-radius:var(--r);padding:12px 14px;margin-bottom:7px;border:1px solid var(--border)}
+
+.kbw{margin-bottom:9px}.kbt{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text2)}
+.kb{height:8px;background:var(--surface2);border-radius:4px;overflow:hidden}.kbf{height:100%;border-radius:4px;transition:width .5s}
+
+.stbl{width:100%;border-collapse:collapse;font-size:13px}
+.stbl th{padding:7px 11px;background:var(--surface2);border:1px solid var(--border);text-align:left;font-weight:600;color:var(--text2);font-size:11px}
+.stbl td{padding:8px 11px;border:1px solid var(--border);vertical-align:middle}
+
+.atbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px}
+.atbl th{padding:7px 10px;background:var(--accent-l);border:1px solid #c7d2fe;text-align:left;font-weight:700;color:var(--accent);font-size:11px}
+.atbl td{padding:8px 10px;border:1px solid var(--border);vertical-align:middle}
+.atbl tr:nth-child(even) td{background:var(--surface2)}
+.sec-lbl{font-weight:700;font-size:12px;color:var(--text);margin-bottom:10px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+
+.cr-box{background:var(--cred-bg);border:1.5px solid #c4b5fd;border-radius:var(--r);padding:12px 14px;margin-top:8px}
+.cr-big{font-size:28px;font-weight:800;color:var(--cred);letter-spacing:-.02em}
+.bsug{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.bsug-b{padding:6px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:11px;font-weight:600;color:var(--text2);transition:all .15s}
+.bsug-b:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-l)}
+.empty-st{text-align:center;padding:56px 24px;color:var(--text3)}
+.empty-st i{font-size:44px;display:block;margin-bottom:14px;opacity:.4}
+
+.dm-opts{display:flex;gap:9px;margin-top:7px}
+.dm-opt{flex:1;padding:10px 12px;border-radius:var(--r);border:1.5px solid var(--border);cursor:pointer;text-align:left;font-size:12px;background:var(--surface2);font-family:inherit;color:var(--text);transition:all .15s}
+.dm-opt.on{border-color:var(--accent);background:var(--accent-l)}
+.warn-b{background:var(--amber-bg);color:var(--amber-t);font-size:10px;padding:2px 7px;border-radius:99px;font-weight:700}
+.leg{font-size:11px;color:var(--text3);margin-bottom:9px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.legd{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:-1px}
+.dinfo{font-size:11px;color:var(--blue-t);padding:9px 12px;background:var(--blue-bg);border-radius:var(--r);margin-bottom:11px;border:1px solid #bfdbfe;line-height:1.6}
+
+/* SIMULATOR */
+.sim-lay{display:grid;grid-template-columns:270px 1fr;gap:18px;align-items:start}
+.sim-inp{background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);padding:16px;box-shadow:var(--sh)}
+.sim-sec{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.sim-sec:last-child{border:none;margin:0;padding:0}
+.sim-stat{background:var(--surface2);border-radius:var(--r);padding:12px 14px;border:1px solid var(--border)}
+.sim-stat-v{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.sim-stat-l{font-size:11px;color:var(--text2);margin-top:3px;font-weight:500}
+.chk-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);margin-bottom:5px;cursor:pointer;transition:all .15s}
+.chk-row.on{border-color:var(--accent);background:var(--accent-l)}
+.chk-row input{width:auto;accent-color:var(--accent);flex-shrink:0}
+.dtbl{width:100%;border-collapse:collapse;font-size:12px}
+.dtbl th{padding:7px 10px;background:var(--surface2);border:1px solid var(--border);text-align:left;font-weight:700;color:var(--text2);font-size:11px;position:sticky;top:0;z-index:1}
+.dtbl td{padding:7px 10px;border:1px solid var(--border);vertical-align:middle}
+.dtbl tr.warn-r td{background:#fffbeb}
+.dtbl tr.bad-r td{background:#fef2f2}
+.screen-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:2px;vertical-align:middle}
+
+#sync-bar{position:fixed;top:0;left:0;right:0;background:var(--accent);color:#fff;font-size:12px;font-weight:600;text-align:center;padding:8px;z-index:9999;display:none}
+#sync-bar.err{background:var(--red)}#sync-bar.ok{background:var(--green)}
+
+@media print{
+  .sb,.sim-inp,#sync-bar,.no-print{display:none!important}
+  .sim-lay{grid-template-columns:1fr!important}
+  body{background:#fff}.mc{padding:0}
+  .dtbl{font-size:10px}
+}
+</style>
+</head>
+<body>
+<div id="sync-bar"></div>
+<div class="app">
+
+<nav class="sb">
+  <div class="sbh"><div class="sb-logo">AdSlot</div><div class="sb-sub">OOH · Lisbon</div></div>
+  <div class="sb-nav">
+    <button class="nb on" data-v="dashboard" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
+    <button class="nb" data-v="availability" onclick="nav('availability')"><i class="ti ti-calendar-stats"></i>Availability</button>
+    <button class="nb" data-v="board" onclick="nav('board')"><i class="ti ti-calendar-week"></i>Board</button>
+    <button class="nb" data-v="kpi" onclick="nav('kpi')"><i class="ti ti-chart-bar"></i>KPIs</button>
+    <div class="sbdiv"></div>
+    <button class="nb" data-v="campaigns" onclick="nav('campaigns')"><i class="ti ti-list"></i>Campaigns</button>
+    <button class="nb" data-v="new_campaign" onclick="nav('new_campaign')"><i class="ti ti-plus"></i>New campaign</button>
+    <div class="sbdiv"></div>
+    <button class="nb" data-v="sim" onclick="nav('sim')"><i class="ti ti-rocket"></i>Simulator</button>
+    <div class="sbdiv"></div>
+    <button class="nb" data-v="mainboard" onclick="nav('mainboard')"><i class="ti ti-settings"></i>Settings <span id="mb-warn" class="nbb warn-b" style="display:none">!</span></button>
+  </div>
+</nav>
+
+<main class="mc">
+
+<!-- DASHBOARD -->
+<div id="pg-dashboard" class="pg on">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;flex-wrap:wrap;gap:8px">
+    <div class="ptitle">Dashboard</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <label class="flbl" style="margin:0">From</label>
+      <input type="date" id="dash-date-s" style="width:148px" onchange="rDash()"/>
+      <label class="flbl" style="margin:0">To</label>
+      <input type="date" id="dash-date-e" style="width:148px" onchange="rDash()"/>
+    </div>
+  </div>
+  <div class="psub" id="dd-sub"></div>
+  <div class="g4" id="ds" style="margin-bottom:14px"></div>
+  <div class="card"><div class="ctitle">Occupancy by area <span id="da-period-lbl" style="font-weight:400;color:var(--text3);text-transform:none;letter-spacing:0;font-size:10px"></span></div><div class="ag" id="da"></div></div>
+  <div class="card" id="dr-card"><div class="ctitle">Campaigns recentes</div><div id="dr"></div></div>
+</div>
+
+<!-- AVAILABILITY -->
+<div id="pg-availability" class="pg">
+  <div class="ptitle">Availability</div><div class="psub">Available slots by area, date and time period.</div>
+  <div class="card row" style="padding:14px 16px;gap:12px">
+    <div class="fg" style="margin:0"><label class="flbl">Area</label><select id="av-a" onchange="rAvail()" style="width:200px"></select></div>
+    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="av-s" onchange="rAvail()" style="width:148px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="av-e" onchange="rAvail()" style="width:148px"/></div>
+  </div>
+  <div class="card" style="overflow-x:auto"><div class="leg" id="av-leg"></div><div id="av-grid"></div></div>
+</div>
+
+<!-- BOARD -->
+<div id="pg-board" class="pg">
+  <div class="ptitle">Board</div><div class="psub">Active campaigns day by day.</div>
+  <div class="card row" style="padding:14px 16px;gap:12px">
+    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="bd-s" onchange="rBoard()" style="width:148px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="bd-e" onchange="rBoard()" style="width:148px"/></div>
+    <div class="fg" style="margin:0"><label class="flbl">Client</label><select id="bd-cli" onchange="rBoard()" style="width:160px"></select></div>
+    <div class="fg" style="margin:0"><label class="flbl">Area</label><select id="bd-area" onchange="rBoard()" style="width:174px"></select></div>
+  </div>
+  <div id="bd-list"></div>
+</div>
+
+<!-- KPIs -->
+<div id="pg-kpi" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">KPIs</div>
+    <div class="row" style="gap:9px">
+      <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="kpi-s" onchange="rKPI()" style="width:148px"/></div>
+      <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="kpi-e" onchange="rKPI()" style="width:148px"/></div>
+    </div>
+  </div>
+  <div class="psub" id="kpi-sub"></div>
+  <div class="g4" id="kpi-cards" style="margin-bottom:14px"></div>
+  <div class="g2"><div class="card"><div class="ctitle">Revenue by area</div><div id="kpi-area"></div></div><div class="card"><div class="ctitle">Revenue by period</div><div id="kpi-period"></div></div></div>
+  <div class="g2"><div class="card"><div class="ctitle">Pipeline</div><div id="kpi-pipe"></div></div><div class="card"><div class="ctitle">Today's utilisation</div><div id="kpi-util"></div></div></div>
+</div>
+
+<!-- CAMPAIGNS -->
+<div id="pg-campaigns" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">Campaigns</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="exportCSV()" style="font-size:12px" class="no-print"><i class="ti ti-download"></i> CSV</button>
+      <button class="btn-p no-print" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> New</button>
+    </div>
+  </div>
+  <div class="psub" id="csub"></div>
+  <div class="card" id="clist"></div>
+</div>
+
+<!-- NEW / EDIT CAMPAIGN -->
+<div id="pg-new_campaign" class="pg">
+  <div class="ptitle" id="wiz-title">New campaign</div>
+  <div class="psub" id="wl">Step 1 of 2</div>
+  <div class="prog"><div class="progf" id="wp" style="width:50%"></div></div>
+  <div class="card">
+    <div id="s1">
+      <div class="step-h"><span class="step-n">1</span>Info, areas & period</div>
+      <div class="g2">
+        <div>
+          <div class="fg"><label class="flbl">Campaign name</label><input id="fn" type="text" placeholder="e.g. Summer 2025" style="width:100%"/></div>
+          <div class="fg"><label class="flbl">Client</label><input id="fc" type="text" placeholder="e.g. Brand XYZ" style="width:100%"/></div>
+          <div class="fg" style="margin-bottom:0">
+            <label class="flbl" style="margin-bottom:7px;display:block">Areas</label>
+            <div class="tgl-g" id="asel"></div>
+            <div id="asel-note" style="font-size:11px;color:var(--text2);margin-top:7px"></div>
+          </div>
+        </div>
+        <div>
+          <div class="g2" style="margin-bottom:12px">
+            <div class="fg" style="margin:0"><label class="flbl">Start</label><input id="fs" type="date" oninput="updDur()" style="width:100%"/></div>
+            <div class="fg" style="margin:0"><label class="flbl">End</label><input id="fe" type="date" oninput="updDur()" style="width:100%"/></div>
+          </div>
+          <div id="fdur" style="font-size:12px;color:var(--text2);margin-bottom:11px"></div>
+          <label class="flbl" style="margin-bottom:7px;display:block">Time periods</label>
+          <div class="tgl-g" id="psel"></div>
+          <div id="psel-note" style="font-size:11px;color:var(--text2);margin-top:7px"></div>
+        </div>
+      </div>
+    </div>
+    <div id="s2" style="display:none">
+      <div class="step-h"><span class="step-n">2</span>Budget, credits & review</div>
+      <div class="g2">
+        <div>
+          <div class="fg"><label class="flbl">Total budget (€)</label><input id="fb" type="number" step="0.01" min="0" placeholder="500.00" style="width:100%" oninput="updEst()"/><div class="fhint">1 credit = €<span id="cv-hint"></span> · <span id="cr-rate-hint"></span></div></div>
+          <div class="fg"><label class="flbl">Suggestion</label><div class="bsug" id="bsug"></div></div>
+          <div class="fg"><label class="flbl">Min slots/day <span style="font-weight:400;color:var(--text3)">(por area)</span></label><input id="fmd" type="number" step="1" min="1" value="10" style="width:100%" oninput="updEst()"/></div>
+          <div class="dinfo" id="distinfo"></div>
+          <div id="estalerts"></div>
+        </div>
+        <div>
+          <div id="estzone" style="display:none">
+            <div class="cr-box" style="margin-bottom:12px"><div class="cr-big" id="est-cr">—</div><div style="font-size:11px;color:#6d28d9;margin-top:2px" id="est-cr-sub">total credits</div></div>
+            <div class="g2" id="estg" style="margin-bottom:12px"></div>
+            <div id="est-cpm" style="font-size:12px;color:var(--text2);padding:9px 12px;background:var(--surface2);border-radius:var(--r)"></div>
+          </div>
+          <div id="estzone-empty" style="text-align:center;padding:30px 0;color:var(--text3)"><i class="ti ti-calculator" style="font-size:36px;display:block;margin-bottom:8px;opacity:.4"></i><div style="font-size:12px">Fill in the budget to see the estimate</div></div>
+        </div>
+      </div>
+      <div id="review-zone" style="display:none">
+        <div class="sec-lbl">Review by area</div>
+        <div id="ral" style="margin-bottom:8px"></div>
+        <div id="rdist"></div>
+      </div>
+    </div>
+    <div class="swrp">
+      <button id="wb" onclick="wBack()">Cancel</button>
+      <div style="display:flex;gap:8px">
+        <button id="wp-prev" onclick="wPrev()" style="display:none">← Back</button>
+        <button id="wn" class="btn-p" onclick="wNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIMULATOR -->
+<div id="pg-sim" class="pg">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+    <div class="ptitle">🚀 Simulator</div>
+    <div id="sim-xbtns" style="display:none;gap:8px" class="no-print">
+      <button onclick="simExportCSV()" style="font-size:12px"><i class="ti ti-download"></i> CSV</button>
+      <button onclick="window.print()" style="font-size:12px"><i class="ti ti-printer"></i> PDF</button>
+    </div>
+  </div>
+  <div class="psub">Simulates real credit consumption day by day, accounting for available screens, active campaigns and client criteria.</div>
+
+  <div class="sim-lay">
+    <!-- INPUTS -->
+    <div class="sim-inp">
+      <div class="sim-sec">
+        <div class="ctitle">Client contract</div>
+        <div class="fg"><label class="flbl">Total budget (€)</label><input type="number" id="sim-budget" step="0.01" min="0.01" placeholder="ex. 5000.00" oninput="simLive()" style="width:100%"/></div>
+        <div id="sim-equiv" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;margin-bottom:12px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="color:var(--text2)">Equivalent credits</span>
+            <strong id="sim-equiv-cr" style="color:var(--cred)">—</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px">
+            <span style="color:var(--text2)">Estimated impressions</span>
+            <strong id="sim-equiv-imp" style="color:var(--blue)">—</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <span style="color:var(--text2)">Ideal per day</span>
+            <span id="sim-equiv-day" style="color:var(--text2)">—</span>
+          </div>
+        </div>
+        <div class="g2" style="margin-bottom:8px">
+          <div class="fg" style="margin:0"><label class="flbl">Start</label><input type="date" id="sim-s" oninput="simLive()" style="width:100%"/></div>
+          <div class="fg" style="margin:0"><label class="flbl">End</label><input type="date" id="sim-e" oninput="simLive()" style="width:100%"/></div>
+        </div>
+        <div id="sim-dur" style="font-size:12px;color:var(--text2)"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="ctitle">Areas / Screens</div>
+        <div id="sim-asel"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="ctitle">Time periods</div>
+        <div id="sim-psel"></div>
+      </div>
+      <div class="sim-sec">
+        <div class="ctitle">Criteria</div>
+        <div class="fg"><label class="flbl">Min slots/day <span style="font-weight:400;color:var(--text3)">(por area)</span></label><input type="number" id="sim-min" step="1" min="1" value="10" style="width:100%"/></div>
+        <div class="fg" style="margin-bottom:14px">
+          <label class="flbl">Distribution</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:5px">
+            <button class="sim-dm on" data-dm="even" onclick="simPickDM(this)" style="padding:7px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--accent);background:var(--accent-l);font-weight:700;cursor:pointer">➡️ Equal/hour</button>
+            <button class="sim-dm" data-dm="weighted" onclick="simPickDM(this)" style="padding:7px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);font-weight:500;cursor:pointer">📈 By peak</button>
+            <button class="sim-dm" data-dm="even_area" onclick="simPickDM(this)" style="padding:7px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);font-weight:500;cursor:pointer">🗂️ Equal/area</button>
+            <button class="sim-dm" data-dm="even_area_hour" onclick="simPickDM(this)" style="padding:7px;font-size:11px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface2);font-weight:500;cursor:pointer">🕐 Area+hour</button>
+          </div>
+        </div>
+        <button class="btn-p" style="width:100%;padding:10px;font-size:13px" onclick="runSim()"><i class="ti ti-play"></i> Simulate</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div>
+      <div id="sim-empty" class="card" style="text-align:center;padding:60px 24px;color:var(--text3)">
+        <i class="ti ti-rocket" style="font-size:48px;display:block;margin-bottom:14px;opacity:.3"></i>
+        <div style="font-weight:700;font-size:16px;color:var(--text2);margin-bottom:8px">Configure & simulate</div>
+        <div style="font-size:13px;line-height:1.7">Fill in the parameters on the left<br>and click <strong>Simulate</strong>.</div>
+      </div>
+
+      <div id="sim-out" style="display:none">
+        <div id="sim-summary" class="g4" style="margin-bottom:14px"></div>
+        <div id="sim-alerts" style="margin-bottom:14px"></div>
+
+        <!-- Burndown chart -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="ctitle">Credit burndown — day by day</div>
+          <div style="overflow-x:auto">
+            <svg id="sim-svg" height="180" style="width:100%;min-width:400px;border-radius:var(--r);border:1px solid var(--border)"></svg>
+          </div>
+          <div id="sim-leg" style="display:flex;gap:14px;margin-top:8px;font-size:11px;color:var(--text2);flex-wrap:wrap"></div>
+        </div>
+
+        <!-- Screens -->
+        <div class="card" style="margin-bottom:14px">
+          <div class="ctitle">Screens for area</div>
+          <div id="sim-screens" style="display:flex;flex-wrap:wrap;gap:10px"></div>
+        </div>
+
+        <!-- Day table -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="ctitle" style="margin:0">Calendário day a day</div>
+            <div style="display:flex;gap:6px" class="no-print">
+              <button class="btn-sm btn-g" onclick="simToggle()"><i class="ti ti-eye"></i> <span id="sim-tgl-lbl">Show all</span></button>
+              <button class="btn-sm btn-g" onclick="simExportCSV()"><i class="ti ti-download"></i> CSV</button>
+              <button class="btn-sm btn-g" onclick="window.print()"><i class="ti ti-printer"></i> PDF</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;max-height:440px;overflow-y:auto">
+            <table class="dtbl" id="sim-tbl">
+              <thead><tr>
+                <th>Date</th><th>Day</th><th>Screens</th><th style="text-align:right">Slots/day</th>
+                <th style="text-align:right">Impressions</th><th style="text-align:right">Cap. used</th>
+                <th style="text-align:right">Credits</th><th style="text-align:right">Remaining</th>
+                <th style="text-align:center">Status</th>
+              </tr></thead>
+              <tbody id="sim-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAINBOARD -->
+<div id="pg-mainboard" class="pg">
+  <div class="ptitle">Settings</div><div class="psub">Prices, zones, screens, reserve, distribution & impressions.</div>
+  <div id="mb-default-warn" class="al al-w" style="margin-bottom:14px;display:none"><i class="ti ti-alert-triangle"></i><span>You're still using default values. Confirm prices and screens before creating campaigns.</span></div>
+  <div class="card">
+    <div class="ctitle">Prices & credits</div>
+    <div class="g2">
+      <div class="fg"><label class="flbl">Base price per 10s slot (€)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-bp" step="0.000001" min="0.000001" style="width:148px"/><span style="font-size:12px;color:var(--text2)">× period mult × area mult</span></div></div>
+      <div class="fg"><label class="flbl">Credit rate (credits per euro)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-cr" step="1" min="1" style="width:120px"/><span style="font-size:12px;color:var(--text2)">1 cr = <span id="cr-prev">€0.005</span></span></div><div class="fhint">Fromfault: 200 cr/€</div></div>
+    </div>
+    <label class="flbl">Period multipliers</label>
+    <table class="stbl"><thead><tr><th>Period</th><th>Hours</th><th>Multiplier</th><th>Price/slot</th><th>Credits/slot</th></tr></thead><tbody id="st-pm"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="ctitle">Zones — screens e multiplicadores</div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:10px">0 screens = zone offline.</div>
+    <table class="stbl"><thead><tr><th>Zone</th><th>Name</th><th>Screens</th><th>Mult. area</th><th>Eff. base price</th></tr></thead><tbody id="st-areas"></tbody></table>
+  </div>
+  <div class="card">
+    <div class="ctitle">Capacity & distribution</div>
+    <div class="fg"><label class="flbl">Reserve buffer (%)</label><div style="display:flex;align-items:center;gap:10px"><input type="number" id="st-res" min="0" max="90" step="1" style="width:88px"/><span style="font-size:12px;color:var(--text2)">% reserved → eff. cap: <strong id="st-cap-prev"></strong></span></div></div>
+    <div class="fg" style="margin-bottom:0"><label class="flbl">Distribution mode</label>
+      <div class="dm-opts" style="flex-wrap:wrap">
+        <button class="dm-opt" data-dm="weighted"><div style="font-weight:700;margin-bottom:3px">📈 Weighted by peak</div><div style="font-size:11px;color:var(--text2)">More slots in higher-multiplier periods.</div></button>
+        <button class="dm-opt" data-dm="even"><div style="font-weight:700;margin-bottom:3px">➡️ Equal per hour</div><div style="font-size:11px;color:var(--text2)">Same number of slots per hour.</div></button>
+        <button class="dm-opt" data-dm="even_area"><div style="font-weight:700;margin-bottom:3px">🗂️ Equal per area</div><div style="font-size:11px;color:var(--text2)">Same number of slots per area.</div></button>
+        <button class="dm-opt" data-dm="even_area_hour"><div style="font-weight:700;margin-bottom:3px">🕐 Equal per area & hour</div><div style="font-size:11px;color:var(--text2)">Same number of slots per area and time period.</div></button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">Estimated impressions for slot</div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:12px">Average number of people who view the ad per 10s slot used, per zone.</div>
+    <table class="stbl"><thead><tr><th>Zone</th><th>Name</th><th>Impressions/slot</th><th>Est. CPM</th></tr></thead><tbody id="st-impr"></tbody></table>
+    <div style="margin-top:12px;padding:10px 12px;background:var(--blue-bg);border-radius:var(--r);font-size:11px;color:var(--blue-t);border:1px solid #bfdbfe">
+      <strong>CPM</strong> = cost per 1000 impressions = (price/slot ÷ impressions/slot) × 1000
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px;margin-top:4px">
+    <button class="btn-p" onclick="stSave()">Save settings</button>
+    <span id="st-saved" style="font-size:12px;color:var(--green);opacity:0;transition:opacity .5s"></span>
+  </div>
+</div>
+
+</main>
+</div>
+
+<script>
+// ── Supabase ──────────────────────────────────────────────────────────────
+const SU='https://satifkbvyebkpvcscbrh.supabase.co';
+const SK='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhdGlma2J2eWVia3B2Y3NjYnJoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1NTc4OTMsImV4cCI6MjA5NTEzMzg5M30.TgIw-o5-sdP1QOpFJSvRcVOmjc76xKj8blf4rvDBT2A';
+const SH={'apikey':SK,'Authorization':'Bearer '+SK,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'};
+let sT=null;
+function syncBar(m,t='',a=true){const el=document.getElementById('sync-bar');el.textContent=m;el.className=t;el.style.display='block';if(sT)clearTimeout(sT);if(a)sT=setTimeout(()=>el.style.display='none',2200);}
+async function dbGet(k){try{const r=await fetch(`${SU}/rest/v1/adslot_data?key=eq.${k}&select=value`,{headers:SH});const d=await r.json();return d&&d[0]?JSON.parse(d[0].value):null;}catch{return null;}}
+async function dbSet(k,v){try{await fetch(`${SU}/rest/v1/adslot_data`,{method:'POST',headers:SH,body:JSON.stringify({key:k,value:JSON.stringify(v),updated_at:new Date().toISOString()})});}catch{syncBar('Connection error','err',false);}}
+
+// ── Date ─────────────────────────────────────────────────────────────────
+const SPH=360;
+const AD=[
+  {id:1,code:'Z01',name:'City Centre / Baixa',defM:1.50,clr:'#6c63d9'},
+  {id:2,code:'Z02',name:'Bairro Alto / Chiado',defM:1.40,clr:'#7c3aed'},
+  {id:3,code:'Z03',name:'Parque Nações / Expo',defM:1.35,clr:'#2563eb'},
+  {id:4,code:'Z04',name:'Avenidas News',defM:1.20,clr:'#0891b2'},
+  {id:5,code:'Z05',name:'Belém / Ajuda',defM:1.15,clr:'#059669'},
+  {id:6,code:'Z06',name:'Alfama / Mouraria',defM:1.10,clr:'#d97706'},
+  {id:7,code:'Z07',name:'Amadora / Odivelas',defM:0.90,clr:'#dc2626'},
+  {id:8,code:'Z08',name:'Sintra / Cascais',defM:0.85,clr:'#be185d'},
+];
+const PD=[
+  {id:'morning',name:'Morning',lbl:'07–10',start:7,end:10,clr:'#BA7517'},
+  {id:'midday',name:'Midday',lbl:'10–12',start:10,end:12,clr:'#1D9E75'},
+  {id:'lunch',name:'Lunch rush',lbl:'12–14',start:12,end:14,clr:'#D85A30'},
+  {id:'afternoon',name:'Afternoon',lbl:'14–18',start:14,end:18,clr:'#378ADD'},
+  {id:'dinner',name:'Dinner peak',lbl:'18–22',start:18,end:22,clr:'#7F77DD'},
+  {id:'latenight',name:'Late night',lbl:'22–02',start:22,end:26,clr:'#888780'},
+];
+let ST={basePrice:0.00508,reservePct:0,distribution:'weighted',creditRate:200,impressionsPerSlot:Object.fromEntries(AD.map(a=>[a.id,50])),screens:Object.fromEntries(AD.map(a=>[a.id,2])),periodMults:{morning:1.10,midday:1.00,lunch:1.35,afternoon:1.15,dinner:1.50,latenight:0.80},areaMults:Object.fromEntries(AD.map(a=>[a.id,a.defM]))};
+let camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']),selA=new Set([1]),wStep=1,wDist=null,editId=null;
+let simDate=[],simAreas=new Set([1,2]),simPers=new Set(['morning','midday','lunch','afternoon','dinner']),simDist='even',simAll=false;
+
+function gP(){return PD.map(p=>({...p,mult:ST.periodMults[p.id]??1}));}
+function gA(){return AD.map(a=>({...a,screens:ST.screens[a.id]??0,areaMult:ST.areaMults[a.id]??1,clr:a.clr}));}
+function eCap(sc){return sc===0?0:Math.max(0,Math.floor(sc*SPH*(1-ST.reservePct/100)));}
+function pH(p){const h=[];for(let i=p.start;i<p.end;i++)h.push({hour:i,mult:p.mult});return h;}
+function crOf(e2){return Math.round(e2*ST.creditRate);}
+function euroOf(c){return c/ST.creditRate;}
+const eu=n=>`€${(+n).toFixed(2)}`;
+const eu5=n=>`€${(+n).toFixed(5)}`;
+const pct=n=>`${Math.round(Math.max(0,n)*100)}%`;
+const comma=n=>Math.round(n).toLocaleString();
+function dR(s,e){const d=[],c=new Date(s),f=new Date(e);while(c<=f){d.push(c.toISOString().slice(0,10));c.setDate(c.getDate()+1);}return d;}
+function addD(d,n){const dt=new Date(d);dt.setDate(dt.getDate()+n);return dt.toISOString().slice(0,10);}
+function fmtD(d){return new Date(d).toLocaleDateString('pt-PT',{day:'2-digit',month:'short'});}
+function fmtDy(d){return new Date(d).toLocaleDateString('pt-PT',{weekday:'short'});}
+function tod(){return new Date().toISOString().slice(0,10);}
+function alH(t,msg){const ic={d:'ti-alert-circle',w:'ti-alert-triangle',s:'ti-circle-check',i:'ti-info-circle'};return`<div class="al al-${t}"><i class="ti ${ic[t]||'ti-info-circle'}"></i><span>${msg}</span></div>`;}
+function campAreas(c){return c.areaIds||[c.areaId].filter(Boolean);}
+
+async function saveC(){syncBar('Saving…','',false);await dbSet('asl_c5',camps);syncBar('Saved ✓','ok');}
+async function saveST(){await dbSet('asl_st5',ST);}
+async function loadAll(){
+  syncBar('Loading…','',false);
+  const [s,c]=await Promise.all([dbGet('asl_st5'),dbGet('asl_c5')]);
+  if(s)ST={...ST,...s,screens:{...ST.screens,...(s.screens||{})},periodMults:{...ST.periodMults,...(s.periodMults||{})},areaMults:{...ST.areaMults,...(s.areaMults||{})},impressionsPerSlot:{...ST.impressionsPerSlot,...(s.impressionsPerSlot||{})}};
+  if(c)camps=c;
+  syncBar('Ready ✓','ok');
+}
+
+function bMap(skipId=null){
+  const m={};
+  function addH(aId,hm,dates){if(!m[aId])m[aId]={};for(const d of dates){for(const[hS,spd]of Object.entries(hm)){const h=+hS,ad=h>=24?addD(d,1):d,ah=h>=24?h-24:h;if(!m[aId][ad])m[aId][ad]={};m[aId][ad][ah]=(m[aId][ad][ah]||0)+spd;}}}
+  for(const c of camps){if(c.id===skipId)continue;const dates=dR(c.startDate,c.endDate);if(c.areaDate){for(const[s2,data]of Object.entries(c.areaDate)){if(data.hourMap)addH(+s2,data.hourMap,dates);}}else if(c.areaId&&c.hourMap)addH(c.areaId,c.hourMap,dates);}
+  return m;
+}
+function pAv(bm,aId,date,period){
+  const area=gA()[aId-1],hrs=pH(period),cap=eCap(area?.screens??0),total=hrs.length*cap;
+  if(total===0)return{total:0,booked:0,avail:0,pct:0,offline:true};
+  let booked=0;for(const{hour}of hrs){const ad=hour>=24?addD(date,1):date,ah=hour>=24?hour-24:hour;booked+=(bm?.[aId]?.[ad]?.[ah]||0);}
+  return{total,booked,avail:Math.max(0,total-booked),pct:Math.max(0,(total-booked)/total)};
+}
+
+function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm){
+  const sel=gP().filter(p=>pids.includes(p.id)),hrs=sel.flatMap(pH);
+  if(!hrs.length)return{error:'no_periods'};
+  const area=gA()[aId-1],aM=ST.areaMults[aId]??1,cap=eCap(area?.screens??0),dates=dR(s0,e0);
+  if(cap===0)return{error:'no_capacity'};
+  const maxH={};for(const h of hrs){let mn=cap;for(const d of dates){const ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;mn=Math.min(mn,Math.max(0,cap-(bm?.[aId]?.[ad]?.[ah]||0)));}maxH[h.hour]=mn;}
+  const totAv=Object.values(maxH).reduce((a,b)=>a+b,0);if(totAv===0)return{error:'no_capacity'};
+  const dist=ST.distribution;
+  // Weight function: how many slots to assign to each hour relative to others
+  // even / even_area / even_area_hour: equal slots per hour
+  // weighted: proportional to period multiplier
+  const wOf=h=>dist==='weighted'?h.mult:1;
+  const sumW=hrs.reduce((s,h)=>s+wOf(h),0)||1,fracs=hrs.map(h=>wOf(h)/sumW);
+  const wCF=hrs.reduce((ss,h,i)=>ss+fracs[i]*h.mult,0)||1;
+  const uC=B*wCF*aM,unN=Math.round(budget/(nd*uC)),minCost=(minpd||1)*nd*uC;
+  const mxSl=fracs.map((f,i)=>Math.min(Math.round(f*totAv),maxH[hrs[i].hour]));
+  const maxCost=hrs.reduce((s,h,i)=>s+mxSl[i]*B*h.mult*aM,0)*nd;
+  const warns=[];
+  if(budget<minCost)warns.push({t:'d',msg:`Budget/area ${eu(budget)} below minimum. You need ${eu(minCost)}/area.`});
+  if(unN>totAv)warns.push({t:'w',msg:`Budget exceeds capacity. Eff: ${eu(maxCost)}.`});
+  let N=Math.min(Math.max(unN,minpd||1),totAv);
+  let slots=fracs.map((f,i)=>Math.min(Math.round(f*N),maxH[hrs[i].hour]));
+  let diff=N-slots.reduce((a,b)=>a+b,0);
+  const ord=fracs.map((_,i)=>i).sort((a,b)=>fracs[b]-fracs[a]);
+  for(let i=0;diff!==0&&i<hrs.length*6;i++){const ix=ord[i%ord.length],nx=slots[ix]+Math.sign(diff);if(nx>=0&&nx<=maxH[hrs[ix].hour]){slots[ix]=nx;diff-=Math.sign(diff);}}
+  const hm={};hrs.forEach((h,i)=>{hm[h.hour]=(hm[h.hour]||0)+slots[i];});
+  const aN=slots.reduce((a,b)=>a+b,0),cpd=hrs.reduce((s,h,i)=>s+slots[i]*B*h.mult*aM,0);
+  return{slotsPerDay:aN,hourMap:hm,cpd,totalCost:cpd*nd,totAv,maxCost,warns};
+}
+
+function calcCamp(budget,nd,pids,minpd,areaIds,s0,e0,bm){
+  if(!areaIds.length)return{error:'no_areas'};
+  const AREAS=gA(),areaDate={},allWarns=[];let pool=budget,open=[...areaIds];
+  for(let iter=0;iter<=areaIds.length;iter++){
+    if(!open.length||pool<0.001)break;
+    const share=pool/open.length,tmp={};for(const aId of open)tmp[aId]=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm);
+    const capped=open.filter(aId=>{const r=tmp[aId];return r.error||(r.totalCost<share*0.99);});
+    if(!capped.length){for(const aId of open){areaDate[aId]=tmp[aId];for(const w of(tmp[aId].warns||[]))allWarns.push({t:w.t,msg:`${AREAS.find(a=>a.id===aId)?.code}: ${w.msg}`});}pool=0;open=[];break;}
+    for(const aId of capped){const r=tmp[aId],area=AREAS.find(a=>a.id===aId);if(r.error){allWarns.push({t:'w',msg:`${area?.code}: ${r.error==='no_capacity'?'No capacity':'No periods'}.`});areaDate[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaDate[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}pool-=r.error?0:(r.totalCost||0);}
+    open=open.filter(aId=>!capped.includes(aId));
+  }
+  if(open.length&&pool>0.001){const share=pool/open.length;for(const aId of open){const r=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm);if(r.error){areaDate[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaDate[aId]=r;}}}
+  let totalCost=0,totalSPD=0,totalCpd=0;
+  for(const aId of areaIds){const d2=areaDate[aId];if(d2&&!d2.error){totalCost+=d2.totalCost;totalSPD+=d2.slotsPerDay;totalCpd+=d2.cpd;}}
+  const alerts=[...allWarns.filter(w=>w.t==='d')];
+  if(totalCost<budget*0.98&&!alerts.length)alerts.push({t:'w',msg:`${eu(budget-totalCost)} unusable — maximum capacity reached.`});
+  if(!alerts.length)alerts.push({t:'s',msg:`Budget allocated — ${comma(totalSPD)} slots/day em ${areaIds.length} area${areaIds.length>1?'s':''} for ${eu(totalCost)}.`});
+  const cpm=totalSPD*nd>0?(totalCost/(totalSPD*nd))*1000:0;
+  const redistributed=Object.values(areaDate).some(d2=>!d2.error&&d2.totalCost<budget/areaIds.length*0.99);
+  return{areaDate,totalCost,totalSlots:totalSPD*nd,slotsPerDay:totalSPD,cpd:totalCpd,alerts,redistributed,cpm};
+}
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function nav(v){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+v).classList.add('on');
+  const nb=document.querySelector(`[data-v="${v}"]`);if(nb)nb.classList.add('on');
+  checkMBWarn();
+  const fns={dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:initWiz,sim:initSim,mainboard:initMB};
+  if(fns[v])fns[v]();
+}
+
+function checkMBWarn(){
+  const def=JSON.stringify({b:0.00508,c:200,s:Object.fromEntries(AD.map(a=>[a.id,2]))});
+  const cur=JSON.stringify({b:ST.basePrice,c:ST.creditRate,s:ST.screens});
+  const isFromfault=def===cur;
+  document.getElementById('mb-warn').style.display=isFromfault?'':'none';
+  document.getElementById('mb-default-warn').style.display=isFromfault?'flex':'none';
+}
+
+// ── Dashboard ─────────────────────────────────────────────────────────────
+function rDash(){
+  const inpS=document.getElementById('dash-date-s'),inpE=document.getElementById('dash-date-e');
+  if(!inpS.value){inpS.value=tod();inpE.value=tod();}
+  const s=inpS.value,e=inpE.value||s;
+  if(e<s){inpE.value=s;}
+  const tS=s,tE=e<s?s:e;
+  const AREAS=gA(),PERIODS=gP(),bm=bMap();
+  const dateRange=dR(tS,tE);
+  const rangeLbl=tS===tE?new Date(tS).toLocaleDateString('pt-PT',{weekday:'long',year:'numeric',month:'long',day:'numeric'}):fmtD(tS)+' – '+fmtD(tE)+' ('+dateRange.length+' days)';
+  document.getElementById('dd-sub').textContent=rangeLbl;
+  if(document.getElementById('da-period-lbl'))document.getElementById('da-period-lbl').textContent=tS===tE?'':`· range`;
+
+  // Aggregate stats over range
+  const t=tod();
+  const active=camps.filter(c=>c.startDate<=tE&&c.endDate>=tS).length;
+  let tb=0,tt=0;
+  for(const d of dateRange)for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,d,p);tb+=av.booked;tt+=av.total;}
+  const totalCr=camps.filter(c=>c.startDate<=tE&&c.endDate>=tS).reduce((s,c)=>s+crOf(c.totalCost),0);
+  document.getElementById('ds').innerHTML=[
+    [camps.length,'Campaigns totais',''],
+    [active,'In period',''],
+    [comma(tb),'Booked slots',''],
+    [comma(totalCr)+' cr','Credits in period','stat-cr'],
+  ].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-v">${v}</div><div class="stat-l">${l}</div></div>`).join('');
+
+  // Occupation per area over range
+  document.getElementById('da').innerHTML=AREAS.map(area=>{
+    let av=0,tot=0;
+    for(const d of dateRange)for(const p of PERIODS){const r=pAv(bm,area.id,d,p);av+=r.avail;tot+=r.total;}
+    const offline=tot===0,pr=offline?0:av/tot;
+    const clr=offline?'#d1d5db':pr>0.6?'#16a34a':pr>0.3?'#d97706':'#dc2626';
+    // Mini bars: average occupation per period across date range
+    const bars=PERIODS.map(p=>{
+      let pAv2=0,pTot=0;
+      for(const d of dateRange){const r=pAv(bm,area.id,d,p);pAv2+=r.avail;pTot+=r.total;}
+      const pPct=pTot>0?pAv2/pTot:1;
+      const h2=pTot===0?3:Math.max(3,Math.round((1-pPct)*22));
+      return`<div class="mini-bar" style="background:${p.clr};height:${h2}px;opacity:${pTot===0?.3:.8}" title="${p.name}: ${(pPct*100).toFixed(0)}% livre"></div>`;
+    }).join('');
+    return`<div class="ac" onclick="nav('availability')">
+      <div style="font-size:10px;font-weight:800;color:var(--accent);margin-bottom:1px">${area.code}</div>
+      <div style="font-size:10px;color:var(--text3);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${area.name.split('/')[0].trim()}</div>
+      <div style="font-size:21px;font-weight:800;color:${clr}">${offline?'—':pct(pr)}</div>
+      <div class="mini-bars">${bars}</div>
+      <div style="font-size:10px;color:var(--text3)">${offline?'Offline':comma(av)+' free'}</div>
+    </div>`;
+  }).join('');
+  const rec=[...camps].sort((a,b)=>b.startDate.localeCompare(a.startDate)).slice(0,6);
+  const drCard=document.getElementById('dr-card');
+  if(!rec.length){drCard.innerHTML=`<div class="ctitle">Campaigns recentes</div><div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Create campaign</button></div>`;}
+  else{drCard.innerHTML=`<div class="ctitle">Campaigns recentes</div>`+rec.map(c=>{const st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Active':st==='up'?'Upcoming':'Ended';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');return`<div class="cr2"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${sl}</span></div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;color:var(--accent)">${eu(c.totalCost)}</div><div style="font-size:11px;color:var(--text3)">${comma(crOf(c.totalCost))} cr</div></div></div>`;}).join('');}
+}
+
+// ── Availability ──────────────────────────────────────────────────────────
+function rAvailInit(){
+  const sel=document.getElementById('av-a');sel.innerHTML='';
+  gA().forEach(a=>sel.add(new Option(`${a.code} ${a.name} (${a.screens} screens)`,a.id)));
+  if(!document.getElementById('av-s').value){document.getElementById('av-s').value=tod();document.getElementById('av-e').value=addD(tod(),6);}
+  document.getElementById('av-leg').innerHTML='<span>Availability:</span>'+[['> 70%','av-hi'],['30–70%','av-mi'],['< 30%','av-lo'],['Full','av-fx'],['Offline','av-off']].map(([l,c])=>`<span><span class="legd ${c}"></span>${l}</span>`).join('');
+  rAvail();
+}
+function rAvail(){
+  const aId=+document.getElementById('av-a').value,s=document.getElementById('av-s').value,e=document.getElementById('av-e').value;
+  if(!s||!e||e<s)return;
+  const dates=dR(s,e).slice(0,14),bm=bMap(),PERIODS=gP();
+  let h=`<table class="avt"><thead><tr><th style="text-align:left;min-width:116px;padding-left:11px">Period</th>`;
+  for(const d of dates)h+=`<th style="min-width:64px">${fmtD(d)}<br><span style="font-size:10px;font-weight:400">${fmtDy(d)}</span></th>`;
+  h+=`</tr></thead><tbody>`;
+  for(const per of PERIODS){h+=`<tr><td style="padding:8px 11px;background:var(--surface2);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:${per.clr};flex-shrink:0;display:inline-block"></span><div><div style="font-weight:600;font-size:12px">${per.name}</div><div style="font-size:10px;color:var(--text3)">${per.lbl} · ${per.mult}×</div></div></div></td>`;for(const d of dates){const av=pAv(bm,aId,d,per);const cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+=`<td class="${cls}"><div style="font-size:12px;font-weight:700">${av.offline?'—':pct(av.pct)}</div><div style="font-size:10px;opacity:.75">${av.offline?'offline':comma(av.avail)+'/'+comma(av.total)}</div></td>`;}h+=`</tr>`;}
+  h+=`</tbody></table>`;document.getElementById('av-grid').innerHTML=h;
+}
+
+// ── Board ─────────────────────────────────────────────────────────────────
+function rBoardInit(){
+  if(!document.getElementById('bd-s').value){document.getElementById('bd-s').value=tod();document.getElementById('bd-e').value=addD(tod(),13);}
+  const clients=[...new Set(camps.map(c=>c.client))].sort();
+  const cs=document.getElementById('bd-cli'),pv=cs.value;cs.innerHTML='<option value="">All clients</option>'+clients.map(c=>`<option value="${c}">${c}</option>`).join('');if(pv)cs.value=pv;
+  const as=document.getElementById('bd-area'),pa=as.value;as.innerHTML='<option value="">All areas</option>'+gA().map(a=>`<option value="${a.id}">${a.code} ${a.name}</option>`).join('');if(pa)as.value=pa;
+  rBoard();
+}
+function rBoard(){
+  const s=document.getElementById('bd-s').value,e=document.getElementById('bd-e').value,fCli=document.getElementById('bd-cli').value,fArea=+document.getElementById('bd-area').value;
+  if(!s||!e||e<s)return;
+  const AREAS=gA(),PERIODS=gP();let html='';
+  for(const d of dR(s,e).slice(0,31)){
+    let act=camps.filter(c=>c.startDate<=d&&c.endDate>=d);
+    if(fCli)act=act.filter(c=>c.client===fCli);if(fArea)act=act.filter(c=>campAreas(c).includes(fArea));
+    html+=`<div style="margin-bottom:14px"><div class="bd-dh">${new Date(d).toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'})}</div>`;
+    if(!act.length)html+=`<div style="color:var(--text3);font-size:12px;padding:4px 0 10px;font-style:italic">No campaigns${fCli||fArea?' for this filter':''}</div>`;
+    else for(const c of act){const pers=PERIODS.filter(p=>c.periodIds.includes(p.id)),cpd=c.cpd||(c.totalCost/Math.max(1,dR(c.startDate,c.endDate).length));const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span><span style="font-size:11px;color:var(--text2);margin-right:6px">${a?.name||''}</span>`;}).join('');html+=`<div class="bd-c"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><div><span style="font-weight:700">${c.name}</span><span style="color:var(--text2);font-size:12px;margin-left:9px">${c.client}</span></div><div style="text-align:right;font-size:11px;color:var(--text3)">${eu(cpd)}/day</div></div><div style="margin-bottom:5px;font-size:12px">${aZ}</div><div style="margin-bottom:4px">${pers.map(p=>`<span class="chip"><span style="width:6px;height:6px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:3px"></span>${p.name}</span>`).join('')}</div><div style="font-size:12px;color:var(--text2)">${comma(c.slotsPerDay)} slots/day · ends ${fmtD(c.endDate)}</div></div>`;}
+    html+=`</div>`;
+  }
+  document.getElementById('bd-list').innerHTML=html;
+}
+
+// ── KPIs ──────────────────────────────────────────────────────────────────
+function rKPIInit(){const s=document.getElementById('kpi-s'),e=document.getElementById('kpi-e');if(!s.value){const first=camps.length?camps.reduce((a,b)=>a.startDate<b.startDate?a:b).startDate:addD(tod(),-30);s.value=first;e.value=tod();}rKPI();}
+function rKPI(){
+  const s=document.getElementById('kpi-s').value||addD(tod(),-30),e=document.getElementById('kpi-e').value||tod();
+  const t=tod(),AREAS=gA(),PERIODS=gP(),bm=bMap();
+  document.getElementById('kpi-sub').textContent=`${fmtD(s)} – ${fmtD(e)}`;
+  const inR=camps.filter(c=>c.startDate<=e&&c.endDate>=s);
+  const totalRev=inR.reduce((a,c)=>a+(c.totalCost||0),0),totalSlots=inR.reduce((a,c)=>a+(c.totalSlots||0),0),avgRev=inR.length?totalRev/inR.length:0;
+  document.getElementById('kpi-cards').innerHTML=[[eu(totalRev),'Total revenue',''],[comma(crOf(totalRev))+' cr','Credits sold','stat-cr'],[comma(totalSlots),'Slots sold',''],[eu(avgRev),'Avg/campaign','']].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-v">${v}</div><div class="stat-l">${l}</div></div>`).join('');
+  const revByArea={},revByPer={};
+  for(const c of inR){const aIds=campAreas(c),nd=dR(c.startDate,c.endDate).length;for(const aId of aIds){const aM=ST.areaMults[aId]??1,hm=c.areaDate?.[aId]?.hourMap||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+(c.areaDate?.[aId]?.totalCost||c.totalCost/aIds.length||0);for(const pid of c.periodIds){const p=PERIODS.find(x=>x.id===pid);if(!p)continue;const sl=pH(p).reduce((a,{hour})=>a+(hm?.[hour]||0),0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;}}}
+  const mxA=Math.max(...Object.values(revByArea),1),mxP=Math.max(...Object.values(revByPer),1);
+  document.getElementById('kpi-area').innerHTML=AREAS.map(a=>{const rv=revByArea[a.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxA*100).toFixed(1)}%;background:${a.clr}"></div></div></div>`;}).join('');
+  document.getElementById('kpi-period').innerHTML=PERIODS.map(p=>{const rv=revByPer[p.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span style="width:8px;height:8px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:5px;vertical-align:middle"></span>${p.name}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxP*100).toFixed(1)}%;background:${p.clr}"></div></div></div>`;}).join('');
+  const active=camps.filter(c=>c.startDate<=t&&c.endDate>=t).length,upcoming=camps.filter(c=>c.startDate>t).length,ended=camps.filter(c=>c.endDate<t).length;
+  document.getElementById('kpi-pipe').innerHTML=[['Active','var(--green)','var(--green-bg)',active],['Upcoming','var(--amber)','var(--amber-bg)',upcoming],['Ended','var(--text3)','var(--surface2)',ended]].map(([l,clr,bg,n])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span style="color:${clr};font-weight:700">${l}</span><span style="background:${bg};color:${clr};padding:3px 14px;border-radius:99px;font-weight:800">${n}</span></div>`).join('')+`<div style="margin-top:9px;font-size:11px;color:var(--text3)">${camps.length} in total</div>`;
+  let tu=0,tt2=0;for(const a of AREAS)for(const p of PERIODS){const av=pAv(bm,a.id,t,p);tu+=av.booked;tt2+=av.total;}
+  const util=tt2?tu/tt2:0;
+  document.getElementById('kpi-util').innerHTML=`<div style="text-align:center;padding:14px 0"><div style="font-size:44px;font-weight:800;letter-spacing:-.03em;color:${util>0.7?'var(--red)':util>0.3?'var(--amber)':'var(--green)'}">${pct(util)}</div><div style="font-size:12px;color:var(--text2);margin:5px 0">of today's slots</div><div style="font-size:11px;color:var(--text3)">${comma(tu)} / ${comma(tt2)}</div></div><div class="kb" style="margin-top:10px"><div class="kbf" style="width:${(util*100).toFixed(1)}%;background:${util>0.7?'var(--red)':util>0.3?'var(--amber)':'var(--green)'}"></div></div>`;
+}
+
+// ── Export CSV ─────────────────────────────────────────────────────────────
+function exportCSV(){
+  if(!camps.length){alert('No campaigns.');return;}
+  const AREAS=gA(),heads=['ID','Campaign','Client','Areas','Start','End','Days','Periods','Budget(€)','Cost(€)','Credits','CPM(€)','Slots/day','Total slots'];
+  const rows=camps.map(c=>{const aIds=campAreas(c),aN=aIds.map(id=>AREAS.find(a=>a.id===id)?.code||'').join(';');const nd=dR(c.startDate,c.endDate).length,cpm=c.cpm||(c.totalSlots>0?(c.totalCost/c.totalSlots)*1000:0);return[c.id,`"${c.name}"`,`"${c.client}"`,`"${aN}"`,c.startDate,c.endDate,nd,`"${c.periodIds.join(';')}"`,c.budget?.toFixed(2)||0,c.totalCost.toFixed(4),crOf(c.totalCost),cpm.toFixed(4),c.slotsPerDay,c.totalSlots].join(',');});
+  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(','),...rows].join('\n'));
+  const a=document.createElement('a');a.href=uri;a.download=`adslot_${tod()}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+// ── Wizard ─────────────────────────────────────────────────────────────────
+function initWiz(cToEdit=null){
+  editId=cToEdit?cToEdit.id:null;wStep=1;wDist=null;
+  if(cToEdit){document.getElementById('wiz-title').textContent='Edit campaign';selP=new Set(cToEdit.periodIds);selA=new Set(campAreas(cToEdit));document.getElementById('fn').value=cToEdit.name;document.getElementById('fc').value=cToEdit.client;document.getElementById('fs').value=cToEdit.startDate;document.getElementById('fe').value=cToEdit.endDate;document.getElementById('fb').value=cToEdit.budget||0;document.getElementById('fmd').value=10;}
+  else{document.getElementById('wiz-title').textContent='New campaign';selP=new Set(['morning','midday','lunch','afternoon','dinner']);selA=new Set([1]);['fn','fc','fb'].forEach(id=>document.getElementById(id).value='');document.getElementById('fmd').value='10';document.getElementById('fs').value=tod();document.getElementById('fe').value=addD(tod(),6);}
+  document.getElementById('estzone').style.display='none';document.getElementById('estzone-empty').style.display='block';document.getElementById('review-zone').style.display='none';
+  document.getElementById('cv-hint').textContent=(1/ST.creditRate).toFixed(5);document.getElementById('cr-rate-hint').textContent=`${ST.creditRate} cr/€`;
+  rAsel();rPsel();updDur();showStep(1);
+}
+function rAsel(){const c=document.getElementById('asel');c.innerHTML=gA().map(a=>{const offline=eCap(a.screens)===0;return`<button type="button" class="tgl${selA.has(a.id)?' on':''}${offline?' tgl-off':''}" data-aid="${a.id}"><div style="min-width:0"><div style="font-weight:700;font-size:12px">${a.code} · ${a.name.split('/')[0].trim()}</div><div style="font-size:10px;color:var(--text2)">${offline?'Offline':a.screens+' screens · '+a.areaMult+'×'}</div></div></button>`;}).join('');c.querySelectorAll('[data-aid]').forEach(btn=>btn.addEventListener('click',function(){const id=+this.dataset.aid;if(this.classList.contains('tgl-off'))return;if(selA.has(id)){selA.delete(id);this.classList.remove('on');}else{selA.add(id);this.classList.add('on');}updAselNote();updEst();}));updAselNote();}
+function updAselNote(){const n=selA.size;document.getElementById('asel-note').textContent=n===0?'⚠️ Select at least one area.':` ${n} area${n>1?'s':''} selected.`;}
+function rPsel(){const c=document.getElementById('psel');c.innerHTML=gP().map(p=>`<button type="button" class="tgl${selP.has(p.id)?' on':''}" data-pid="${p.id}"><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};flex-shrink:0;display:inline-block"></span><div><div style="font-weight:700;font-size:12px">${p.name}</div><div style="font-size:10px;color:var(--text2)">${p.lbl} · ${p.mult}×</div></div></button>`).join('');c.querySelectorAll('[data-pid]').forEach(btn=>btn.addEventListener('click',function(){const id=this.dataset.pid;if(selP.has(id)){selP.delete(id);this.classList.remove('on');}else{selP.add(id);this.classList.add('on');}document.getElementById('psel-note').textContent=selP.size===0?'⚠️ Select at least one period.':`${selP.size} period${selP.size>1?'s':''} selected.`;}));document.getElementById('psel-note').textContent=`${selP.size} period${selP.size>1?'s':''} selected.`;}
+function updDur(){const s=document.getElementById('fs').value,e=document.getElementById('fe').value;if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('fdur').textContent=`Duration: ${n} day${n!==1?'s':''}`;}updBsug();}
+function updBsug(){
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
+  if(!s||!e||e<s||!selA.size||!selP.size){document.getElementById('bsug').innerHTML='';return;}
+  const bm=bMap(editId),aIds=[...selA];
+  const targets=[0.25,0.5,1.0];
+  document.getElementById('bsug').innerHTML=targets.map(fill=>{
+    let maxC=0;for(const aId of aIds){const r=calcSingle(999999,dR(s,e).length,[...selP],1,aId,s,e,bm);if(!r.error)maxC+=(r.maxCost||r.totalCost||0);}
+    const bud=Math.round(maxC*fill*100)/100;
+    return`<button class="bsug-b" onclick="document.getElementById('fb').value='${bud.toFixed(2)}';updEst()">${fill*100}% cap.<br><strong>${eu(bud)}</strong></button>`;
+  }).join('');
+}
+function updEst(){
+  const budget=parseFloat(document.getElementById('fb').value),minpd=parseInt(document.getElementById('fmd').value)||1;
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value;
+  const dmLabels={'weighted':'Weighted by peak','even':'Equal per hour','even_area':'Equal per area','even_area_hour':'Equal per area & hour'};
+  const distEl=document.getElementById('distinfo');if(distEl)distEl.textContent=`Distribution mode: ${dmLabels[ST.distribution]||ST.distribution}. Change in Settings.`;
+  if(!budget||budget<=0||!s||!e||e<s){document.getElementById('estzone').style.display='none';document.getElementById('estzone-empty').style.display='block';document.getElementById('review-zone').style.display='none';return;}
+  const nd=dR(s,e).length;wDist=calcCamp(budget,nd,[...selP],minpd,[...selA],s,e,bMap(editId));
+  document.getElementById('estzone').style.display='';document.getElementById('estzone-empty').style.display='none';
+  if(wDist.error){document.getElementById('est-cr').textContent='—';document.getElementById('estg').innerHTML='';document.getElementById('estalerts').innerHTML=alH('d','Select at least one area and one period.');document.getElementById('review-zone').style.display='none';return;}
+  const totalCr2=crOf(wDist.totalCost);
+  document.getElementById('est-cr').textContent=comma(totalCr2);document.getElementById('est-cr-sub').textContent=`credits · ${eu(wDist.totalCost)} (budget: ${eu(budget)})`;
+  document.getElementById('estg').innerHTML=[['Areas',selA.size],['Slots/day',comma(wDist.slotsPerDay)],['Cost/day',eu(wDist.cpd)],['CPM',eu(wDist.cpm)]].map(([l,v])=>`<div class="stat"><div class="stat-v" style="font-size:18px">${v}</div><div class="stat-l">${l}</div></div>`).join('');
+  document.getElementById('est-cpm').innerHTML=`CPM <strong>${eu(wDist.cpm)}</strong> · <strong>${comma(crOf(wDist.cpd))} cr/day</strong>`;
+  document.getElementById('estalerts').innerHTML=(wDist.alerts||[]).map(a=>alH(a.t,a.msg)).join('');
+  document.getElementById('review-zone').style.display='';rReview(budget,nd);
+}
+function showStep(n){wStep=n;[1,2].forEach(i=>document.getElementById('s'+i).style.display=i===n?'':'none');document.getElementById('wl').textContent=`Step ${n} of 2`;document.getElementById('wp').style.width=`${n/2*100}%`;document.getElementById('wb').textContent=n===1?'Cancel':'← Back';document.getElementById('wn').textContent=n===2?(editId?'✓ Update':'✓ Create campaign'):'Next →';document.getElementById('wp-prev').style.display=n===2?'':'none';if(n===2){updBsug();updEst();}}
+function wBack(){if(wStep===1){editId=null;nav('campaigns');return;}showStep(1);}
+function wPrev(){showStep(1);}
+function wNext(){
+  if(wStep===1){if(!document.getElementById('fn').value.trim()||!document.getElementById('fc').value.trim()){alert('Fill in the name and client.');return;}if(!selA.size){alert('Select at least one area.');return;}const s=document.getElementById('fs').value,e=document.getElementById('fe').value;if(!s||!e||e<s){alert('Dates inválidas.');return;}if(!selP.size){alert('Select at least one period.');return;}showStep(2);}
+  else{const budget=parseFloat(document.getElementById('fb').value);if(!budget||budget<=0){alert('Invalid budget.');return;}const minpd=parseInt(document.getElementById('fmd').value)||1,s=document.getElementById('fs').value,e=document.getElementById('fe').value;wDist=calcCamp(budget,dR(s,e).length,[...selP],minpd,[...selA],s,e,bMap(editId));if(wDist.error){alert('Select an area and a period.');return;}saveCamp();}
+}
+function rReview(budget,nd){
+  const AREAS=gA(),PERIODS=gP(),aIds=[...selA],s=document.getElementById('fs').value,e=document.getElementById('fe').value;
+  document.getElementById('ral').innerHTML=(wDist.alerts||[]).filter(a=>a.t!=='s').map(a=>alH(a.t,a.msg)).join('');
+  let html=`<table class="atbl"><thead><tr><th>Zone</th><th>Name</th><th>Slots/day</th><th>Cost/day</th><th>Cr/day</th><th>Total cost</th></tr></thead><tbody>`;
+  for(const aId of aIds){const area=AREAS.find(a=>a.id===aId),data=wDist.areaDate?.[aId],hasErr=data?.error;html+=`<tr${hasErr?' style="opacity:.4"':''}><td><span class="zbadge">${area?.code||''}</span></td><td style="font-size:12px">${area?.name||''}</td><td style="text-align:right;font-weight:700">${hasErr?'—':comma(data?.slotsPerDay||0)}</td><td style="text-align:right">${hasErr?'—':eu(data?.cpd||0)}</td><td style="text-align:right;color:var(--cred);font-weight:600">${hasErr?'—':comma(crOf(data?.cpd||0))}</td><td style="text-align:right;font-weight:700;color:var(--accent)">${hasErr?'—':eu(data?.totalCost||0)}</td></tr>`;}
+  html+=`<tr style="background:var(--accent-l);font-weight:800"><td colspan="2">Total</td><td style="text-align:right">${comma(wDist.slotsPerDay)}</td><td style="text-align:right">${eu(wDist.cpd)}</td><td style="text-align:right;color:var(--cred)">${comma(crOf(wDist.cpd))}</td><td style="text-align:right;color:var(--accent)">${eu(wDist.totalCost)}</td></tr></tbody></table>`;
+  const aggHm={};for(const aId of aIds){const data=wDist.areaDate?.[aId];if(!data||data.error)continue;for(const[h,spd]of Object.entries(data.hourMap))aggHm[+h]=(aggHm[+h]||0)+spd;}
+  const tcph=aIds.reduce((sum,aId)=>{const area=AREAS.find(a=>a.id===aId);return sum+eCap(area?.screens??0);},0);
+  const selPers=PERIODS.filter(p=>selP.has(p.id)),maxSl=Math.max(...selPers.map(p=>pH(p).reduce((s2,{hour})=>s2+(aggHm[hour]||0),0)),1);
+  html+=`<div class="sec-lbl">Distribution by period</div>`;
+  html+=selPers.map(p=>{const hrs=pH(p),slots=hrs.reduce((s2,{hour})=>s2+(aggHm[hour]||0),0),cap=hrs.length*tcph;let cost=0;for(const aId of aIds){const aM=ST.areaMults[aId]??1,data=wDist.areaDate?.[aId];if(!data||data.error)continue;const aSlots=hrs.reduce((s2,{hour})=>s2+(data.hourMap?.[hour]||0),0);cost+=aSlots*ST.basePrice*p.mult*aM*nd;}return`<div class="dr"><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};flex-shrink:0;display:inline-block"></span><span style="width:84px;color:var(--text2);font-weight:600">${p.name}</span><div class="dbar"><div class="dfil" style="width:${(slots/maxSl*100).toFixed(1)}%;background:${p.clr}"></div></div><span style="width:96px;text-align:right;color:var(--text2)">${comma(slots)} (${cap>0?(slots/cap*100).toFixed(0):0}%)</span><span style="width:64px;text-align:right;font-weight:700;color:var(--accent)">${eu(cost)}</span><span style="width:66px;text-align:right;color:var(--cred);font-size:11px">${comma(crOf(cost))} cr</span></div>`;}).join('');
+  document.getElementById('rdist').innerHTML=html;
+}
+function saveCamp(){
+  const s=document.getElementById('fs').value,e=document.getElementById('fe').value,nd=dR(s,e).length;
+  const nc={id:editId||Date.now().toString(),name:document.getElementById('fn').value.trim(),client:document.getElementById('fc').value.trim(),areaIds:[...selA],startDate:s,endDate:e,periodIds:[...selP],budget:parseFloat(document.getElementById('fb').value),totalCost:wDist.totalCost,slotsPerDay:wDist.slotsPerDay,totalSlots:wDist.totalSlots,cpd:wDist.cpd,cpm:wDist.cpm,areaDate:wDist.areaDate};
+  if(editId){const idx=camps.findIndex(c=>c.id===editId);if(idx>=0)camps[idx]=nc;else camps.push(nc);}else camps.push(nc);
+  editId=null;saveC();nav('campaigns');
+}
+
+// ── Campaigns list ─────────────────────────────────────────────────────────
+function rCamps(){
+  const t=tod(),AREAS=gA();document.getElementById('csub').textContent=`${camps.length} campaign${camps.length!==1?'s':''} in total`;
+  const el=document.getElementById('clist');
+  if(!camps.length){el.innerHTML=`<div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> New campaign</button></div>`;return;}
+  el.innerHTML=[...camps].reverse().map(c=>{const st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Active':st==='up'?'Upcoming':'Ended';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');const cpmStr=c.cpm?eu(c.cpm):'—';return`<div class="cr2"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${sl}</span></div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div></div><div style="text-align:center;min-width:108px;flex-shrink:0"><div style="font-weight:600;font-size:12px">${fmtD(c.startDate)}–${fmtD(c.endDate)}</div><div style="font-size:11px;color:var(--text3)">${dR(c.startDate,c.endDate).length} days</div></div><div style="text-align:center;min-width:80px;flex-shrink:0"><div style="font-weight:700;color:var(--cred)">${comma(crOf(c.totalCost))}</div><div style="font-size:11px;color:var(--text3)">credits</div></div><div style="text-align:center;min-width:68px;flex-shrink:0"><div style="font-weight:700;font-size:12px">CPM ${cpmStr}</div><div style="font-size:11px;color:var(--text3)">${comma(c.slotsPerDay)} sl/day</div></div><div style="text-align:right;min-width:72px;flex-shrink:0"><div style="font-weight:800;color:var(--accent)">${eu(c.totalCost)}</div><div style="font-size:11px;color:var(--text3)">total</div></div><div style="display:flex;gap:4px;flex-shrink:0"><button class="btn-g btn-sm" data-edit="${c.id}" title="Edit"><i class="ti ti-pencil"></i></button><button class="btn-d btn-sm" data-del="${c.id}" title="Delete"><i class="ti ti-trash"></i></button></div></div>`;}).join('');
+  el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){if(!confirm('Fromlete this campaign?'))return;camps=camps.filter(c=>c.id!==this.dataset.del);saveC();rCamps();}));
+  el.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click',function(){const c=camps.find(x=>x.id===this.dataset.edit);if(c){initWiz(c);nav('new_campaign');}}));
+}
+
+// ── Settings ──────────────────────────────────────────────────────────────
+function updCapPrev(){const areas=gA(),caps=[...new Set(areas.map(a=>eCap(a.screens)))].sort((a,b)=>a-b);const el=document.getElementById('st-cap-prev');if(el)el.textContent=`${comma(Math.min(...caps))}–${comma(Math.max(...caps))} slots/hr`;}
+function initMB(){
+  const PERIODS=gP(),AREAS=gA();
+  document.getElementById('st-bp').value=ST.basePrice;document.getElementById('st-res').value=ST.reservePct;document.getElementById('st-cr').value=ST.creditRate;
+  document.getElementById('cr-prev').textContent=`€${(1/ST.creditRate).toFixed(5)}`;
+  document.getElementById('st-cr').addEventListener('input',function(){document.getElementById('cr-prev').textContent=`€${(1/(parseFloat(this.value)||1)).toFixed(5)}`;});
+  const pm=document.getElementById('st-pm');
+  pm.innerHTML=PERIODS.map(p=>`<tr><td><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:7px;vertical-align:middle"></span>${p.name}</td><td style="color:var(--text2)">${p.lbl}</td><td><input type="number" step="0.01" min="0.01" max="20" value="${p.mult}" style="width:76px" data-pm="${p.id}"/> ×</td><td style="color:var(--text2);font-size:12px" id="ep-${p.id}">${eu5(ST.basePrice*p.mult)}/slot</td><td style="color:var(--cred);font-size:12px">${(ST.basePrice*p.mult*ST.creditRate).toFixed(2)} cr/slot</td></tr>`).join('');
+  pm.querySelectorAll('[data-pm]').forEach(inp=>inp.addEventListener('change',function(){ST.periodMults[this.dataset.pm]=parseFloat(this.value)||1;const el=document.getElementById('ep-'+this.dataset.pm);if(el)el.textContent=eu5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
+  document.getElementById('st-bp').addEventListener('input',function(){const bp=parseFloat(this.value)||0.00508;PERIODS.forEach(p=>{const el=document.getElementById('ep-'+p.id);if(el)el.textContent=eu5(bp*ST.periodMults[p.id])+'/slot';});updCapPrev();});
+  const sa=document.getElementById('st-areas');
+  sa.innerHTML=AREAS.map(a=>`<tr><td><span class="zbadge">${a.code}</span></td><td style="font-size:12px">${a.name}</td><td><input type="number" min="0" max="500" value="${a.screens}" style="width:70px" data-sc="${a.id}"/></td><td><input type="number" step="0.01" min="0" max="20" value="${a.areaMult}" style="width:70px" data-am="${a.id}"/> ×</td><td style="color:var(--text2);font-size:11px" id="ae-${a.id}">${eu5(ST.basePrice*a.areaMult)}/slot</td></tr>`).join('');
+  sa.querySelectorAll('[data-sc]').forEach(inp=>inp.addEventListener('change',function(){ST.screens[parseInt(this.dataset.sc)]=Math.max(0,parseInt(this.value)||0);updCapPrev();}));
+  sa.querySelectorAll('[data-am]').forEach(inp=>inp.addEventListener('change',function(){ST.areaMults[parseInt(this.dataset.am)]=parseFloat(this.value)||1;const el=document.getElementById('ae-'+this.dataset.am);if(el)el.textContent=eu5(ST.basePrice*(parseFloat(this.value)||1))+'/slot';}));
+  document.getElementById('st-res').addEventListener('input',function(){ST.reservePct=Math.min(90,Math.max(0,parseFloat(this.value)||0));updCapPrev();});
+  document.querySelectorAll('.dm-opt').forEach(b=>{b.classList.toggle('on',b.dataset.dm===ST.distribution);b.addEventListener('click',function(){ST.distribution=this.dataset.dm;document.querySelectorAll('.dm-opt').forEach(x=>x.classList.toggle('on',x.dataset.dm===ST.distribution));});});
+  // Ensure saved distribution is reflected even if it's one of the new modes
+  if(!['weighted','even','even_area','even_area_hour'].includes(ST.distribution))ST.distribution='even';
+  document.querySelectorAll('.dm-opt').forEach(x=>x.classList.toggle('on',x.dataset.dm===ST.distribution));
+  // Render impressions table
+  const si=document.getElementById('st-impr');
+  if(si){
+    si.innerHTML=AREAS.map(a=>`<tr>
+      <td><span class="zbadge">${a.code}</span></td>
+      <td style="font-size:12px">${a.name}</td>
+      <td><input type="number" min="1" max="100000" value="${ST.impressionsPerSlot[a.id]??50}" style="width:90px" data-ips="${a.id}" oninput="updImprPrev(${a.id},this.value)"/> <span style="font-size:11px;color:var(--text2)">/ slot</span></td>
+      <td style="color:var(--text2);font-size:11px" id="ips-cpm-${a.id}">${calcIpsCPM(a.id,ST.impressionsPerSlot[a.id]??50)}</td>
+    </tr>`).join('');
+  }
+  updCapPrev();checkMBWarn();
+}
+function calcIpsCPM(aId,ips){
+  const a=gA().find(x=>x.id===aId);if(!a)return'—';
+  const avgCps=ST.basePrice*(ST.areaMults[aId]??1);
+  const cpm=ips>0?(avgCps/ips)*1000:0;
+  return`CPM ~${eu(cpm)}`;
+}
+function updImprPrev(aId,val){
+  const ips=Math.max(1,parseInt(val)||1);
+  ST.impressionsPerSlot[aId]=ips;
+  const el=document.getElementById('ips-cpm-'+aId);
+  if(el)el.textContent=calcIpsCPM(aId,ips);
+}
+function stSave(){
+  ST.basePrice=parseFloat(document.getElementById('st-bp').value)||0.00508;
+  ST.reservePct=Math.min(90,Math.max(0,parseFloat(document.getElementById('st-res').value)||0));
+  ST.creditRate=Math.max(1,parseInt(document.getElementById('st-cr').value)||200);
+  document.querySelectorAll('[data-pm]').forEach(i=>{ST.periodMults[i.dataset.pm]=parseFloat(i.value)||1;});
+  document.querySelectorAll('[data-sc]').forEach(i=>{ST.screens[parseInt(i.dataset.sc)]=Math.max(0,parseInt(i.value)||0);});
+  document.querySelectorAll('[data-am]').forEach(i=>{ST.areaMults[parseInt(i.dataset.am)]=parseFloat(i.value)||1;});
+  document.querySelectorAll('[data-ips]').forEach(i=>{ST.impressionsPerSlot[parseInt(i.dataset.ips)]=Math.max(1,parseInt(i.value)||1);});
+  saveST();checkMBWarn();const el=document.getElementById('st-saved');el.textContent='✓ Saved';el.style.opacity='1';setTimeout(()=>el.style.opacity='0',2500);
+}
+
+// ── SIMULATOR ──────────────────────────────────────────────────────────────
+function initSim(){
+  // Build area checkboxes
+  const ac=document.getElementById('sim-asel');
+  ac.innerHTML=gA().map(a=>{
+    const offline=eCap(a.screens)===0,on=simAreas.has(a.id)&&!offline;
+    return`<label class="chk-row${on?' on':''}" id="sim-al-${a.id}">
+      <input type="checkbox" ${on?'checked':''} ${offline?'disabled':''} onchange="simTogA(${a.id},this.checked)" style="width:auto;accent-color:var(--accent);flex-shrink:0"/>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:12px"><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</div>
+        <div style="font-size:10px;color:var(--text2)">${offline?'Offline':a.screens+' screen'+(a.screens!==1?'s':'')}</div>
+      </div>
+    </label>`;
+  }).join('');
+  // Build period checkboxes
+  const pc=document.getElementById('sim-psel');
+  pc.innerHTML=gP().map(p=>{
+    const on=simPers.has(p.id);
+    return`<label class="chk-row${on?' on':''}" id="sim-pl-${p.id}">
+      <input type="checkbox" ${on?'checked':''} onchange="simTogP('${p.id}',this.checked)" style="width:auto;accent-color:var(--accent);flex-shrink:0"/>
+      <span style="width:9px;height:9px;border-radius:50%;background:${p.clr};display:inline-block;flex-shrink:0"></span>
+      <div style="flex:1"><div style="font-weight:600;font-size:12px">${p.name}</div><div style="font-size:10px;color:var(--text2)">${p.lbl} · ${p.mult}×</div></div>
+    </label>`;
+  }).join('');
+  if(!document.getElementById('sim-s').value){document.getElementById('sim-s').value=tod();document.getElementById('sim-e').value=addD(tod(),29);}
+  simLive();
+}
+
+function simTogA(id,checked){
+  if(checked)simAreas.add(id);else simAreas.delete(id);
+  const lbl=document.getElementById('sim-al-'+id);if(lbl)lbl.classList.toggle('on',checked);
+  simLive();
+}
+function simTogP(id,checked){
+  if(checked)simPers.add(id);else simPers.delete(id);
+  const lbl=document.getElementById('sim-pl-'+id);if(lbl)lbl.classList.toggle('on',checked);
+  simLive();
+}
+function simPickDM(btn){
+  simDist=btn.dataset.dm;
+  document.querySelectorAll('.sim-dm').forEach(b=>{
+    const on=b===btn;
+    b.style.borderColor=on?'var(--accent)':'var(--border)';
+    b.style.background=on?'var(--accent-l)':'var(--surface2)';
+    b.style.fontWeight=on?'700':'500';
+  });
+}
+function simLive(){
+  const s=document.getElementById('sim-s').value,e=document.getElementById('sim-e').value;
+  if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('sim-dur').textContent=`${n} day${n!==1?'s':''} campaign`;}
+  const budget=parseFloat(document.getElementById('sim-budget').value)||0;
+  const eqEl=document.getElementById('sim-equiv');
+  if(budget>0){
+    const cr=crOf(budget);
+    // estimate impressions using weighted avg ips across selected areas
+    const aIds=[...simAreas];
+    const avgIps=aIds.length?aIds.reduce((s,id)=>s+(ST.impressionsPerSlot[id]??50),0)/aIds.length:50;
+    // rough slots estimate: budget / avg cost-per-slot
+    const aM=aIds.length?aIds.reduce((s,id)=>s+(ST.areaMults[id]??1),0)/aIds.length:1;
+    const sel=gP().filter(p=>simPers.has(p.id));
+    const hrs=sel.flatMap(pH);
+    const wOf=h=>(simDist==='weighted')?h.mult:1;
+    const sumW=hrs.reduce((ss,h)=>ss+wOf(h),0)||1;
+    const fracs=hrs.map(h=>wOf(h)/sumW);
+    const wCF=hrs.reduce((ss,h,i)=>ss+fracs[i]*h.mult,0)||1;
+    const avgCps=ST.basePrice*wCF*aM;
+    const estSlots=avgCps>0?Math.round(budget/avgCps):0;
+    const estImpr=Math.round(estSlots*avgIps);
+    document.getElementById('sim-equiv-cr').textContent=comma(cr)+' cr';
+    document.getElementById('sim-equiv-imp').textContent=comma(estImpr)+' impressions';
+    if(s&&e&&e>=s){const n=dR(s,e).length;document.getElementById('sim-equiv-day').textContent=eu(budget/n)+' / day  ·  '+comma(Math.round(estImpr/n))+' impr/day';}
+    else document.getElementById('sim-equiv-day').textContent='—';
+    eqEl.style.display='';
+  } else {
+    eqEl.style.display='none';
+  }
+}
+
+function runSim(){
+  const totalBudgetEur=parseFloat(document.getElementById('sim-budget').value)||0;
+  const s=document.getElementById('sim-s').value,e=document.getElementById('sim-e').value;
+  const minSPD=parseInt(document.getElementById('sim-min').value)||1;
+  if(!totalBudgetEur||totalBudgetEur<=0){alert('Enter the total budget in €.');return;}
+  const totalCr=crOf(totalBudgetEur);
+  if(!s||!e||e<s){alert('Select a valid period.');return;}
+  if(!simAreas.size){alert('Select at least one area.');return;}
+  if(!simPers.size){alert('Select at least one period.');return;}
+
+  const bm=bMap(), AREAS=gA(), PERIODS=gP();
+  const days=dR(s,e), totalDays=days.length;
+  const sel=PERIODS.filter(p=>simPers.has(p.id));
+  const hrs=sel.flatMap(pH);
+  const aIds=[...simAreas];
+
+  // Weight function per simDist mode
+  // even / even_area: equal slots per hour (uniform fracs)
+  // even_area_hour: same (uniform), but we cap per-hour equally
+  // weighted: proportional to period mult
+  const wOf=h=>(simDist==='weighted')?h.mult:1;
+  const sumW=hrs.reduce((ss,h)=>ss+wOf(h),0)||1;
+  const fracs=hrs.map(h=>wOf(h)/sumW);
+  const wCF=hrs.reduce((ss,h,i)=>ss+fracs[i]*h.mult,0)||1;
+  // For even_area modes, weight all areas equally in budget split (ignore areaMult for cost-per-slot weighting)
+  const cpsOf=aId=>{
+    if(simDist==='even_area'||simDist==='even_area_hour'){
+      // Use average mult across selected areas so budget splits evenly
+      const avgAM=aIds.reduce((s,id)=>s+(ST.areaMults[id]??1),0)/Math.max(1,aIds.length);
+      return ST.basePrice*wCF*avgAM;
+    }
+    return ST.basePrice*wCF*(ST.areaMults[aId]??1);
+  };
+
+  let remCr=totalCr;
+  simDate=[];
+
+  for(let i=0;i<days.length;i++){
+    const d=days[i];
+    const daysLeft=totalDays-i;
+    const idealCrDay=remCr/daysLeft; // credits to spend today to finish on time
+    const idealEurDay=euroOf(idealCrDay);
+
+    let totalAvail=0,totalSlots=0,totalCost=0;
+    const areaBreak={};
+
+    for(const aId of aIds){
+      const area=AREAS[aId-1];
+      const cap=eCap(area.screens);
+      const aM=ST.areaMults[aId]??1;
+      // Available slots per hour this day (accounting for other campaigns)
+      const availByHour={};
+      let avail=0;
+      for(const h of hrs){
+        const ad=h.hour>=24?addD(d,1):d,ah=h.hour>=24?h.hour-24:h.hour;
+        const hAvail=Math.max(0,cap-(bm?.[aId]?.[ad]?.[ah]||0));
+        availByHour[h.hour]=(availByHour[h.hour]||0)+hAvail;
+        avail+=hAvail;
+      }
+      const cps=ST.basePrice*wCF*aM; // actual cost-per-slot for this area
+
+      let idealSlotsArea;
+      if(simDist==='even_area'||simDist==='even_area_hour'){
+        // Equal budget share per area, ignoring area mult weighting
+        const budgetShare=idealEurDay/aIds.length;
+        idealSlotsArea=cps>0?Math.round(budgetShare/cps):0;
+      } else {
+        idealSlotsArea=cps>0?Math.round(idealEurDay/(cps*aIds.length)):0;
+      }
+
+      let actualSlots;
+      if(simDist==='even_area_hour'){
+        // Distribute slots equally across hours within this area
+        const nHrs=hrs.length||1;
+        const slotsPerHour=Math.floor(idealSlotsArea/nHrs);
+        actualSlots=hrs.reduce((s,h)=>s+Math.min(availByHour[h.hour]||0,Math.max(Math.ceil(minSPD/nHrs),slotsPerHour)),0);
+      } else {
+        actualSlots=Math.min(avail,Math.max(minSPD,idealSlotsArea));
+      }
+      const areaCost=actualSlots*cps;
+      totalAvail+=avail;totalSlots+=actualSlots;totalCost+=areaCost;
+      areaBreak[aId]={slots:actualSlots,avail,cost:areaCost,screens:area.screens,minMet:actualSlots>=minSPD};
+    }
+
+    const dayCr=crOf(totalCost);
+    const usedCr=Math.min(remCr,dayCr);
+    const scale=dayCr>0?usedCr/dayCr:1;
+    remCr=Math.max(0,remCr-usedCr);
+    const minGlobal=minSPD*aIds.length;
+    const status=totalSlots>=minGlobal?'ok':totalSlots>0?'warn':'bad';
+
+    // Compute total impressions for this day across all areas
+    const dayImpr=aIds.reduce((s,aId)=>{
+      const ips=ST.impressionsPerSlot[aId]??50;
+      return s+(areaBreak[aId]?.slots||0)*ips;
+    },0);
+    simDate.push({date:d,idx:i,slots:Math.round(totalSlots*scale),avail:totalAvail,credits:usedCr,cost:totalCost*scale,remaining:remCr,pctCap:totalAvail>0?totalSlots/totalAvail:0,status,areaBreak,idealCrDay,daysLeft,impressions:Math.round(dayImpr*scale)});
+  }
+
+  renderSim(totalCr,totalDays,minSPD,totalBudgetEur);
+}
+
+function renderSim(totalCr,totalDays,minSPD,totalBudget){
+  document.getElementById('sim-empty').style.display='none';
+  document.getElementById('sim-out').style.display='block';
+  document.getElementById('sim-xbtns').style.display='flex';
+
+  const avgCr=totalCr/totalDays;
+  const totalSlots2=simDate.reduce((s,d)=>s+d.slots,0);
+  const avgSlots=Math.round(totalSlots2/totalDays);
+  const daysBelow=simDate.filter(d=>d.status!=='ok').length;
+  const leftover=simData.length?simDate[simData.length-1].remaining:0;
+
+  const totalImpr=simDate.reduce((s,d)=>s+d.impressions,0);
+  const avgImprDay=Math.round(totalImpr/totalDays);
+  document.getElementById('sim-summary').innerHTML=[
+    [totalDays+' days','Contract duration',''],
+    [eu(totalBudget),'Total budget',''],
+    [comma(totalImpr),'Total impressions',''],
+    [daysBelow===0?'✓ All good':'⚠ '+daysBelow+' days','Below minimum',daysBelow>0?'sim-warn':''],
+  ].map(([v,l,cls])=>`<div class="sim-stat"><div class="sim-stat-v" style="${cls==='sim-warn'?'color:var(--amber)':'font-size:18px'}">${v}</div><div class="sim-stat-l">${l}</div></div>`).join('');
+
+  // Alerts
+  const als=[];
+  if(daysBelow>0)als.push(alH('w',`${daysBelow} day${daysBelow>1?'s':''} with slots below minimum (${minSPD * [...simAreas].length} total) — other campaigns are reducing available capacity.`));
+  if(leftover>totalCr*0.03)als.push(alH('i',`There are ${comma(Math.round(leftover))} credits (${eu(euroOf(leftover))}) at end of campaign. Increase min slots/day to spend more per day.ts/day para gastar mais for day.`));
+  als.push(alH('i',`Estimated total: <strong>${comma(totalImpr)} impressions</strong> · Avg CPM: <strong>${eu(totalBudget>0&&totalImpr>0?totalBudget/totalImpr*1000:0)}</strong>`));
+  if(!als.length||als.every(a=>a.includes('al-i')))als.push(alH('s',`Balanced simulation — ${eu(totalBudget)} distribuídos for ${totalDays} days.`));
+  document.getElementById('sim-alerts').innerHTML=als.join('');
+
+  // SVG Burndown
+  renderBurnSVG(totalCr);
+
+  // Screens card
+  const AREAS=gA();
+  document.getElementById('sim-screens').innerHTML=[...simAreas].map(aId=>{
+    const area=AREAS[aId-1];
+    const avgSl=simDate.reduce((s,d)=>s+(d.areaBreak[aId]?.slots||0),0)/totalDays;
+    const avgAv=simDate.reduce((s,d)=>s+(d.areaBreak[aId]?.avail||0),0)/totalDays;
+    const screensActive=Math.min(area.screens,Math.ceil(avgSl/Math.max(1,avgSl/area.screens)));
+    return`<div style="background:var(--surface2);border-radius:var(--r);padding:10px 14px;border:1px solid var(--border);min-width:160px">
+      <div style="font-weight:800;font-size:13px"><span class="zbadge">${area.code}</span>${area.name.split('/')[0].trim()}</div>
+      <div style="margin:6px 0;display:flex;gap:4px;align-items:center;flex-wrap:wrap">${Array.from({length:area.screens},(_,i)=>`<span class="screen-dot" style="width:10px;height:10px;background:${i<Math.round(avgSl/Math.max(1,avgSl/area.screens))?area.clr:'#ddd'}" title="Screen ${i+1}"></span>`).join('')}</div>
+      <div style="font-size:11px;color:var(--text2)">${area.screens} screen${area.screens!==1?'s':''}  ·  <strong>${comma(Math.round(avgSl))}</strong> slots/day</div>
+      <div style="font-size:10px;color:var(--text3)">${avgAv>0?(avgSl/avgAv*100).toFixed(0):0}% cap. used</div>
+    </div>`;
+  }).join('');
+
+  renderSimTable(false);
+}
+
+function renderBurnSVG(totalCr){
+  const W=800,H=180,PL=46,PR=8,PT=16,PB=28;
+  const cw=W-PL-PR,ch=H-PT-PB,n=simData.length;
+  const toX=i=>PL+i/Math.max(1,n-1)*cw;
+  const toY=v=>PT+ch-(Math.max(0,v)/totalCr)*ch;
+
+  // Bars (one per day)
+  const bW=Math.max(1,(cw/n)-0.5);
+  const bars=simDate.map((d,i)=>{
+    const x=PL+i/n*cw,h2=Math.max(1,(d.credits/totalCr)*ch);
+    const clr=d.status==='ok'?'#16a34a':d.status==='warn'?'#d97706':'#dc2626';
+    return`<rect x="${x.toFixed(1)}" y="${(PT+ch-h2).toFixed(1)}" width="${bW.toFixed(1)}" height="${h2.toFixed(1)}" fill="${clr}" opacity="0.65" rx="1"/>`;
+  }).join('');
+
+  // Remaining credits line
+  const linePts=simDate.map((d,i)=>`${toX(i).toFixed(1)},${toY(d.remaining).toFixed(1)}`).join(' ');
+  // Ideal burn line
+  const idealPts=simDate.map((d,i)=>`${toX(i).toFixed(1)},${toY(totalCr*(1-(i+1)/n)).toFixed(1)}`).join(' ');
+  // Fill under remaining line
+  const fillPts=`${PL.toFixed(1)},${(PT+ch).toFixed(1)} `+simDate.map((d,i)=>`${toX(i).toFixed(1)},${toY(d.remaining).toFixed(1)}`).join(' ')+` ${toX(n-1).toFixed(1)},${(PT+ch).toFixed(1)}`;
+
+  // Y axis
+  const yTicks=[0,0.25,0.5,0.75,1].map(f=>{
+    const y=PT+ch-f*ch;
+    return`<line x1="${PL}" y1="${y.toFixed(0)}" x2="${(PL+cw).toFixed(0)}" y2="${y.toFixed(0)}" stroke="#e4e4e8" stroke-width="0.5"/>
+    <text x="${(PL-5).toFixed(0)}" y="${(y+4).toFixed(0)}" text-anchor="end" font-size="9" fill="#9898aa">${comma(Math.round(totalCr*f))}</text>`;
+  }).join('');
+
+  // X ticks (6 labels)
+  const xStep=Math.ceil(n/6);
+  const xTicks=simDate.filter((_,i)=>i%xStep===0||i===n-1).map((d,_)=>{
+    const i2=simDate.indexOf(d),x=toX(i2);
+    return`<text x="${x.toFixed(0)}" y="${(H-6).toFixed(0)}" text-anchor="middle" font-size="9" fill="#9898aa">${fmtD(d.date)}</text>`;
+  }).join('');
+
+  document.getElementById('sim-svg').setAttribute('viewBox',`0 0 ${W} ${H}`);
+  document.getElementById('sim-svg').innerHTML=`
+    <defs><linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5b50e8" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#5b50e8" stop-opacity="0.02"/>
+    </linearGradient></defs>
+    <rect width="${W}" height="${H}" fill="#fafafe" rx="8"/>
+    ${yTicks}${bars}
+    <polygon points="${fillPts}" fill="url(#bg2)"/>
+    <polyline points="${linePts}" fill="none" stroke="#5b50e8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="${idealPts}" fill="none" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,4" opacity="0.5"/>
+    ${xTicks}
+    <text x="${PL}" y="${PT-3}" font-size="9" fill="#9898aa">Remaining credits</text>
+  `;
+  document.getElementById('sim-leg').innerHTML=`
+    <span style="display:flex;align-items:center;gap:4px"><svg width="14" height="12"><rect x="0" y="2" width="14" height="8" rx="2" fill="#16a34a" opacity=".7"/></svg>Day normal</span>
+    <span style="display:flex;align-items:center;gap:4px"><svg width="14" height="12"><rect x="0" y="2" width="14" height="8" rx="2" fill="#d97706" opacity=".7"/></svg>Below minimum</span>
+    <span style="display:flex;align-items:center;gap:4px"><svg width="14" height="12"><rect x="0" y="2" width="14" height="8" rx="2" fill="#dc2626" opacity=".7"/></svg>No capacity</span>
+    <span style="display:flex;align-items:center;gap:4px"><svg width="22" height="12"><line x1="0" y1="6" x2="22" y2="6" stroke="#5b50e8" stroke-width="2.5"/></svg>Credits reais</span>
+    <span style="display:flex;align-items:center;gap:4px"><svg width="22" height="12"><line x1="0" y1="6" x2="22" y2="6" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5,4" opacity=".6"/></svg>Ideal pace</span>
+  `;
+}
+
+function renderSimTable(showAll){
+  const rows=showAll?simDate:simDate.slice(0,60);
+  const totalScreens=[...simAreas].reduce((s,aId)=>{const a=gA()[aId-1];return s+(a?.screens||0);},0);
+  document.getElementById('sim-tbody').innerHTML=rows.map(d=>{
+    const wd=new Date(d.date).toLocaleDateString('pt-PT',{weekday:'short'});
+    const icon=d.status==='ok'?'<span style="color:var(--green);font-weight:700">✓</span>':d.status==='warn'?'<span style="color:var(--amber);font-weight:700">⚠</span>':'<span style="color:var(--red);font-weight:700">✗</span>';
+    const cls=d.status==='warn'?'warn-r':d.status==='bad'?'bad-r':'';
+    const capPct=(d.avail>0?(d.slots/d.avail*100):0).toFixed(0);
+    return`<tr class="${cls}">
+      <td style="font-weight:600;white-space:nowrap">${fmtD(d.date)}</td>
+      <td style="color:var(--text3)">${wd}</td>
+      <td style="text-align:center">${totalScreens}</td>
+      <td style="text-align:right;font-weight:700">${comma(d.slots)}</td>
+      <td style="text-align:right;color:var(--blue)">${comma(d.impressions||0)}</td>
+      <td style="text-align:right"><span style="color:${+capPct>70?'var(--green)':+capPct>30?'var(--amber)':'var(--red)'}">${capPct}%</span></td>
+      <td style="text-align:right;font-weight:700;color:var(--cred)">${comma(Math.round(d.credits))}</td>
+      <td style="text-align:right">${comma(Math.round(d.remaining))}</td>
+      <td style="text-align:center">${icon}</td>
+    </tr>`;
+  }).join('');
+  if(!showAll&&simData.length>60){
+    document.getElementById('sim-tbody').innerHTML+=`<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:12px;font-style:italic">Showing 60 of ${simData.length} days. Click "Show all" to expand.</td></tr>`;
+  }
+}
+
+function simToggle(){
+  simAll=!simAll;
+  document.getElementById('sim-tgl-lbl').textContent=simAll?'Collapse':'Show all';
+  renderSimTable(simAll);
+}
+
+function simExportCSV(){
+  if(!simData.length){alert('Run the simulation first.');return;}
+  const heads=['Date','Day semana','Slots','Impressions','Cap. available','% used','Credits spent','Remaining credits','Status'];
+  const rows=simDate.map(d=>{
+    const wd=new Date(d.date).toLocaleDateString('pt-PT',{weekday:'long'});
+    const cap=(d.avail>0?(d.slots/d.avail*100):0).toFixed(1);
+    const st=d.status==='ok'?'Normal':d.status==='warn'?'Below minimum':'No capacity';
+    return[d.date,wd,d.slots,d.impressions||0,d.avail,cap,Math.round(d.credits),Math.round(d.remaining),st].join(',');
+  });
+  const uri='data:text/csv;charset=utf-8,'+encodeURIComponent([heads.join(','),...rows].join('\n'));
+  const a=document.createElement('a');a.href=uri;a.download=`simulacao_${document.getElementById('sim-s').value||tod()}.csv`;document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+// ── Boot ────────────────────────────────────────────────────────────────────
+loadAll().then(()=>{
+  document.getElementById('dash-date-s').value=tod();
+  document.getElementById('dash-date-e').value=tod();
+  rDash();
+  checkMBWarn();
+});
+</script>
+</body></html>
