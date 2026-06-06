@@ -204,13 +204,13 @@ button:hover{background:var(--surface2)}
 
 <!-- AVAILABILITY -->
 <div id="pg-availability" class="pg">
-  <div class="ptitle">Availability</div><div class="psub">Available slots by area, date and time period.</div>
-  <div class="card row" style="padding:14px 16px;gap:12px">
-    <div class="fg" style="margin:0"><label class="flbl">Area</label><select id="av-a" onchange="rAvail()" style="width:200px"></select></div>
-    <div class="fg" style="margin:0"><label class="flbl">From</label><input type="date" id="av-s" onchange="rAvail()" style="width:148px"/></div>
-    <div class="fg" style="margin:0"><label class="flbl">To</label><input type="date" id="av-e" onchange="rAvail()" style="width:148px"/></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+    <div class="ptitle">Availability</div>
+    <button class="btn-p btn-sm" onclick="avAddPanel()"><i class="ti ti-plus"></i> Add area</button>
   </div>
-  <div class="card" style="overflow-x:auto"><div class="leg" id="av-leg"></div><div id="av-grid"></div></div>
+  <div class="psub">Compare availability across multiple areas and date ranges.</div>
+  <div class="leg" style="margin-bottom:14px" id="av-leg"></div>
+  <div id="av-panels"></div>
 </div>
 
 <!-- BOARD -->
@@ -585,6 +585,11 @@ function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm,distOverride){
   let diff=N-slots.reduce((a,b)=>a+b,0);
   const ord=fracs.map((_,i)=>i).sort((a,b)=>fracs[b]-fracs[a]);
   for(let i=0;diff!==0&&i<hrs.length*6;i++){const ix=ord[i%ord.length],nx=slots[ix]+Math.sign(diff);if(nx>=0&&nx<=maxH[hrs[ix].hour]){slots[ix]=nx;diff-=Math.sign(diff);}}
+  // For even_area_hour: additionally enforce strict equal slots per hour
+  if(dist==='even_area_hour'&&hrs.length>1){
+    const perHr=Math.floor(slots.reduce((a,b)=>a+b,0)/hrs.length);
+    slots=slots.map((s2,i)=>Math.min(s2,Math.min(perHr,maxH[hrs[i].hour])));
+  }
   const hm={};hrs.forEach((h,i)=>{hm[h.hour]=(hm[h.hour]||0)+slots[i];});
   const aN=slots.reduce((a,b)=>a+b,0),cpd=hrs.reduce((s,h,i)=>s+slots[i]*B*h.mult*aM,0);
   return{slotsPerDay:aN,hourMap:hm,cpd,totalCost:cpd*nd,totAv,maxCost,warns};
@@ -593,15 +598,26 @@ function calcSingle(budget,nd,pids,minpd,aId,s0,e0,bm,distOverride){
 function calcCamp(budget,nd,pids,minpd,areaIds,s0,e0,bm,distOverride){
   if(!areaIds.length)return{error:'no_areas'};
   const AREAS=gA(),areaDate={},allWarns=[];let pool=budget,open=[...areaIds];
+  // For even_area/even_area_hour: split budget proportional to areaMult so each
+  // area ends up with the SAME number of slots (cost-per-slot ∝ areaMult).
+  // For even/weighted: equal budget per area (cheaper areas get more slots).
+  const equalSlots=distOverride==='even_area'||distOverride==='even_area_hour';
+  function shareFor(aId,openList,remaining){
+    if(equalSlots){
+      const totalM=openList.reduce((s,id)=>s+(ST.areaMults[id]??1),0)||1;
+      return remaining*(ST.areaMults[aId]??1)/totalM;
+    }
+    return remaining/openList.length;
+  }
   for(let iter=0;iter<=areaIds.length;iter++){
     if(!open.length||pool<0.001)break;
-    const share=pool/open.length,tmp={};for(const aId of open)tmp[aId]=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm,distOverride);
-    const capped=open.filter(aId=>{const r=tmp[aId];return r.error||(r.totalCost<share*0.99);});
+    const tmp={};for(const aId of open)tmp[aId]=calcSingle(shareFor(aId,open,pool),nd,pids,minpd,aId,s0,e0,bm,distOverride);
+    const capped=open.filter(aId=>{const r=tmp[aId];return r.error||(r.totalCost<shareFor(aId,open,pool)*0.99);});
     if(!capped.length){for(const aId of open){areaDate[aId]=tmp[aId];for(const w of(tmp[aId].warns||[]))allWarns.push({t:w.t,msg:`${AREAS.find(a=>a.id===aId)?.code}: ${w.msg}`});}pool=0;open=[];break;}
     for(const aId of capped){const r=tmp[aId],area=AREAS.find(a=>a.id===aId);if(r.error){allWarns.push({t:'w',msg:`${area?.code}: ${r.error==='no_capacity'?'No capacity':'No periods'}.`});areaDate[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaDate[aId]=r;for(const w of(r.warns||[]))allWarns.push({t:w.t,msg:`${area?.code}: ${w.msg}`});}pool-=r.error?0:(r.totalCost||0);}
     open=open.filter(aId=>!capped.includes(aId));
   }
-  if(open.length&&pool>0.001){const share=pool/open.length;for(const aId of open){const r=calcSingle(share,nd,pids,minpd,aId,s0,e0,bm,distOverride);if(r.error){areaDate[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaDate[aId]=r;}}}
+  if(open.length&&pool>0.001){for(const aId of open){const r=calcSingle(shareFor(aId,open,pool),nd,pids,minpd,aId,s0,e0,bm,distOverride);if(r.error){areaDate[aId]={slotsPerDay:0,hourMap:{},cpd:0,totalCost:0,error:r.error};}else{areaDate[aId]=r;}}}
   let totalCost=0,totalSPD=0,totalCpd=0;
   for(const aId of areaIds){const d2=areaDate[aId];if(d2&&!d2.error){totalCost+=d2.totalCost;totalSPD+=d2.slotsPerDay;totalCpd+=d2.cpd;}}
   const alerts=[...allWarns.filter(w=>w.t==='d')];
@@ -681,27 +697,85 @@ function rDash(){updCampBadge();
   }).join('');
   const rec=[...camps].sort((a,b)=>b.startDate.localeCompare(a.startDate)).slice(0,6);
   const drCard=document.getElementById('dr-card');
-  if(!rec.length){drCard.innerHTML=`<div class="ctitle">Recent Campaigns</div><div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Create campaign</button></div>`;}
+  if(!rec.length){drCard.innerHTML=`<div class="ctitle">Recent Campaigns</div><div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" style="padding:9px 24px;width:auto;border-radius:8px;align-self:center;display:inline-block" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> Create campaign</button></div>`;}
   else{drCard.innerHTML=`<div class="ctitle">Recent Campaigns</div>`+rec.map(c=>{const st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Active':st==='up'?'Upcoming':'Ended';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');return`<div class="cr2"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${sl}</span></div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div></div><div style="text-align:right;flex-shrink:0"><div style="font-weight:700;color:var(--accent)">${eu(c.totalCost)}</div><div style="font-size:11px;color:var(--text3)">${comma(crOf(c.totalCost))} cr</div></div></div>`;}).join('');}
 }
 
 // ── Availability ──────────────────────────────────────────────────────────
+let avPanels=[];let avPanelId=0;
+
 function rAvailInit(){
-  const sel=document.getElementById('av-a');sel.innerHTML='';
-  gA().forEach(a=>sel.add(new Option(`${a.code} ${a.name} (${a.screens} screens)`,a.id)));
-  if(!document.getElementById('av-s').value){document.getElementById('av-s').value=tod();document.getElementById('av-e').value=addD(tod(),6);}
-  document.getElementById('av-leg').innerHTML='<span>Availability:</span>'+[['> 70%','av-hi'],['30–70%','av-mi'],['< 30%','av-lo'],['Full','av-fx'],['Offline','av-off']].map(([l,c])=>`<span><span class="legd ${c}"></span>${l}</span>`).join('');
-  rAvail();
+  document.getElementById('av-leg').innerHTML='<span style="font-weight:600;font-size:11px;color:var(--text2)">Availability:</span>'+[['> 70%','av-hi'],['30–70%','av-mi'],['< 30%','av-lo'],['Full','av-fx'],['Offline','av-off']].map(([l,cl])=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--text2)"><span class="legd ${cl}" style="display:inline-block;width:10px;height:10px;border-radius:2px"></span>${l}</span>`).join('');
+  if(!avPanels.length){avAddPanel();}
+  else{avPanels.forEach(p=>avRenderPanel(p.id));}
 }
-function rAvail(){
-  const aId=+document.getElementById('av-a').value,s=document.getElementById('av-s').value,e=document.getElementById('av-e').value;
-  if(!s||!e||e<s)return;
-  const dates=dR(s,e).slice(0,14),bm=bMap(),PERIODS=gP();
+
+function avAreaOptions(){
+  return gA().map(a=>`<option value="${a.id}">${a.code} ${a.name} (${a.screens} screens)</option>`).join('');
+}
+
+function avAddPanel(){
+  const id=++avPanelId;
+  const s=tod(),e=addD(tod(),9);
+  avPanels.push({id,aId:gA()[0]?.id||1,s,e});
+  const container=document.getElementById('av-panels');
+  const div=document.createElement('div');
+  div.id='av-panel-'+id;
+  div.className='card';
+  div.style.marginBottom='14px';
+  div.innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div class="fg" style="margin:0;flex:1;min-width:180px">
+        <label class="flbl">Area</label>
+        <select style="width:100%" onchange="avUpdatePanel(${id},'aId',this.value)">${avAreaOptions()}</select>
+      </div>
+      <div class="fg" style="margin:0">
+        <label class="flbl">From</label>
+        <input type="date" value="${s}" style="width:148px" onchange="avUpdatePanel(${id},'s',this.value)"/>
+      </div>
+      <div class="fg" style="margin:0">
+        <label class="flbl">To</label>
+        <input type="date" value="${e}" style="width:148px" onchange="avUpdatePanel(${id},'e',this.value)"/>
+      </div>
+      ${avPanels.length>1?`<button class="btn-d btn-sm" style="margin-top:16px;flex-shrink:0" onclick="avRemovePanel(${id})"><i class="ti ti-trash"></i> Remove</button>`:''}
+    </div>
+    <div style="overflow-x:auto" id="av-grid-${id}"></div>`;
+  container.appendChild(div);
+  avRenderPanel(id);
+}
+
+function avRemovePanel(id){
+  avPanels=avPanels.filter(p=>p.id!==id);
+  const el=document.getElementById('av-panel-'+id);
+  if(el)el.remove();
+  // If only one left, remove its delete button
+  if(avPanels.length===1){
+    const btn=document.querySelector('#av-panel-'+avPanels[0].id+' .btn-d');
+    if(btn)btn.remove();
+  }
+}
+
+function avUpdatePanel(id,field,val){
+  const p=avPanels.find(p=>p.id===id);if(!p)return;
+  p[field]=field==='aId'?+val:val;
+  avRenderPanel(id);
+}
+
+function avRenderPanel(id){
+  const p=avPanels.find(p=>p.id===id);
+  const el=document.getElementById('av-grid-'+id);
+  if(!p||!el||!p.s||!p.e||p.e<p.s)return;
+  const dates=dR(p.s,p.e).slice(0,14),bm=bMap(),PERIODS=gP();
   let h=`<table class="avt"><thead><tr><th style="text-align:left;min-width:116px;padding-left:11px">Period</th>`;
   for(const d of dates)h+=`<th style="min-width:64px">${fmtD(d)}<br><span style="font-size:10px;font-weight:400">${fmtDy(d)}</span></th>`;
   h+=`</tr></thead><tbody>`;
-  for(const per of PERIODS){h+=`<tr><td style="padding:8px 11px;background:var(--surface2);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:${per.clr};flex-shrink:0;display:inline-block"></span><div><div style="font-weight:600;font-size:12px">${per.name}</div><div style="font-size:10px;color:var(--text3)">${per.lbl} · ${per.mult}×</div></div></div></td>`;for(const d of dates){const av=pAv(bm,aId,d,per);const cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+=`<td class="${cls}"><div style="font-size:12px;font-weight:700">${av.offline?'—':pct(av.pct)}</div><div style="font-size:10px;opacity:.75">${av.offline?'offline':comma(av.avail)+'/'+comma(av.total)}</div></td>`;}h+=`</tr>`;}
-  h+=`</tbody></table>`;document.getElementById('av-grid').innerHTML=h;
+  for(const per of PERIODS){
+    h+=`<tr><td style="padding:8px 11px;background:var(--surface2);border:1px solid var(--border)"><div style="display:flex;align-items:center;gap:8px"><span style="width:9px;height:9px;border-radius:50%;background:${per.clr};flex-shrink:0;display:inline-block"></span><div><div style="font-weight:600;font-size:12px">${per.name}</div><div style="font-size:10px;color:var(--text3)">${per.lbl} · ${per.mult}×</div></div></div></td>`;
+    for(const d of dates){const av=pAv(bm,p.aId,d,per);const cls=av.offline?'av-off':av.avail===0?'av-fx':av.pct>0.7?'av-hi':av.pct>0.3?'av-mi':'av-lo';h+=`<td class="${cls}"><div style="font-size:12px;font-weight:700">${av.offline?'—':pct(av.pct)}</div><div style="font-size:10px;opacity:.75">${av.offline?'offline':comma(av.avail)+'/'+comma(av.total)}</div></td>`;}
+    h+=`</tr>`;
+  }
+  h+=`</tbody></table>`;
+  el.innerHTML=h;
 }
 
 // ── Board ─────────────────────────────────────────────────────────────────
@@ -850,7 +924,7 @@ function updCampBadge(){const t=tod();const n=camps.filter(c=>c.startDate<=t&&c.
 function rCamps(){updCampBadge();
   const t=tod(),AREAS=gA();document.getElementById('csub').textContent=`${camps.length} campaign${camps.length!==1?'s':''} in total`;
   const el=document.getElementById('clist');
-  if(!camps.length){el.innerHTML=`<div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> New campaign</button></div>`;return;}
+  if(!camps.length){el.innerHTML=`<div class="empty-st"><i class="ti ti-calendar-off"></i><div style="font-weight:700;font-size:15px;color:var(--text2);margin-bottom:6px">No campaigns yet</div><p style="font-size:13px;margin-bottom:18px">Create your first campaign to get started.</p><button class="btn-p" style="padding:9px 24px;width:auto;border-radius:8px;align-self:center;display:inline-block" onclick="nav('new_campaign')"><i class="ti ti-plus"></i> New campaign</button></div>`;return;}
   el.innerHTML=[...camps].reverse().map(c=>{const st=c.endDate<t?'end':c.startDate>t?'up':'ok',bc=st==='ok'?'b-ok':st==='up'?'b-up':'b-end',sl=st==='ok'?'Active':st==='up'?'Upcoming':'Ended';const aIds=campAreas(c),aZ=aIds.map(id=>{const a=AREAS.find(x=>x.id===id);return`<span class="zbadge">${a?.code||''}</span>`;}).join('');const cpmStr=c.cpm?eu(c.cpm):'—';return`<div class="cr2"><div style="flex:1;min-width:0"><div style="font-weight:700">${c.name} <span class="badge ${bc}">${sl}</span></div><div style="font-size:12px;color:var(--text2);margin-top:2px">${c.client} · ${aZ}</div></div><div style="text-align:center;min-width:108px;flex-shrink:0"><div style="font-weight:600;font-size:12px">${fmtD(c.startDate)}–${fmtD(c.endDate)}</div><div style="font-size:11px;color:var(--text3)">${dR(c.startDate,c.endDate).length} days</div></div><div style="text-align:center;min-width:80px;flex-shrink:0"><div style="font-weight:700;color:var(--cred)">${comma(crOf(c.totalCost))}</div><div style="font-size:11px;color:var(--text3)">credits</div></div><div style="text-align:center;min-width:68px;flex-shrink:0"><div style="font-weight:700;font-size:12px">CPM ${cpmStr}</div><div style="font-size:11px;color:var(--text3)">${comma(c.slotsPerDay)} sl/day</div></div><div style="text-align:right;min-width:72px;flex-shrink:0"><div style="font-weight:800;color:var(--accent)">${eu(c.totalCost)}</div><div style="font-size:11px;color:var(--text3)">total</div></div><div style="display:flex;gap:4px;flex-shrink:0"><button class="btn-g btn-sm" data-edit="${c.id}" title="Edit"><i class="ti ti-pencil"></i></button><button class="btn-d btn-sm" data-del="${c.id}" title="Delete"><i class="ti ti-trash"></i></button></div></div>`;}).join('');
   el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){if(!confirm('Delete this campaign?'))return;camps=camps.filter(c=>c.id!==this.dataset.del);saveC();rCamps();}));
   el.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click',function(){const c=camps.find(x=>x.id===this.dataset.edit);if(c){initWiz(c);nav('new_campaign');}}));
