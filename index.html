@@ -27,7 +27,7 @@ button:hover{background:var(--surface2)}
 .btn-g{border-color:transparent;background:transparent}.btn-g:hover{background:var(--surface2);border-color:var(--border)}
 .btn-d{color:var(--red);border-color:transparent;background:transparent}.btn-d:hover{background:var(--red-bg)}
 
-.app{display:flex;min-height:100vh}
+.app{display:flex;min-height:100vh;width:100%}
 .sb{width:196px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
 .sbh{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
 .sb-logo{font-size:16px;font-weight:800;color:var(--accent);letter-spacing:-.02em}
@@ -40,7 +40,7 @@ button:hover{background:var(--surface2)}
 .nb i{font-size:17px;flex-shrink:0}
 .nb .nbb{margin-left:auto;font-size:10px;padding:1px 6px;border-radius:99px;font-weight:700}
 .sbdiv{height:1px;background:var(--border);margin:6px 14px}
-.mc{flex:1;padding:28px 32px;overflow-y:auto}
+.mc{flex:1;min-width:0;padding:28px 32px;overflow-y:auto;width:100%}
 .pg{display:none}.pg.on{display:block}
 
 .card{background:var(--surface);border-radius:var(--r2);border:1px solid var(--border);padding:16px;margin-bottom:14px;box-shadow:var(--sh)}
@@ -122,7 +122,7 @@ button:hover{background:var(--surface2)}
 .bsug{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
 .bsug-b{padding:6px 11px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface2);cursor:pointer;font-size:11px;font-weight:600;color:var(--text2);transition:all .15s}
 .bsug-b:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-l)}
-.empty-st{text-align:center;padding:56px 24px;color:var(--text3);display:flex;flex-direction:column;align-items:center}.empty-st .btn-p{align-self:center;width:auto;max-width:220px;padding:9px 28px;font-size:13px;border-radius:var(--r)}
+.empty-st{text-align:center;padding:56px 24px;color:var(--text3);display:flex;flex-direction:column;align-items:center}.empty-st .btn-p{align-self:center;width:fit-content;padding:9px 24px;font-size:13px;border-radius:var(--r)}
 .empty-st i{font-size:44px;display:block;margin-bottom:14px;opacity:.4}
 
 .dm-opts{display:flex;gap:9px;margin-top:7px}
