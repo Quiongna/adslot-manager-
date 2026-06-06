@@ -314,7 +314,7 @@ button:hover{background:var(--surface2)}
         <div>
           <div id="estzone" style="display:none">
             <div class="cr-box" style="margin-bottom:12px"><div class="cr-big" id="est-cr">—</div><div style="font-size:11px;color:#6d28d9;margin-top:2px" id="est-cr-sub">total credits</div></div>
-            <div class="g2" id="estg" style="margin-bottom:12px"></div>
+            <div id="estg" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px"></div>
             <div id="est-cpm" style="font-size:12px;color:var(--text2);padding:9px 12px;background:var(--surface2);border-radius:var(--r)"></div>
           </div>
           <div id="estzone-empty" style="text-align:center;padding:30px 0;color:var(--text3)"><i class="ti ti-calculator" style="font-size:36px;display:block;margin-bottom:8px;opacity:.4"></i><div style="font-size:12px">Fill in the budget to see the estimate</div></div>
@@ -902,7 +902,21 @@ function updEst(){
   if(wDist.error){document.getElementById('est-cr').textContent='—';document.getElementById('estg').innerHTML='';document.getElementById('estalerts').innerHTML=alH('d','Select at least one area and one period.');document.getElementById('review-zone').style.display='none';return;}
   const totalCr2=crOf(wDist.totalCost);
   document.getElementById('est-cr').textContent=comma(totalCr2);document.getElementById('est-cr-sub').textContent=`credits · ${eu(wDist.totalCost)} (budget: ${eu(budget)})`;
-  document.getElementById('estg').innerHTML=[['Areas',selA.size],['Slots/day',comma(wDist.slotsPerDay)],['Cost/day',eu(wDist.cpd)],['CPM',eu(wDist.cpm)]].map(([l,v])=>`<div class="stat"><div class="stat-v" style="font-size:18px">${v}</div><div class="stat-l">${l}</div></div>`).join('');
+  // Compute total estimated impressions across selected areas
+  const wizTotalImpr=[...selA].reduce((s,aId)=>{
+    const ips=ST.impressionsPerSlot[aId]??50;
+    const slots=(wDist.areaDate?.[aId]?.slotsPerDay||0)*nd;
+    return s+slots*ips;
+  },0);
+  const wizImprDay=Math.round(wizTotalImpr/Math.max(1,nd));
+  document.getElementById('estg').innerHTML=[
+    ['Areas',selA.size],
+    ['Slots/day',comma(wDist.slotsPerDay)],
+    ['Est. impressions',comma(Math.round(wizTotalImpr))],
+    ['Impr/day',comma(wizImprDay)],
+    ['Cost/day',eu(wDist.cpd)],
+    ['CPM',eu(wDist.cpm)],
+  ].map(([l,v])=>`<div class="stat"><div class="stat-v" style="font-size:17px">${v}</div><div class="stat-l">${l}</div></div>`).join('');
   document.getElementById('est-cpm').innerHTML=`CPM <strong>${eu(wDist.cpm)}</strong> · <strong>${comma(crOf(wDist.cpd))} cr/day</strong>`;
   document.getElementById('estalerts').innerHTML=(wDist.alerts||[]).map(a=>alH(a.t,a.msg)).join('');
   document.getElementById('review-zone').style.display='';rReview(budget,nd);
@@ -917,14 +931,26 @@ function wNext(){
 function rReview(budget,nd){
   const AREAS=gA(),PERIODS=gP(),aIds=[...selA],s=document.getElementById('fs').value,e=document.getElementById('fe').value;
   document.getElementById('ral').innerHTML=(wDist.alerts||[]).filter(a=>a.t!=='s').map(a=>alH(a.t,a.msg)).join('');
-  let html=`<table class="atbl"><thead><tr><th>Zone</th><th>Name</th><th>Slots/day</th><th>Cost/day</th><th>Cr/day</th><th>Total cost</th></tr></thead><tbody>`;
-  for(const aId of aIds){const area=AREAS.find(a=>a.id===aId),data=wDist.areaDate?.[aId],hasErr=data?.error;html+=`<tr${hasErr?' style="opacity:.4"':''}><td><span class="zbadge">${area?.code||''}</span></td><td style="font-size:12px">${area?.name||''}</td><td style="text-align:right;font-weight:700">${hasErr?'—':comma(data?.slotsPerDay||0)}</td><td style="text-align:right">${hasErr?'—':eu(data?.cpd||0)}</td><td style="text-align:right;color:var(--cred);font-weight:600">${hasErr?'—':comma(crOf(data?.cpd||0))}</td><td style="text-align:right;font-weight:700;color:var(--accent)">${hasErr?'—':eu(data?.totalCost||0)}</td></tr>`;}
-  html+=`<tr style="background:var(--accent-l);font-weight:800"><td colspan="2">Total</td><td style="text-align:right">${comma(wDist.slotsPerDay)}</td><td style="text-align:right">${eu(wDist.cpd)}</td><td style="text-align:right;color:var(--cred)">${comma(crOf(wDist.cpd))}</td><td style="text-align:right;color:var(--accent)">${eu(wDist.totalCost)}</td></tr></tbody></table>`;
+  let html=`<table class="atbl"><thead><tr><th>Zone</th><th>Name</th><th>Slots/day</th><th style="color:var(--blue)">Impr/day</th><th>Cost/day</th><th>Cr/day</th><th>Total cost</th></tr></thead><tbody>`;
+  for(const aId of aIds){const area=AREAS.find(a=>a.id===aId),data=wDist.areaDate?.[aId],hasErr=data?.error;const ips=ST.impressionsPerSlot[aId]??50;const aImprDay=hasErr?0:Math.round((data?.slotsPerDay||0)*ips);html+=`<tr${hasErr?' style="opacity:.4"':''}><td><span class="zbadge">${area?.code||''}</span></td><td style="font-size:12px">${area?.name||''}</td><td style="text-align:right;font-weight:700">${hasErr?'—':comma(data?.slotsPerDay||0)}</td><td style="text-align:right;font-weight:600;color:var(--blue)">${hasErr?'—':comma(aImprDay)}</td><td style="text-align:right">${hasErr?'—':eu(data?.cpd||0)}</td><td style="text-align:right;color:var(--cred);font-weight:600">${hasErr?'—':comma(crOf(data?.cpd||0))}</td><td style="text-align:right;font-weight:700;color:var(--accent)">${hasErr?'—':eu(data?.totalCost||0)}</td></tr>`;}
+  const totalImprDay=aIds.reduce((s,aId)=>{const ips=ST.impressionsPerSlot[aId]??50;return s+Math.round((wDist.areaDate?.[aId]?.slotsPerDay||0)*ips);},0);html+=`<tr style="background:var(--accent-l);font-weight:800"><td colspan="2">Total</td><td style="text-align:right">${comma(wDist.slotsPerDay)}</td><td style="text-align:right;color:var(--blue)">${comma(totalImprDay)}</td><td style="text-align:right">${eu(wDist.cpd)}</td><td style="text-align:right;color:var(--cred)">${comma(crOf(wDist.cpd))}</td><td style="text-align:right;color:var(--accent)">${eu(wDist.totalCost)}</td></tr></tbody></table>`;
   const aggHm={};for(const aId of aIds){const data=wDist.areaDate?.[aId];if(!data||data.error)continue;for(const[h,spd]of Object.entries(data.hourMap))aggHm[+h]=(aggHm[+h]||0)+spd;}
   const tcph=aIds.reduce((sum,aId)=>{const area=AREAS.find(a=>a.id===aId);return sum+eCap(area?.screens??0);},0);
   const selPers=PERIODS.filter(p=>selP.has(p.id)),maxSl=Math.max(...selPers.map(p=>pH(p).reduce((s2,{hour})=>s2+(aggHm[hour]||0),0)),1);
   html+=`<div class="sec-lbl">Distribution by period</div>`;
-  html+=selPers.map(p=>{const hrs=pH(p),slots=hrs.reduce((s2,{hour})=>s2+(aggHm[hour]||0),0),cap=hrs.length*tcph;let cost=0;for(const aId of aIds){const aM=ST.areaMults[aId]??1,data=wDist.areaDate?.[aId];if(!data||data.error)continue;const aSlots=hrs.reduce((s2,{hour})=>s2+(data.hourMap?.[hour]||0),0);cost+=aSlots*ST.basePrice*p.mult*aM*nd;}return`<div class="dr"><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};flex-shrink:0;display:inline-block"></span><span style="width:84px;color:var(--text2);font-weight:600">${p.name}</span><div class="dbar"><div class="dfil" style="width:${(slots/maxSl*100).toFixed(1)}%;background:${p.clr}"></div></div><span style="width:96px;text-align:right;color:var(--text2)">${comma(slots)} (${cap>0?(slots/cap*100).toFixed(0):0}%)</span><span style="width:64px;text-align:right;font-weight:700;color:var(--accent)">${eu(cost)}</span><span style="width:66px;text-align:right;color:var(--cred);font-size:11px">${comma(crOf(cost))} cr</span></div>`;}).join('');
+  // Compute avg impressions/slot across selected areas for each period row
+  const avgIpsAll=aIds.length?aIds.reduce((s,aId)=>s+(ST.impressionsPerSlot[aId]??50),0)/aIds.length:50;
+  html+=selPers.map(p=>{
+    const hrs=pH(p),slots=hrs.reduce((s2,{hour})=>s2+(aggHm[hour]||0),0),cap=hrs.length*tcph;
+    let cost=0,perImpr=0;
+    for(const aId of aIds){
+      const aM=ST.areaMults[aId]??1,data=wDist.areaDate?.[aId];if(!data||data.error)continue;
+      const aSlots=hrs.reduce((s2,{hour})=>s2+(data.hourMap?.[hour]||0),0);
+      cost+=aSlots*ST.basePrice*p.mult*aM*nd;
+      perImpr+=aSlots*(ST.impressionsPerSlot[aId]??50);
+    }
+    return`<div class="dr"><span style="width:9px;height:9px;border-radius:50%;background:${p.clr};flex-shrink:0;display:inline-block"></span><span style="width:84px;color:var(--text2);font-weight:600">${p.name}</span><div class="dbar"><div class="dfil" style="width:${(slots/maxSl*100).toFixed(1)}%;background:${p.clr}"></div></div><span style="width:96px;text-align:right;color:var(--text2)">${comma(slots)} (${cap>0?(slots/cap*100).toFixed(0):0}%)</span><span style="width:80px;text-align:right;font-weight:600;color:var(--blue);font-size:11px">${comma(Math.round(perImpr))} impr</span><span style="width:64px;text-align:right;font-weight:700;color:var(--accent)">${eu(cost)}</span><span style="width:66px;text-align:right;color:var(--cred);font-size:11px">${comma(crOf(cost))} cr</span></div>`;
+  }).join('');
   document.getElementById('rdist').innerHTML=html;
 }
 function saveCamp(){
