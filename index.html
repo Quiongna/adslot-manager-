@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="pt"><head><meta charset="utf-8"/>
-<title>AdSlot Manager — OOH · Lisbon</title>
+<title>Ads Dicted — OOH · Lisbon</title>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/tabler-icons.min.css"/>
 <style>
@@ -176,7 +176,7 @@ button:hover{background:var(--surface2)}
 <div class="app">
 
 <nav class="sb">
-  <div class="sbh"><div class="sb-logo">AdSlot</div><div class="sb-sub">OOH · Lisbon</div></div>
+  <div class="sbh"><div class="sb-logo">Ads Dicted</div><div class="sb-sub">OOH · Lisbon</div></div>
   <div class="sb-nav">
     <button class="nb on" data-v="dashboard" onclick="nav('dashboard')"><i class="ti ti-layout-dashboard"></i>Dashboard</button>
     <button class="nb" data-v="availability" onclick="nav('availability')"><i class="ti ti-calendar-stats"></i>Availability</button>
@@ -682,26 +682,28 @@ function rDash(){updCampBadge();
     [comma(totalCr)+' cr','Credits in period','stat-cr'],
   ].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-v">${v}</div><div class="stat-l">${l}</div></div>`).join('');
 
-  // Occupation per area over range
+  // Occupancy per area over range (booked / total, not free / total)
   document.getElementById('da').innerHTML=AREAS.map(area=>{
     let av=0,tot=0;
     for(const d of dateRange)for(const p of PERIODS){const r=pAv(bm,area.id,d,p);av+=r.avail;tot+=r.total;}
-    const offline=tot===0,pr=offline?0:av/tot;
-    const clr=offline?'#d1d5db':pr>0.6?'#16a34a':pr>0.3?'#d97706':'#dc2626';
-    // Mini bars: average occupation per period across date range
+    const booked=tot-av;
+    const offline=tot===0,occ=offline?0:booked/tot;
+    // Green = high occupancy (good revenue), amber = medium, red = low (idle)
+    const clr=offline?'#d1d5db':occ>0.6?'#16a34a':occ>0.3?'#d97706':'#dc2626';
+    // Mini bars: height proportional to occupancy (booked) for each period
     const bars=PERIODS.map(p=>{
       let pAv2=0,pTot=0;
       for(const d of dateRange){const r=pAv(bm,area.id,d,p);pAv2+=r.avail;pTot+=r.total;}
-      const pPct=pTot>0?pAv2/pTot:1;
-      const h2=pTot===0?3:Math.max(3,Math.round((1-pPct)*22));
-      return`<div class="mini-bar" style="background:${p.clr};height:${h2}px;opacity:${pTot===0?.3:.8}" title="${p.name}: ${(pPct*100).toFixed(0)}% livre"></div>`;
+      const pOcc=pTot>0?(pTot-pAv2)/pTot:0;
+      const h2=pTot===0?3:Math.max(3,Math.round(pOcc*22));
+      return`<div class="mini-bar" style="background:${p.clr};height:${h2}px;opacity:${pTot===0?.3:.8}" title="${p.name}: ${(pOcc*100).toFixed(0)}% booked"></div>`;
     }).join('');
     return`<div class="ac" onclick="nav('availability')">
       <div style="font-size:10px;font-weight:800;color:var(--accent);margin-bottom:1px">${area.code}</div>
       <div style="font-size:10px;color:var(--text3);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${area.name.split('/')[0].trim()}</div>
-      <div style="font-size:21px;font-weight:800;color:${clr}">${offline?'—':pct(pr)}</div>
+      <div style="font-size:21px;font-weight:800;color:${clr}">${offline?'—':pct(occ)}</div>
       <div class="mini-bars">${bars}</div>
-      <div style="font-size:10px;color:var(--text3)">${offline?'Offline':comma(av)+' free'}</div>
+      <div style="font-size:10px;color:var(--text3)">${offline?'Offline':comma(av)+' free · '+comma(booked)+' booked'}</div>
     </div>`;
   }).join('');
   const rec=[...camps].sort((a,b)=>b.startDate.localeCompare(a.startDate)).slice(0,6);
