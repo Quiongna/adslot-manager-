@@ -525,7 +525,7 @@ const PD=[
   {id:'latenight',name:'Late night',lbl:'22–02',start:22,end:26,clr:'#888780'},
 ];
 let ST={basePrice:0.00508,reservePct:0,distribution:'weighted',creditRate:200,impressionsPerSlot:Object.fromEntries(AD.map(a=>[a.id,50])),screens:Object.fromEntries(AD.map(a=>[a.id,2])),periodMults:{morning:1.10,midday:1.00,lunch:1.35,afternoon:1.15,dinner:1.50,latenight:0.80},areaMults:Object.fromEntries(AD.map(a=>[a.id,a.defM]))};
-let camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']),selA=new Set([1]),wStep=1,wDist=null,editId=null,wizDist='weighted';
+let camps=[],selP=new Set(['morning','midday','lunch','afternoon','dinner']),selA=new Set([1]),wStep=1,wDist=null,editId=null,wizDist='weighted',pendingEdit=null;
 let simData=[],simAreas=new Set([1,2]),simPers=new Set(['morning','midday','lunch','afternoon','dinner']),simDist='even',simAll=false;
 
 function gP(){return PD.map(p=>({...p,mult:ST.periodMults[p.id]??1}));}
@@ -644,7 +644,7 @@ function nav(v){
   document.getElementById('pg-'+v).classList.add('on');
   const nb=document.querySelector(`[data-v="${v}"]`);if(nb)nb.classList.add('on');
   checkMBWarn();
-  const fns={dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:initWiz,sim:initSim,mainboard:initMB};
+  const fns={dashboard:rDash,availability:rAvailInit,board:rBoardInit,kpi:rKPIInit,campaigns:rCamps,new_campaign:()=>{const pe=pendingEdit;pendingEdit=null;initWiz(pe);},sim:initSim,mainboard:initMB};
   if(fns[v])fns[v]();
 }
 
@@ -816,11 +816,17 @@ function rKPI(){
   const s=document.getElementById('kpi-s').value||addD(tod(),-30),e=document.getElementById('kpi-e').value||tod();
   const t=tod(),AREAS=gA(),PERIODS=gP(),bm=bMap();
   document.getElementById('kpi-sub').textContent=`${fmtD(s)} – ${fmtD(e)}`;
-  const inR=camps.filter(c=>c.startDate<=e&&c.endDate>=s);
-  const totalRev=inR.reduce((a,c)=>a+(c.totalCost||0),0),totalSlots=inR.reduce((a,c)=>a+(c.totalSlots||0),0),avgRev=inR.length?totalRev/inR.length:0;
-  document.getElementById('kpi-cards').innerHTML=[[eu(totalRev),'Total revenue',''],[comma(crOf(totalRev))+' cr','Credits sold','stat-cr'],[comma(totalSlots),'Slots sold',''],[eu(avgRev),'Avg/campaign','']].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-v">${v}</div><div class="stat-l">${l}</div></div>`).join('');
+  // Prorate each campaign's cost to the fraction of its days that fall within [s,e]
+  const inR=camps.filter(c=>c.startDate<=e&&c.endDate>=s).map(c=>{
+    const effS=c.startDate>s?c.startDate:s, effE=c.endDate<e?c.endDate:e;
+    const effDays=dR(effS,effE).length, totDays=dR(c.startDate,c.endDate).length||1;
+    const f=effDays/totDays;
+    return{...c,_f:f,_effCost:(c.totalCost||0)*f,_effSlots:Math.round((c.totalSlots||0)*f),_effS:effS,_effE:effE,_effDays:effDays};
+  });
+  const totalRev=inR.reduce((a,c)=>a+c._effCost,0),totalSlots=inR.reduce((a,c)=>a+c._effSlots,0),avgRev=inR.length?totalRev/inR.length:0;
+  document.getElementById('kpi-cards').innerHTML=[[eu(totalRev),'Revenue in period',''],[comma(crOf(totalRev))+' cr','Credits in period','stat-cr'],[comma(totalSlots),'Slots in period',''],[eu(avgRev),'Avg/campaign','']].map(([v,l,cls])=>`<div class="stat ${cls}"><div class="stat-v">${v}</div><div class="stat-l">${l}</div></div>`).join('');
   const revByArea={},revByPer={};
-  for(const c of inR){const aIds=campAreas(c),nd=dR(c.startDate,c.endDate).length;for(const aId of aIds){const aM=ST.areaMults[aId]??1,hm=c.areaDate?.[aId]?.hourMap||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+(c.areaDate?.[aId]?.totalCost||c.totalCost/aIds.length||0);for(const pid of c.periodIds){const p=PERIODS.find(x=>x.id===pid);if(!p)continue;const sl=pH(p).reduce((a,{hour})=>a+(hm?.[hour]||0),0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;}}}
+  for(const c of inR){const aIds=campAreas(c),nd=c._effDays;for(const aId of aIds){const aM=ST.areaMults[aId]??1,hm=c.areaDate?.[aId]?.hourMap||c.hourMap||{};revByArea[aId]=(revByArea[aId]||0)+((c.areaDate?.[aId]?.totalCost||c.totalCost/aIds.length||0)*c._f);for(const pid of (c.periodIds||[])){const p=PERIODS.find(x=>x.id===pid);if(!p)continue;const sl=pH(p).reduce((a,{hour})=>a+(hm?.[hour]||0),0);revByPer[pid]=(revByPer[pid]||0)+sl*ST.basePrice*p.mult*aM*nd;}}}
   const mxA=Math.max(...Object.values(revByArea),1),mxP=Math.max(...Object.values(revByPer),1);
   document.getElementById('kpi-area').innerHTML=AREAS.map(a=>{const rv=revByArea[a.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span class="zbadge">${a.code}</span>${a.name.split('/')[0].trim()}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxA*100).toFixed(1)}%;background:${a.clr}"></div></div></div>`;}).join('');
   document.getElementById('kpi-period').innerHTML=PERIODS.map(p=>{const rv=revByPer[p.id]||0,p2=totalRev?rv/totalRev*100:0;return`<div class="kbw"><div class="kbt"><span><span style="width:8px;height:8px;border-radius:50%;background:${p.clr};display:inline-block;margin-right:5px;vertical-align:middle"></span>${p.name}</span><span>${eu(rv)} (${p2.toFixed(0)}%)</span></div><div class="kb"><div class="kbf" style="width:${(rv/mxP*100).toFixed(1)}%;background:${p.clr}"></div></div></div>`;}).join('');
@@ -975,7 +981,7 @@ function rCamps(){updCampBadge();
     </div>`;
   }).join('');
   el.querySelectorAll('[data-del]').forEach(btn=>btn.addEventListener('click',function(){if(!confirm('Delete this campaign?'))return;camps=camps.filter(c=>c.id!==this.dataset.del);saveC();rCamps();}));
-  el.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click',function(){const c=camps.find(x=>x.id===this.dataset.edit);if(c){initWiz(c);nav('new_campaign');}}));
+  el.querySelectorAll('[data-edit]').forEach(btn=>btn.addEventListener('click',function(){const camp=camps.find(x=>x.id===this.dataset.edit);if(camp){pendingEdit=camp;nav('new_campaign');}}));
 }
 
 // ── Settings ──────────────────────────────────────────────────────────────
